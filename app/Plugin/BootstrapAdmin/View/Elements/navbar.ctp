@@ -1,33 +1,3 @@
-<?php
-  $items = array(
-    array(
-      'label'=> 'Destaque home',
-      'icon'=> 'th-large',
-      'url'=> array('controller'=> 'destaques_home')
-      ),
-    array(
-      'label'=> 'Estabelecimentos',
-      'icon'=> 'th',
-      'url'=> array('controller'=> 'estabelecimentos')
-      ),
-    array(
-      'label'=> 'Comentários',
-      'icon'=> 'comment',
-      'url'=> array('controller'=> 'comentarios')
-      ),
-    array(
-      'label'=> 'Usuários',
-      'icon'=> 'user',
-      'url'=> array('controller'=> 'usuarios')
-      ),
-    array(
-      'label'=> 'Contatos',
-      'icon'=> 'envelope',
-      'url'=> array('controller'=> 'contatos')
-      ),
-    );
-?>
-
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -46,7 +16,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
 <ul class="nav navbar-nav visible-xs menu-navbar">
-      <?php foreach ($items as $item): ?>
+      <?php foreach ($items_menu as $item): ?>
         <li class="<?php echo ($this->params['controller'] == $item['url']['controller'])? 'active': ''; ?>">
           <?php
             echo $this->Html->link(

@@ -5,7 +5,7 @@
 		Adicionar Estabelecimento	</li>
 </div>
 
-<div style="margin-top: 55px;">
+<div class="wrap-internal-page">
 	<div class="estabelecimentos form">
 	<?php
 			echo $this->Form->create('Estabelecimento',

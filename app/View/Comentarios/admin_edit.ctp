@@ -5,7 +5,7 @@
 		Adicionar Comentario	</li>
 </div>
 
-<div style="margin-top: 55px;">
+<div class="wrap-internal-page">
 	<div class="comentarios form">
 	<?php
 			echo $this->Form->create('Comentario',
