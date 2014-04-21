@@ -5,7 +5,7 @@
 		Adicionar Comentarios Estabelecimento	</li>
 </div>
 
-<div style="margin-top: 50px;">
+<div style="margin-top: 55px;">
 	<div class="comentariosEstabelecimentos form">
 	<?php
 			echo $this->Form->create('ComentariosEstabelecimento',
@@ -25,12 +25,11 @@
 		</fieldset>
 
 		<div class="row">
-			<div class="col-md-2 col-xs-6">
-				<button type="submit" class="btn btn-block btn-success"><span class='glyphicon glyphicon-saved'></span> Salvar</button>
+			<div class="col-md-2 col-sm-2">
+				<?php //echo $this->Html->link('<span class=\'glyphicon glyphicon-ban-circle\'></span> Cancelar', array('controller'=> 'comentariosEstabelecimentos', 'action'=> 'index'), array('escape'=> false, 'class'=> 'btn btn-danger')); ?>
+
+				<button type="submit" class="btn btn-block btn-primary"><span class='glyphicon glyphicon-saved'></span> Salvar</button>
 	
-			</div>
-			<div class="col-md-2 col-md-offset-8 col-xs-6">
-				<?php echo $this->Html->link('<span class=\'glyphicon glyphicon-ban-circle\'></span> Cancelar', array('controller'=> 'comentariosEstabelecimentos', 'action'=> 'index'), array('escape'=> false, 'class'=> 'btn btn-block btn-danger')); ?>
 			</div>
 			
 		</div>

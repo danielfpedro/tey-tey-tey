@@ -8,7 +8,7 @@ App::uses('AppController', 'Controller');
  */
 class EstabelecimentosController extends AppController {
 
-public $layout = 'admin';	
+public $layout = 'BootstrapAdmin.admin';	
 /**
  * Components
  *

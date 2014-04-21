@@ -5,10 +5,9 @@
 			Protos		</li>
 	</div>
 
-<div class="" style="margin-top: 50px;">
+<div class="" style="margin-top: 55px;">
 <!-- 	<h3>Protos</h3>
 	<hr> -->
-
 	<div class="row">
 
 		<div class="col-md-3 col-sm-6">
@@ -27,7 +26,7 @@
 			<?php
 	$label = '<span class=\'glyphicon glyphicon-plus\'></span> Novo proto';
 	$path = array('action'=> 'add');
-	$options = array('escape'=> false,'class'=> 'btn btn-success');
+	$options = array('escape'=> false,'class'=> 'btn btn-default btn-novo');
 	echo $this->Html->link($label, $path, $options);
 ?>
 		</div>
@@ -64,13 +63,17 @@
 		</table>
 	</div>
 	
+	<div class="">
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-6 col-sm-6 col-xs-8">
 			<?php
 				echo $this->Paginator->counter(array(
-				'format' => __('Página {:page} / {:pages} de {:count} registros')
+				'format' => __('Página {:page} / {:pages} de {:count} registro(s)')
 				));
 				?>	
 		</div>
+		<div class="col-md-6 col-sm-6 col-xs-4 text-right">
+			<?php echo $this->element('BootstrapAdmin.paginator_numbers'); ?>		</div>
 	</div>
-	<?php echo $this->element('Admin/paginator_numbers'); ?></div>
+	</div>
+</div>
