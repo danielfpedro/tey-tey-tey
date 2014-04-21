@@ -1,0 +1,8 @@
+{
+	"name": "Cakephp jumpstart 2.x",
+	"version": "0.0.0",
+	"dependencies": {
+		"jquery": "2.x",
+		"bootstrap": "3.x"
+	}
+}

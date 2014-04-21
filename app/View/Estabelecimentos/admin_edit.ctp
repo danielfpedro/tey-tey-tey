@@ -1,0 +1,39 @@
+<div class="breadcrumb breadcrumb-admin">
+	<li>
+		<?php echo $this->Html->link('Estabelecimentos', array('action'=> 'index')) ?>	</li>
+	<li class="active">
+		Adicionar Estabelecimento	</li>
+</div>
+
+<div style="margin-top: 50px;">
+	<div class="estabelecimentos form">
+	<?php
+			echo $this->Form->create('Estabelecimento',
+				array('inputDefaults'=>
+					array(
+						'div'=> array('class'=> 'form-group')
+						)
+					)
+				);
+		?>
+		<fieldset>
+				<?php
+		echo $this->Form->input('id', array('empty'=> 'Selecione:','class'=> 'form-control'));
+		echo $this->Form->input('name', array('empty'=> 'Selecione:','class'=> 'form-control'));
+		echo $this->Form->input('Comentario', array('class'=> 'form-control'));
+	?>
+		</fieldset>
+
+		<div class="row">
+			<div class="col-md-2 col-xs-6">
+				<button type="submit" class="btn btn-block btn-success"><span class='glyphicon glyphicon-saved'></span> Salvar</button>
+	
+			</div>
+			<div class="col-md-2 col-md-offset-8 col-xs-6">
+				<?php echo $this->Html->link('<span class=\'glyphicon glyphicon-ban-circle\'></span> Cancelar', array('controller'=> 'estabelecimentos', 'action'=> 'index'), array('escape'=> false, 'class'=> 'btn btn-block btn-danger')); ?>
+			</div>
+			
+		</div>
+	<?php echo $this->Form->end(); ?>
+	</div>
+</div>
