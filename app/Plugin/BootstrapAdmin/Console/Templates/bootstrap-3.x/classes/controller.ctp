@@ -39,7 +39,7 @@ if (!$isScaffold) {
  */
 class <?php echo $controllerName; ?>Controller extends <?php echo $plugin; ?>AppController {
 
-<?php echo "public \$layout = 'BootstrapAdmin.admin';\t"; ?>
+<?php echo "public \$layout = 'BootstrapAdmin.default';\t"; ?>
 
 <?php if ($isScaffold): ?>
 /**

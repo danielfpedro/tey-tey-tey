@@ -8,7 +8,7 @@ App::uses('AppController', 'Controller');
  */
 class ProtosController extends AppController {
 
-public $layout = 'BootstrapAdmin.admin';	
+public $layout = 'BootstrapAdmin.default';	
 /**
  * Components
  *
@@ -105,7 +105,6 @@ public $layout = 'BootstrapAdmin.admin';
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
-
 
 /**
  * admin_index method
