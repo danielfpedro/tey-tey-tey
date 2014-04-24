@@ -50,7 +50,7 @@
 	border-bottom: 1px solid #E7E7E7;
 	border-radius: 0;
 }
-thead{
+..thead{
 	background: rgb(255,255,255);
 	background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(229,229,229,1)));
@@ -101,8 +101,14 @@ html, body {
 .menu-navbar .icon-menu{
 	color: #FFF;
 }
+.txt-search{
+	width: 260px!important;
+}
 @media (max-width: 768px) {
 	.btn-novo{
+		width: 100%;
+	}
+	.txt-search{
 		width: 100%;
 	}
 }
@@ -110,8 +116,10 @@ html, body {
 
 }
 @media (min-width: 993px) and (max-width: 1200px) {
-
 }
 @media (min-width: 1201px) {
-
+}
+.table-admin td{
+	height: 50px;
+	vertical-align: middle!important;
 }

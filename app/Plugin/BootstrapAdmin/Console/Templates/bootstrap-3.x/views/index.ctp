@@ -5,29 +5,12 @@
 </div>
 
 <div class="wrap-internal-page">
+	<?php echo "<?php echo \$this->Session->flash(); ?>" ?>
 	<div class="row">
-		<div class="col-md-3 col-sm-6">
-			<form method="GET">
-				<button type="submit" style="position: absolute; margin: 5px 0 0 5px;border:0;background-color: #FFF;">
-					<span class="text-muted glyphicon glyphicon-search">
-					</span>
-				</button>
-				<input
-					type="text"
-					class="form-control"
-					style="padding-left: 30px;"
-					placeholder="Pesquisar"
-					name="q"
-					value="<?php echo "<?php echo \$this->request->query['q']; ?>"?>">
-			</form>
-		</div>
-
-		<div style="margin-top: 15px;" class="visible-xs"></div>
-
-		<div class="col-sm-6 col-md-3 col-xs-12 col-md-offset-6 text-right">
+		<div class="col-md-12">
 			<?php echo "<?php
 			echo \$this->Html->link(
-				\"<span class='glyphicon glyphicon-plus'></span> Novo ".strtolower($singularHumanName)."\",
+				\"Novo ".strtolower($singularHumanName)."\",
 				array('action'=> 'add'),
 				array('class'=> 'btn btn-success btn-novo',
 					'escape'=> false
@@ -36,11 +19,28 @@
 			?>
 		</div>
 	</div>
-
+	
 	<br>
+	<div class="well well-sm">
+		<div class="row clearfix">
+			<div class="col-md-12">
+				<form method="GET" class="form-inline">
+					<input
+						type="text"
+						class="form-control txt-search"
+						placeholder="Pesquisar"
+						name="q"
+						value="<?php echo "<?php echo \$this->request->query['q']; ?>"?>">
+					<button class="btn btn-default hidden-xs">
+						<span class="glyphicon glyphicon-search"></span>
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
 
 	<div class="table-responsive clearfix">
-		<table class="table table-condensed table-bordered table-hover table-striped">
+		<table class="table table-condensed table-hover table-striped table-admin">
 			<thead>
 				<?php 
 					echo "<tr>\n";
@@ -62,17 +62,19 @@
 									foreach ($associations['belongsTo'] as $alias => $details) {
 										if ($field === $details['foreignKey']) {
 											$isKey = true;
-											echo "
-												<?php
-													echo \$this->Html->link(
-														\${$singularVar}['{$alias}']['{$details['displayField']}'],
-														array(
-															'controller' => '{$details['controller']}',
-															'action' => 'view',
-															\${$singularVar}['{$alias}']['{$details['primaryKey']}']
-														));
-												?>
-											";
+							echo "
+							<td>
+								<?php
+									echo \$this->Html->link(
+										\${$singularVar}['{$alias}']['{$details['displayField']}'],
+										array(
+											'controller' => '{$details['controller']}',
+											'action' => 'view',
+											\${$singularVar}['{$alias}']['{$details['primaryKey']}']
+										));
+									
+								?>
+							</td>";
 											break;
 										}
 									}
@@ -84,7 +86,7 @@
 						?>
 						<?php
 						echo "
-							<td class=\"text-center\" style=\"width:90px; vertical-align: middle;\">
+							<td class=\"text-center\" style=\"width:90px;\">
 								<?php
 									echo \$this->Html->link(
 										\"<span class='glyphicon glyphicon-pencil'></span>\",
@@ -97,18 +99,19 @@
 											'escape'=> false
 										)
 									);
-									echo \$this->Html->link(
+									echo \"&nbsp;\";
+									echo \$this->Form->postLink(
 										\"<span class='glyphicon glyphicon-remove'></span>\",
 										array(
-											'action' => 'edit',
+											'action' => 'delete',
 											\${$singularVar}['{$modelClass}']['{$primaryKey}']),
 										array(
 											'class'=> 'btn btn-sm btn-danger tt',
 											'title'=> 'Remover',
 											'escape'=> false
 										),
-											'Você tem certeza que deseja deletar # %s?'
-											, \${$singularVar}['{$modelClass}']['{$primaryKey}']
+										__('Você tem certeza que deseja deletar # %s?'
+										, \${$singularVar}['{$modelClass}']['{$primaryKey}'])
 									);
 								?>
 							</td>";
@@ -122,6 +125,8 @@
 		</table>
 	</div>
 	
+	<br>
+
 	<div class="row">
 		<?php echo "<div class=\"col-md-6 col-sm-6 col-xs-8\">
 			<?php

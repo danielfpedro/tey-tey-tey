@@ -8,8 +8,10 @@
 </div>
 
 <div class="wrap-internal-page">
-	<?php echo $this->Form->create('ComentariosEstabelecimento'); ?>
-		
+	<div class="row">
+		<div class="col-md-11">
+			<?php echo $this->Form->create('ComentariosEstabelecimento'); ?>
+				
 		<div class="form-group">
 			<?php echo $this->Form->input('id', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
 		</div>
@@ -21,9 +23,11 @@
 		</div>
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary">
-				Salvar
+				<span class="glyphicon glyphicon-ok"></span> Salvar
 			</button>
-		</div>
+		</div>		</div>
+		
 
 	<?php echo $this->Form->end(); ?>
+	</div>
 </div>

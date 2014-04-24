@@ -53,10 +53,10 @@ public $layout = 'BootstrapAdmin.default';
 		if ($this->request->is('post')) {
 			$this->Estabelecimento->create();
 			if ($this->Estabelecimento->save($this->request->data)) {
-				$this->Session->setFlash(__('The estabelecimento has been saved.'));
+				$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The estabelecimento could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
 		$comentarios = $this->Estabelecimento->Comentario->find('list');
@@ -103,9 +103,9 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Estabelecimento->delete()) {
-			$this->Session->setFlash(__('The estabelecimento has been deleted.'));
+			$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-success'));
 		} else {
-			$this->Session->setFlash(__('The estabelecimento could not be deleted. Please, try again.'));
+			$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
@@ -147,10 +147,10 @@ public $layout = 'BootstrapAdmin.default';
 		if ($this->request->is('post')) {
 			$this->Estabelecimento->create();
 			if ($this->Estabelecimento->save($this->request->data)) {
-				$this->Session->setFlash(__('The estabelecimento has been saved.'));
+				$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The estabelecimento could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
 		$comentarios = $this->Estabelecimento->Comentario->find('list');
@@ -197,9 +197,9 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Estabelecimento->delete()) {
-			$this->Session->setFlash(__('The estabelecimento has been deleted.'));
+			$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-success'));
 		} else {
-			$this->Session->setFlash(__('The estabelecimento could not be deleted. Please, try again.'));
+			$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 		}
 		return $this->redirect(array('action' => 'index'));
 	}}

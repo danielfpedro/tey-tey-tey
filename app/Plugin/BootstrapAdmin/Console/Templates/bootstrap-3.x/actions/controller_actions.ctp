@@ -55,12 +55,12 @@
 			$this-><?php echo $currentModelName; ?>->create();
 			if ($this-><?php echo $currentModelName; ?>->save($this->request->data)) {
 <?php if ($wannaUseSession): ?>
-				$this->Session->setFlash(__('The <?php echo strtolower($singularHumanName); ?> has been saved.'));
+				$this->Session->setFlash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The <?php echo strtolower($singularHumanName); ?> could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 <?php else: ?>
-				return $this->flash(__('The <?php echo strtolower($singularHumanName); ?> has been saved.'), array('action' => 'index'));
+				return $this->flash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> foi salvo com sucesso.'), array('action' => 'index'), array('class'=> 'alert alert-success'));
 <?php endif; ?>
 			}
 		}
@@ -140,13 +140,13 @@
 		$this->request->onlyAllow('post', 'delete');
 		if ($this-><?php echo $currentModelName; ?>->delete()) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('The <?php echo strtolower($singularHumanName); ?> has been deleted.'));
+			$this->Session->setFlash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-success'));
 		} else {
-			$this->Session->setFlash(__('The <?php echo strtolower($singularHumanName); ?> could not be deleted. Please, try again.'));
+			$this->Session->setFlash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 		}
 		return $this->redirect(array('action' => 'index'));
 <?php else: ?>
-			return $this->flash(__('The <?php echo strtolower($singularHumanName); ?> has been deleted.'), array('action' => 'index'));
+			return $this->flash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> foi deletado com sucesso.'), array('action' => 'index'), array('class'=> 'alert allert-success'));
 		} else {
 			return $this->flash(__('The <?php echo strtolower($singularHumanName); ?> could not be deleted. Please, try again.'), array('action' => 'index'));
 		}
