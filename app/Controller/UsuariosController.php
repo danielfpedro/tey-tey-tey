@@ -59,6 +59,8 @@ public $layout = 'BootstrapAdmin.default';
 				$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
+		$perfis = $this->Usuario->Perfil->find('list');
+		$this->set(compact('perfis'));
 	}
 
 /**
@@ -83,6 +85,8 @@ public $layout = 'BootstrapAdmin.default';
 			$options = array('conditions' => array('Usuario.' . $this->Usuario->primaryKey => $id));
 			$this->request->data = $this->Usuario->find('first', $options);
 		}
+		$perfis = $this->Usuario->Perfil->find('list');
+		$this->set(compact('perfis'));
 	}
 
 /**
@@ -149,6 +153,8 @@ public $layout = 'BootstrapAdmin.default';
 				$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
+		$perfis = $this->Usuario->Perfil->find('list');
+		$this->set(compact('perfis'));
 	}
 
 /**
@@ -173,6 +179,8 @@ public $layout = 'BootstrapAdmin.default';
 			$options = array('conditions' => array('Usuario.' . $this->Usuario->primaryKey => $id));
 			$this->request->data = $this->Usuario->find('first', $options);
 		}
+		$perfis = $this->Usuario->Perfil->find('list');
+		$this->set(compact('perfis'));
 	}
 
 /**

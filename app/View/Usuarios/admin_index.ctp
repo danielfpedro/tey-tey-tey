@@ -45,13 +45,19 @@
 						<?php echo $this->Paginator->sort('id'); ?>
 					</th>
 					<th>
-						<?php echo $this->Paginator->sort('name'); ?>
-					</th>
-					<th>
 						<?php echo $this->Paginator->sort('created'); ?>
 					</th>
 					<th>
 						<?php echo $this->Paginator->sort('modified'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('email'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('senha'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('perfil_id'); ?>
 					</th>
 					<th></th>
 				</tr>
@@ -64,13 +70,28 @@
 								<?php echo h($usuario['Usuario']['id']); ?>
 							</td>
 							<td>
-								<?php echo h($usuario['Usuario']['name']); ?>
-							</td>
-							<td>
 								<?php echo h($usuario['Usuario']['created']); ?>
 							</td>
 							<td>
 								<?php echo h($usuario['Usuario']['modified']); ?>
+							</td>
+							<td>
+								<?php echo h($usuario['Usuario']['email']); ?>
+							</td>
+							<td>
+								<?php echo h($usuario['Usuario']['senha']); ?>
+							</td>
+							<td>
+								<?php
+									echo $this->Html->link(
+										$usuario['Perfil']['name'],
+										array(
+											'controller' => 'perfis',
+											'action' => 'view',
+											$usuario['Perfil']['id']
+										));
+									
+								?>
 							</td>						
 							<td class="text-center" style="width:90px;">
 								<?php
@@ -104,7 +125,7 @@
 						<tr>					
 					<?php endforeach; ?>
 				<?php else: ?>
-					<td colspan="5">Nenhuma informação encontrada.</td>
+					<td colspan="7">Nenhuma informação encontrada.</td>
 				<?php endif; ?>
 			</tbody>
 		</table>

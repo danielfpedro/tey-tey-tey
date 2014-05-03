@@ -1,29 +1,30 @@
-<br>
-
-<div class="breadcrumb" style="margin-left: -15	px;">
+<div class="breadcrumb breadcrumb-admin">
 	<li>
-		<?php echo $this->Html->link('Protos', array('action'=> 'index')) ?>	</li>
+		<?php echo $this->Html->link('Protos', array('action'=> 'index')) ?>
+	</li>
 	<li class="active">
-		Adicionar Proto	</li>
+		Proto
+	</li>
 </div>
 
-<div class="protos form">
-<?php
-		echo $this->Form->create('Proto',
-			array('inputDefaults'=>
-				array(
-					'div'=> array('class'=> 'form-group')
-					)
-				)
-			);
-	?>
-	<fieldset>
-			<?php
-		echo $this->Form->input('id', array('empty'=> 'Selecione:','class'=> 'form-control'));
-		echo $this->Form->input('name', array('empty'=> 'Selecione:','class'=> 'form-control'));
-	?>
-	</fieldset>
-<button type="submit" class="btn btn-success">Salvar</button>
-&nbsp;<?php echo $this->Html->link('Cancelar', array('controller'=> '', 'action'=> ''), array('class'=> 'btn btn-danger btn-sm')); ?>
-<?php echo $this->Form->end(); ?>
+<div class="wrap-internal-page">
+	<div class="row">
+		<div class="col-md-11">
+			<?php echo $this->Form->create('Proto'); ?>
+				
+		<div class="form-group">
+			<?php echo $this->Form->input('id', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
+		</div>
+		<div class="form-group">
+			<?php echo $this->Form->input('name', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
+		</div>
+		<div class="form-group">
+			<button type="submit" class="btn btn-primary">
+				<span class="glyphicon glyphicon-ok"></span> Salvar
+			</button>
+		</div>		</div>
+		
+
+	<?php echo $this->Form->end(); ?>
+	</div>
 </div>

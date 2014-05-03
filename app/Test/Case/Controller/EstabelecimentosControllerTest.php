@@ -14,8 +14,11 @@ class EstabelecimentosControllerTest extends ControllerTestCase {
  */
 	public $fixtures = array(
 		'app.estabelecimento',
+		'app.categoria',
+		'app.usuarios_administrativo',
 		'app.comentario',
 		'app.usuario',
+		'app.perfil',
 		'app.comentarios_estabelecimento'
 	);
 

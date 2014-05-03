@@ -73,7 +73,8 @@ CakePlugin::load('BootstrapAdmin'); //Loads a single plugin named DebugKit
 
 $_pluralIrregular = array(
 	'abdomens' => 'abdomen',
-	'alemao' => 'alemaes'
+	'alemao' => 'alemaes',
+	'perfil' => 'perfis'
 );
 
 $_uninflected = array('atlas', 'lapis', 'onibus', 'pires', 'virus', '.*x', 'status');

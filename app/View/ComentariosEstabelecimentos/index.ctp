@@ -1,72 +1,140 @@
-<div class="comentariosEstabelecimentos index">
+<div class="breadcrumb breadcrumb-admin">
+	<li class="active">
+		ComentariosEstabelecimentos
+	</li>
+</div>
 
+<div class="wrap-internal-page">
+	<?php echo $this->Session->flash(); ?>	<div class="row">
+		<div class="col-md-12">
+			<?php
+			echo $this->Html->link(
+				"Novo comentarios estabelecimento",
+				array('action'=> 'add'),
+				array('class'=> 'btn btn-success btn-novo',
+					'escape'=> false
+				));
+			?>
+		</div>
+	</div>
 	
 	<br>
-
-	<div class="breadcrumb" style="margin-left: -15	px;">
-		<li class="active">
-			ComentariosEstabelecimentos		</li>
-	</div>
-
-	<div class="row">
-		<div class="col-lg-5">
-			<div class="input-group">
-				<span class="input-group-btn">	
-					<button class="btn btn-default">
+	<div class="well well-sm">
+		<div class="row clearfix">
+			<div class="col-md-12">
+				<form method="GET" class="form-inline">
+					<input
+						type="text"
+						class="form-control txt-search"
+						placeholder="Pesquisar"
+						name="q"
+						value="<?php echo $this->request->query['q']; ?>">
+					<button class="btn btn-default hidden-xs">
 						<span class="glyphicon glyphicon-search"></span>
 					</button>
-				</span>
-				<form method="GET">
-					<input type="text" class="form-control" placeholder="Pesquisar" name="q" value="<?php echo $this->request->query['q']; ?>">
 				</form>
 			</div>
 		</div>
-		<div class="col-lg-4">
-		</div>
-		<div class="col-lg-3">
-			<?php
-	$label = 'Novo comentarios estabelecimento';
-	$path = array('action'=> 'add');
-	$options = array('class'=> 'btn btn-success btn-block');
-	echo $this->Html->link($label, $path, $options);
-?>
-		</div>
 	</div>
-
-	<br>
 
 	<div class="table-responsive clearfix">
-		<table class="table table-condensed table-bordered table-hover table-striped">
-			<tr>
-							<th><?php echo $this->Paginator->sort('id'); ?></th>
-							<th><?php echo $this->Paginator->sort('estabelecimento_id'); ?></th>
-							<th><?php echo $this->Paginator->sort('comentario_id'); ?></th>
-							<th class=""></th>
-			</tr>
-			<?php foreach ($comentariosEstabelecimentos as $comentariosEstabelecimento): ?>
-	<tr>
-		<td style='vertical-align: middle;'><?php echo h($comentariosEstabelecimento['ComentariosEstabelecimento']['id']); ?>&nbsp;</td>
-		<td style='vertical-align: middle;'>
-			<?php echo $this->Html->link($comentariosEstabelecimento['Estabelecimento']['name'], array('controller' => 'estabelecimentos', 'action' => 'view', $comentariosEstabelecimento['Estabelecimento']['id'])); ?>
-		</td>
-		<td style='vertical-align: middle;'>
-			<?php echo $this->Html->link($comentariosEstabelecimento['Comentario']['name'], array('controller' => 'comentarios', 'action' => 'view', $comentariosEstabelecimento['Comentario']['id'])); ?>
-		</td>
-		<td class="text-center" style="width: 90px;vertical-align: middle;">
-			<?php //echo $this->Html->link(__('View'), array('action' => 'view', $comentariosEstabelecimento['ComentariosEstabelecimento']['id'])); ?>
-			<?php echo $this->Html->link('<span class=\'glyphicon glyphicon-pencil\'></span>', array('action' => 'edit', $comentariosEstabelecimento['ComentariosEstabelecimento']['id']), array('class'=> 'btn btn-sm btn-primary','escape'=> false)); ?>
-			<?php echo $this->Form->postLink('<span class=\'glyphicon glyphicon-remove\'></span>', array('action' => 'delete', $comentariosEstabelecimento['ComentariosEstabelecimento']['id']), array('class'=> 'btn btn-sm btn-danger','escape'=> false), __('Are you sure you want to delete # %s?', $comentariosEstabelecimento['ComentariosEstabelecimento']['id'])); ?>
-		</td>
-	</tr>
-<?php endforeach; ?>
+		<table class="table table-condensed table-hover table-striped table-admin">
+			<thead>
+				<tr>
+					<th>
+						<?php echo $this->Paginator->sort('id'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('estabelecimento_id'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('comentario_id'); ?>
+					</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php if (!empty($comentariosEstabelecimentos)): ?>
+					<?php foreach ($comentariosEstabelecimentos as $comentariosEstabelecimento): ?>						
+						<tr>
+							<td>
+								<?php echo h($comentariosEstabelecimento['ComentariosEstabelecimento']['id']); ?>
+							</td>
+							<td>
+								<?php
+									echo $this->Html->link(
+										$comentariosEstabelecimento['Estabelecimento']['name'],
+										array(
+											'controller' => 'estabelecimentos',
+											'action' => 'view',
+											$comentariosEstabelecimento['Estabelecimento']['id']
+										));
+									
+								?>
+							</td>
+							<td>
+								<?php
+									echo $this->Html->link(
+										$comentariosEstabelecimento['Comentario']['name'],
+										array(
+											'controller' => 'comentarios',
+											'action' => 'view',
+											$comentariosEstabelecimento['Comentario']['id']
+										));
+									
+								?>
+							</td>						
+							<td class="text-center" style="width:90px;">
+								<?php
+									echo $this->Html->link(
+										"<span class='glyphicon glyphicon-pencil'></span>",
+										array(
+											'action' => 'edit',
+											$comentariosEstabelecimento['ComentariosEstabelecimento']['id']),
+										array(
+											'class'=> 'btn btn-sm btn-primary tt',
+											'title'=> 'Editar',
+											'escape'=> false
+										)
+									);
+									echo "&nbsp;";
+									echo $this->Form->postLink(
+										"<span class='glyphicon glyphicon-remove'></span>",
+										array(
+											'action' => 'delete',
+											$comentariosEstabelecimento['ComentariosEstabelecimento']['id']),
+										array(
+											'class'=> 'btn btn-sm btn-danger tt',
+											'title'=> 'Remover',
+											'escape'=> false
+										),
+										__('Você tem certeza que deseja deletar # %s?'
+										, $comentariosEstabelecimento['ComentariosEstabelecimento']['id'])
+									);
+								?>
+							</td>
+						<tr>					
+					<?php endforeach; ?>
+				<?php else: ?>
+					<td colspan="4">Nenhuma informação encontrada.</td>
+				<?php endif; ?>
+			</tbody>
 		</table>
 	</div>
-	<p>
-		<?php
-			echo $this->Paginator->counter(array(
-			'format' => __('Página {:page} de {:pages}, mostrando {:current} registro(s) de um total de {:count} , começando no registro {:start} e terminando no registro {:end}')
-			));
-			?>	</p>
 	
-	<?php echo $this->element('Admin/paginator_numbers'); ?>
+	<br>
+
+	<div class="row">
+		<div class="col-md-6 col-sm-6 col-xs-8">
+			<?php
+				echo $this->Paginator->counter(
+					array(
+						'format'=> 'Página {:page}/{:pages} de {:count} registro(s)'
+					));
+			?>	
+		</div>
+		<div class="col-md-6 col-sm-6 col-xs-4 text-right">
+			<?php echo $this->element('BootstrapAdmin.paginator_numbers'); ?>
+		</div>
+	</div>
 </div>

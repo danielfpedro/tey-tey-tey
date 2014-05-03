@@ -13,7 +13,13 @@
 			<?php echo $this->Form->create('Usuario'); ?>
 				
 		<div class="form-group">
-			<?php echo $this->Form->input('name', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
+			<?php echo $this->Form->input('email', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
+		</div>
+		<div class="form-group">
+			<?php echo $this->Form->input('senha', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
+		</div>
+		<div class="form-group">
+			<?php echo $this->Form->input('perfil_id', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
 		</div>
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary">

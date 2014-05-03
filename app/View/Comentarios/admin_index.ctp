@@ -78,7 +78,7 @@
 							<td>
 								<?php
 									echo $this->Html->link(
-										$comentario['Usuario']['name'],
+										$comentario['Usuario']['id'],
 										array(
 											'controller' => 'usuarios',
 											'action' => 'view',

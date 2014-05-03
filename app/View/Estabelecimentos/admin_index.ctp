@@ -53,6 +53,51 @@
 					<th>
 						<?php echo $this->Paginator->sort('modified'); ?>
 					</th>
+					<th>
+						<?php echo $this->Paginator->sort('site'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('telefone'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('endereco'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('area_fumantes'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('faz_reserva'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('ar_condicionado'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('estacionamento'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('ar_livre'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('descricao'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('rate'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('categoria_id'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('usuarios_administrativo_id'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('desde'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('imagem'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('cidade'); ?>
+					</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -71,6 +116,69 @@
 							</td>
 							<td>
 								<?php echo h($estabelecimento['Estabelecimento']['modified']); ?>
+							</td>
+							<td>
+								<?php echo h($estabelecimento['Estabelecimento']['site']); ?>
+							</td>
+							<td>
+								<?php echo h($estabelecimento['Estabelecimento']['telefone']); ?>
+							</td>
+							<td>
+								<?php echo h($estabelecimento['Estabelecimento']['endereco']); ?>
+							</td>
+							<td>
+								<?php echo h($estabelecimento['Estabelecimento']['area_fumantes']); ?>
+							</td>
+							<td>
+								<?php echo h($estabelecimento['Estabelecimento']['faz_reserva']); ?>
+							</td>
+							<td>
+								<?php echo h($estabelecimento['Estabelecimento']['ar_condicionado']); ?>
+							</td>
+							<td>
+								<?php echo h($estabelecimento['Estabelecimento']['estacionamento']); ?>
+							</td>
+							<td>
+								<?php echo h($estabelecimento['Estabelecimento']['ar_livre']); ?>
+							</td>
+							<td>
+								<?php echo h($estabelecimento['Estabelecimento']['descricao']); ?>
+							</td>
+							<td>
+								<?php echo h($estabelecimento['Estabelecimento']['rate']); ?>
+							</td>
+							<td>
+								<?php
+									echo $this->Html->link(
+										$estabelecimento['Categoria']['name'],
+										array(
+											'controller' => 'categorias',
+											'action' => 'view',
+											$estabelecimento['Categoria']['id']
+										));
+									
+								?>
+							</td>
+							<td>
+								<?php
+									echo $this->Html->link(
+										$estabelecimento['UsuariosAdministrativo']['name'],
+										array(
+											'controller' => 'usuarios_administrativos',
+											'action' => 'view',
+											$estabelecimento['UsuariosAdministrativo']['id']
+										));
+									
+								?>
+							</td>
+							<td>
+								<?php echo h($estabelecimento['Estabelecimento']['desde']); ?>
+							</td>
+							<td>
+								<?php echo h($estabelecimento['Estabelecimento']['imagem']); ?>
+							</td>
+							<td>
+								<?php echo h($estabelecimento['Estabelecimento']['cidade']); ?>
 							</td>						
 							<td class="text-center" style="width:90px;">
 								<?php
@@ -104,7 +212,7 @@
 						<tr>					
 					<?php endforeach; ?>
 				<?php else: ?>
-					<td colspan="5">Nenhuma informação encontrada.</td>
+					<td colspan="20">Nenhuma informação encontrada.</td>
 				<?php endif; ?>
 			</tbody>
 		</table>

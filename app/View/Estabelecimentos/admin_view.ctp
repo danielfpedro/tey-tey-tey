@@ -22,6 +22,81 @@
 			<?php echo h($estabelecimento['Estabelecimento']['modified']); ?>
 			&nbsp;
 		</dd>
+		<dt><?php echo __('Site'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['site']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Telefone'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['telefone']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Endereco'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['endereco']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Area Fumantes'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['area_fumantes']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Faz Reserva'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['faz_reserva']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Ar Condicionado'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['ar_condicionado']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Estacionamento'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['estacionamento']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Ar Livre'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['ar_livre']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Descricao'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['descricao']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Rate'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['rate']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Categoria'); ?></dt>
+		<dd>
+			<?php echo $this->Html->link($estabelecimento['Categoria']['name'], array('controller' => 'categorias', 'action' => 'view', $estabelecimento['Categoria']['id'])); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Usuarios Administrativo'); ?></dt>
+		<dd>
+			<?php echo $this->Html->link($estabelecimento['UsuariosAdministrativo']['name'], array('controller' => 'usuarios_administrativos', 'action' => 'view', $estabelecimento['UsuariosAdministrativo']['id'])); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Desde'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['desde']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Imagem'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['imagem']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Cidade'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['cidade']); ?>
+			&nbsp;
+		</dd>
 	</dl>
 </div>
 <div class="actions">
@@ -31,6 +106,10 @@
 		<li><?php echo $this->Form->postLink(__('Delete Estabelecimento'), array('action' => 'delete', $estabelecimento['Estabelecimento']['id']), null, __('Are you sure you want to delete # %s?', $estabelecimento['Estabelecimento']['id'])); ?> </li>
 		<li><?php echo $this->Html->link(__('List Estabelecimentos'), array('action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('New Estabelecimento'), array('action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Categorias'), array('controller' => 'categorias', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Categoria'), array('controller' => 'categorias', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Usuarios Administrativos'), array('controller' => 'usuarios_administrativos', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Usuarios Administrativo'), array('controller' => 'usuarios_administrativos', 'action' => 'add')); ?> </li>
 		<li><?php echo $this->Html->link(__('List Comentarios'), array('controller' => 'comentarios', 'action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('New Comentario'), array('controller' => 'comentarios', 'action' => 'add')); ?> </li>
 	</ul>

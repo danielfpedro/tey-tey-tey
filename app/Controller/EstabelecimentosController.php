@@ -59,8 +59,10 @@ public $layout = 'BootstrapAdmin.default';
 				$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
+		$categorias = $this->Estabelecimento->Categorium->find('list');
+		$usuariosAdministrativos = $this->Estabelecimento->UsuariosAdministrativo->find('list');
 		$comentarios = $this->Estabelecimento->Comentario->find('list');
-		$this->set(compact('comentarios'));
+		$this->set(compact('categorias', 'usuariosAdministrativos', 'comentarios'));
 	}
 
 /**
@@ -85,8 +87,10 @@ public $layout = 'BootstrapAdmin.default';
 			$options = array('conditions' => array('Estabelecimento.' . $this->Estabelecimento->primaryKey => $id));
 			$this->request->data = $this->Estabelecimento->find('first', $options);
 		}
+		$categorias = $this->Estabelecimento->Categorium->find('list');
+		$usuariosAdministrativos = $this->Estabelecimento->UsuariosAdministrativo->find('list');
 		$comentarios = $this->Estabelecimento->Comentario->find('list');
-		$this->set(compact('comentarios'));
+		$this->set(compact('categorias', 'usuariosAdministrativos', 'comentarios'));
 	}
 
 /**
@@ -153,8 +157,10 @@ public $layout = 'BootstrapAdmin.default';
 				$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
+		$categorias = $this->Estabelecimento->Categorium->find('list');
+		$usuariosAdministrativos = $this->Estabelecimento->UsuariosAdministrativo->find('list');
 		$comentarios = $this->Estabelecimento->Comentario->find('list');
-		$this->set(compact('comentarios'));
+		$this->set(compact('categorias', 'usuariosAdministrativos', 'comentarios'));
 	}
 
 /**
@@ -179,8 +185,10 @@ public $layout = 'BootstrapAdmin.default';
 			$options = array('conditions' => array('Estabelecimento.' . $this->Estabelecimento->primaryKey => $id));
 			$this->request->data = $this->Estabelecimento->find('first', $options);
 		}
+		$categorias = $this->Estabelecimento->Categorium->find('list');
+		$usuariosAdministrativos = $this->Estabelecimento->UsuariosAdministrativo->find('list');
 		$comentarios = $this->Estabelecimento->Comentario->find('list');
-		$this->set(compact('comentarios'));
+		$this->set(compact('categorias', 'usuariosAdministrativos', 'comentarios'));
 	}
 
 /**

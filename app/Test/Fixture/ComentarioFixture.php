@@ -32,8 +32,8 @@ class ComentarioFixture extends CakeTestFixture {
 		array(
 			'id' => 1,
 			'name' => 'Lorem ipsum dolor sit amet',
-			'created' => '2014-04-24 03:44:42',
-			'modified' => '2014-04-24 03:44:42',
+			'created' => '2014-05-04 01:02:41',
+			'modified' => '2014-05-04 01:02:41',
 			'usuario_id' => 1
 		),
 	);

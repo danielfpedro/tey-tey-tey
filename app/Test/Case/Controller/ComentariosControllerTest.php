@@ -15,7 +15,10 @@ class ComentariosControllerTest extends ControllerTestCase {
 	public $fixtures = array(
 		'app.comentario',
 		'app.usuario',
+		'app.perfil',
 		'app.estabelecimento',
+		'app.categoria',
+		'app.usuarios_administrativo',
 		'app.comentarios_estabelecimento'
 	);
 
