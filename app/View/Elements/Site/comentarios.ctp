@@ -1,5 +1,4 @@
 <div id="comments">
-	
 	<div id="respond">
 	
 		<h3 id="reply-title">Deixe seu Comentário</h3>
@@ -20,11 +19,13 @@
 			<br class="clearer" />	
 														
 			<p class="form-submit">
-				<input name="submit" type="submit" id="submit" value="Comentar" />
+				<button type="submit" class="btn-comentario">Comentar</button>
 			</p>
-			
 		</form>
-		
 	</div>
-	
 </div> 
+
+<!-- Lista comentarios -->
+<?php foreach (array(1,2,3,4,5,6,7,8,9,0) as $value): ?>
+	
+<?php endforeach ?>

@@ -32,6 +32,8 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
 
+	public $site_name = 'Agito Riosul';
+
 	function beforeFilter(){
 		$items_menu = array(
 		    array(

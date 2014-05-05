@@ -1,5 +1,6 @@
-<div id="page-wrapper"> <!-- everything below the top menu should be inside the page wrapper div -->
+<?php echo $this->Html->script('Site/widget_estabelecimentos', array('inline'=> false)); ?>
 
+<div id="page-wrapper"> <!-- everything below the top menu should be inside the page wrapper div -->
 	<div id="logo-bar"> <!--begin the main header logo area-->
 		<div id="logo-wrapper">
 			<div id="logo"><!--logo and section header area-->
@@ -53,7 +54,19 @@
 					   <div class="left-panel">       
 							<div class="article-image">
 								<a href="" title="">
-									<img alt="Image Alt" src="" width="260px" height="195px" />
+									<?php
+										$img_url = ''.
+											'Estabelecimentos/'.
+											$estabelecimento['Estabelecimento']['id'].
+											'/300x170_'.
+											$estabelecimento['Estabelecimento']['imagem'];
+
+										echo $this->Html->image(
+											$img_url,
+											array('width'=> '260px')
+										);
+									?>
+									<!-- <img alt="Image Alt" src="" width="260px" height="195px" /> -->
 								</a>		
 							</div>        
 							Descrição aqiu iasd oashd iuash du

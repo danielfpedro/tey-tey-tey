@@ -9,15 +9,16 @@
 		echo $this->Html->meta('icon');
 
 		echo $this->Html->css('Site/style');
+		echo $this->Html->css('Site/cake-style');
 		// Estilo dos plugin jquery, estou apenas seguinte como estava
 		echo $this->Html->css('Site/plugins');
 
 		echo $this->Html->script('../lib/jquery/dist/jquery.min');
 		
 		// Não faço ideia oq faz, provavelmente instruçoes para alguns plugins
-		echo $this->Html->script('Site/plugins');
+		// echo $this->Html->script('Site/plugins');
 		// Não faço ideia oq faz
-		echo $this->Html->script('Site/custom');
+		// echo $this->Html->script('Site/custom');
 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');

@@ -1,0 +1,21 @@
+.tabdiv{
+	display: none;
+}
+.thumbnail{
+	height: 70px;
+}
+
+.thumb-img{
+	opacity: 1;
+	transition: 1s;
+}
+.thumb-img:hover{
+	opacity: 0.4;
+}
+.btn-comentario{
+	cursor: pointer;
+	border: 0;
+	background-color: #EEE;
+	padding: 10px 20px;
+	border: 1px solid #E7E7E7;
+}
