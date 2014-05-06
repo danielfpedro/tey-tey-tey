@@ -44,7 +44,9 @@
 					<!-- Barrinha com o icone de comentarios -->
 					<div class="section-wrapper review">
 						<div class="comment-bubble">
-							<a href="#comments" title="Comentários NOME">0</a>  
+							<a href="#comentarios">
+							<?php echo count($estabelecimento['Comentario']); ?>
+							</a>  
 						</div>
 						<div class="section">
 							20 de Janeiro, 2013 por <a href="#" title="" rel="external">Administrador</a>	

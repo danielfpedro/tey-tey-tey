@@ -1,3 +1,9 @@
+hr{
+	height: 1px;
+	border: 0;
+	background-color: #E7E7E7;	
+}
+
 .tabdiv{
 	display: none;
 }
@@ -18,4 +24,35 @@
 	background-color: #EEE;
 	padding: 10px 20px;
 	border: 1px solid #E7E7E7;
+}
+
+
+.media-wrap{
+	margin: 20px 0 20px;
+	width: 100%;
+}
+.media-thumb{
+	width: 60px;
+	height: 60px;
+	background-color: #EEE;
+	float: left;
+	margin-right: 10px;
+}
+.media-body{
+	float: left;
+}
+.media-body p {
+	font-size: 14px;
+}
+
+.alert{
+	padding: 15px;
+	border-radius: 3px;
+	color: #FFF;
+}
+.alert-success{
+	background-color: #2ecc71;
+}
+.alert-danger{
+	background-color: #e74c3c;
 }

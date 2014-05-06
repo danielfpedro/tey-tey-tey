@@ -32,8 +32,8 @@ class UsuariosAdministrativoFixture extends CakeTestFixture {
 		array(
 			'id' => 1,
 			'name' => 'Lorem ipsum dolor sit amet',
-			'created' => '2014-05-04 01:02:42',
-			'modified' => '2014-05-04 01:02:42',
+			'created' => '2014-05-06 04:24:18',
+			'modified' => '2014-05-06 04:24:18',
 			'login' => 'Lorem ipsum dolor sit amet',
 			'senha' => 'Lorem ipsum dolor sit amet'
 		),

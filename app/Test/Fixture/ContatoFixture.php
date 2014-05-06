@@ -33,8 +33,8 @@ class ContatoFixture extends CakeTestFixture {
 			'id' => 1,
 			'name' => 'Lorem ipsum dolor sit amet',
 			'texto' => 'Lorem ipsum dolor sit amet',
-			'created' => '2014-05-04 01:02:42',
-			'modified' => '2014-05-04 01:02:42',
+			'created' => '2014-05-06 04:24:17',
+			'modified' => '2014-05-06 04:24:17',
 			'email' => 'Lorem ipsum dolor sit amet'
 		),
 	);

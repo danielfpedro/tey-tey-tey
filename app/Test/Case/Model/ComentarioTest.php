@@ -15,8 +15,10 @@ class ComentarioTest extends CakeTestCase {
 	public $fixtures = array(
 		'app.comentario',
 		'app.usuario',
+		'app.perfil',
 		'app.estabelecimento',
-		'app.comentarios_estabelecimento'
+		'app.categoria',
+		'app.usuarios_administrativo'
 	);
 
 /**

@@ -46,6 +46,8 @@ class SiteController extends AppController {
 	public function perfil($slug = null) {
 		$this->loadModel('Estabelecimento');
 		
+		$this->Estabelecimento->recursive = 3;
+
 		$estabelecimento = $this->Estabelecimento->find('first', array('conditions'=> array('Estabelecimento.slug'=> $slug)));
 
 		if (!empty($estabelecimento)) {
@@ -53,6 +55,8 @@ class SiteController extends AppController {
 
 			$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
 			$this->set(compact('title_for_layout', 'estabelecimento', 'widget_estabelecimentos'));
+
+			//Debugger::dump($estabelecimento);
 		} else {
 			throw new NotFoundException('Este estabelecimento não existe.');
 		}

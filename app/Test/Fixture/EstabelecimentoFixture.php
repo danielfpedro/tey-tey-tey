@@ -30,6 +30,7 @@ class EstabelecimentoFixture extends CakeTestFixture {
 		'desde' => array('type' => 'integer', 'null' => true, 'default' => null),
 		'imagem' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 45, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'cidade' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 45, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'slug' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 45, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'fk_estabelecimentos_categorias1_idx' => array('column' => 'categoria_id', 'unique' => 0),
@@ -47,8 +48,8 @@ class EstabelecimentoFixture extends CakeTestFixture {
 		array(
 			'id' => 1,
 			'name' => 'Lorem ipsum dolor sit amet',
-			'created' => '2014-05-04 01:02:42',
-			'modified' => '2014-05-04 01:02:42',
+			'created' => '2014-05-06 04:24:17',
+			'modified' => '2014-05-06 04:24:17',
 			'site' => 'Lorem ipsum dolor sit amet',
 			'telefone' => 'Lorem ipsum dolor sit a',
 			'endereco' => 'Lorem ipsum dolor sit amet',
@@ -63,7 +64,8 @@ class EstabelecimentoFixture extends CakeTestFixture {
 			'usuarios_administrativo_id' => 1,
 			'desde' => 1,
 			'imagem' => 'Lorem ipsum dolor sit amet',
-			'cidade' => 'Lorem ipsum dolor sit amet'
+			'cidade' => 'Lorem ipsum dolor sit amet',
+			'slug' => 'Lorem ipsum dolor sit amet'
 		),
 	);
 

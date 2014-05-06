@@ -52,16 +52,22 @@ public $layout = 'BootstrapAdmin.default';
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->Comentario->create();
+
+			$this->request->data['Comentario']['usuario_id'] = 1;
+
 			if ($this->Comentario->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>comentario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
-				return $this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(
+					__('O seu <strong>comentário</strong> foi salvo com sucesso, ele será analisado e em breve aparecerá no site.'),
+					'default',
+					array(
+						'class'=> 'alert alert-success'
+					)
+				);				
 			} else {
 				$this->Session->setFlash(__('O <strong>comentario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
+			return $this->redirect($this->referer());
 		}
-		$usuarios = $this->Comentario->Usuario->find('list');
-		$estabelecimentos = $this->Comentario->Estabelecimento->find('list');
-		$this->set(compact('usuarios', 'estabelecimentos'));
 	}
 
 /**

@@ -14,9 +14,11 @@ class EstabelecimentoTest extends CakeTestCase {
  */
 	public $fixtures = array(
 		'app.estabelecimento',
+		'app.categoria',
+		'app.usuarios_administrativo',
 		'app.comentario',
 		'app.usuario',
-		'app.comentarios_estabelecimento'
+		'app.perfil'
 	);
 
 /**

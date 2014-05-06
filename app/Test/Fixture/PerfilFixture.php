@@ -15,7 +15,7 @@ class PerfilFixture extends CakeTestFixture {
 		'name' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 60, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'avatar_squared' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 60, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'imagem' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 60, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),
@@ -31,9 +31,9 @@ class PerfilFixture extends CakeTestFixture {
 		array(
 			'id' => 1,
 			'name' => 'Lorem ipsum dolor sit amet',
-			'created' => '2014-05-04 01:02:42',
-			'modified' => '2014-05-04 01:02:42',
-			'avatar_squared' => 'Lorem ipsum dolor sit amet'
+			'created' => '2014-05-06 04:24:17',
+			'modified' => '2014-05-06 04:24:17',
+			'imagem' => 'Lorem ipsum dolor sit amet'
 		),
 	);
 
