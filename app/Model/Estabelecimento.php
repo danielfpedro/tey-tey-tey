@@ -9,6 +9,8 @@ App::uses('AppModel', 'Model');
  */
 class Estabelecimento extends AppModel {
 
+	public $actsAs  = array('Containable');
+
 /**
  * Validation rules
  *

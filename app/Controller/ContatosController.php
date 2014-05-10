@@ -54,10 +54,10 @@ public $layout = 'BootstrapAdmin.default';
 			$this->Contato->create();
 			if ($this->Contato->save($this->request->data)) {
 				$this->Session->setFlash(__('O <strong>contato</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
-				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('O <strong>contato</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
+			return $this->redirect($this->referer());
 		}
 	}
 

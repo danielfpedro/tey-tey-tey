@@ -48,8 +48,8 @@ class EstabelecimentoFixture extends CakeTestFixture {
 		array(
 			'id' => 1,
 			'name' => 'Lorem ipsum dolor sit amet',
-			'created' => '2014-05-06 04:24:17',
-			'modified' => '2014-05-06 04:24:17',
+			'created' => '2014-05-10 07:20:06',
+			'modified' => '2014-05-10 07:20:06',
 			'site' => 'Lorem ipsum dolor sit amet',
 			'telefone' => 'Lorem ipsum dolor sit a',
 			'endereco' => 'Lorem ipsum dolor sit amet',

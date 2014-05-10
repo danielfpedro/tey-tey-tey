@@ -17,6 +17,7 @@ class ComentarioFixture extends CakeTestFixture {
 		'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'usuario_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'index'),
 		'estabelecimento_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'index'),
+		'ativo' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 4),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'fk_comentarios_usuarios1_idx' => array('column' => 'usuario_id', 'unique' => 0),
@@ -34,10 +35,11 @@ class ComentarioFixture extends CakeTestFixture {
 		array(
 			'id' => 1,
 			'texto' => 'Lorem ipsum dolor sit amet',
-			'created' => '2014-05-06 04:24:17',
-			'modified' => '2014-05-06 04:24:17',
+			'created' => '2014-05-10 07:20:06',
+			'modified' => '2014-05-10 07:20:06',
 			'usuario_id' => 1,
-			'estabelecimento_id' => 1
+			'estabelecimento_id' => 1,
+			'ativo' => 1
 		),
 	);
 

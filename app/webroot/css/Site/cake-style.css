@@ -56,3 +56,43 @@ hr{
 .alert-danger{
 	background-color: #e74c3c;
 }
+.categorypanel .darken{
+	height: 170px;
+}
+
+
+.wrap-form-contato{
+	margin-top: 40px;
+}
+.wrap-form-contato label{
+	font-family: BebasNeueRegular, Arial, Sans-Serif;
+	color: #666;
+	font-size: 18px;
+	display: block;
+	margin-bottom: 8px;
+}
+.wrap-form-contato input{
+	height: 30px;
+	margin-bottom: 20px;
+}
+.wrap-form-contato input, .wrap-form-contato textarea{
+	width: 100%;
+}
+.wrap-form-contato textarea{
+	font-family: arial;
+	font-size: 13px;
+	padding: 10px;
+	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+	box-sizing: border-box;
+	height: 200px;
+	resize: vertical;
+}
+.wrap-form-contato button{
+	margin-top:  5px;
+	cursor: pointer;
+	border: 0;
+	background-color: #EEE;
+	padding: 10px 20px;
+	border: 1px solid #E7E7E7;
+}

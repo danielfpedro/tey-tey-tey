@@ -45,7 +45,7 @@
 					<div class="section-wrapper review">
 						<div class="comment-bubble">
 							<a href="#comentarios">
-							<?php echo count($estabelecimento['Comentario']); ?>
+							<?php echo $comentarios_count; ?>
 							</a>  
 						</div>
 						<div class="section">
@@ -55,21 +55,18 @@
 					<div class="overview">
 					   <div class="left-panel">       
 							<div class="article-image">
-								<a href="" title="">
-									<?php
-										$img_url = ''.
-											'Estabelecimentos/'.
-											$estabelecimento['Estabelecimento']['id'].
-											'/300x170_'.
-											$estabelecimento['Estabelecimento']['imagem'];
+								<?php
+									$img_url = ''.
+										'Estabelecimentos/'.
+										$estabelecimento['Estabelecimento']['id'].
+										'/300x170_'.
+										$estabelecimento['Estabelecimento']['imagem'];
 
-										echo $this->Html->image(
-											$img_url,
-											array('width'=> '260px')
-										);
-									?>
-									<!-- <img alt="Image Alt" src="" width="260px" height="195px" /> -->
-								</a>		
+									echo $this->Html->image(
+										$img_url,
+										array('width'=> '260px')
+									);
+								?>
 							</div>        
 							Descrição aqiu iasd oashd iuash du
 							<br class="clearer" />    	
@@ -180,4 +177,7 @@
 		<br class="clearer" />
 
 	</div><!-- content-wrapper -->
+
+	<?php echo $this->element('Site/footer'); ?>
+
 </div> <!-- page wrapper -->

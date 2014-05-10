@@ -6,19 +6,41 @@
 		
 		<ul>
 			<li>
-				<?php echo $this->Html->image('home2.png', $options = array('url'=> '#', 'style'=> 'border-left: none;')); ?>
+				<?php echo $this->Html->image(
+					'home2.png',
+					array('url'=> '/', 'style'=> 'border-left: none;')); ?>
 			</li>
 			<li>
-				<?php echo $this->Html->image('bares.png', $options = array('url'=> '#')); ?>
+				<?php
+					echo $this->Html->image(
+						'bares.png',
+						array('url'=> array('controller'=> 'site', 'action'=> 'estabelecimentos', 'bares'))
+					);
+				?>
 			</li>
 			<li>
-				<?php echo $this->Html->image('festas.png', $options = array('url'=> '#')); ?>
+				<?php
+					echo $this->Html->image(
+						'festas.png',
+						array('url'=> array('controller'=> 'site', 'action'=> 'estabelecimentos', 'festas'))
+					);
+				?>
 			</li>
 			<li>
-				<?php echo $this->Html->image('restaurantes.png', $options = array('url'=> '#')); ?>
+				<?php
+					echo $this->Html->image(
+						'restaurantes.png',
+						array('url'=> array('controller'=> 'site', 'action'=> 'estabelecimentos', 'restaurantes'))
+					);
+				?>
 			</li>
 			<li>
-				<?php echo $this->Html->image('contato.png', $options = array('url'=> '#')); ?>
+				<?php
+					echo $this->Html->image(
+						'contato.png',
+						array('url'=> array('controller'=> 'site', 'action'=> 'contato'))
+					);
+				?>
 			</li>
 		</ul>  
 						  

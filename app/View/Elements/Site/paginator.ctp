@@ -1,0 +1,5 @@
+<?php
+	echo $this->Paginator->prev();
+	echo $this->Paginator->numbers();
+	echo $this->Paginator->next();
+?>

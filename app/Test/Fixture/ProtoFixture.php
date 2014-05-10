@@ -37,8 +37,8 @@ class ProtoFixture extends CakeTestFixture {
 		array(
 			'id' => 1,
 			'name' => 'Lorem ipsum dolor sit amet',
-			'created' => '2014-05-06 04:24:17',
-			'modified' => '2014-05-06 04:24:17'
+			'created' => '2014-05-10 07:20:07',
+			'modified' => '2014-05-10 07:20:07'
 		),
 	);
 
