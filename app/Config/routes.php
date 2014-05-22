@@ -32,12 +32,16 @@
 
 	Router::connect('/preview', array('controller' => 'site', 'action' => 'preview'));
 
+	Router::connect('/home', array('controller' => 'site', 'action' => 'home'));
+	Router::connect('/cadastro', array('controller' => 'site', 'action' => 'cadastro'));
+
 	Router::connect('/l/*', array('controller' => 'site', 'action' => 'estabelecimentos'));
 
 	Router::connect('/contatos/add', array('controller' => 'contatos', 'action' => 'add'));
 	Router::connect('/contato', array('controller' => 'site', 'action' => 'contato'));
 
 	Router::connect('/comentarios/add', array('controller' => 'comentarios', 'action' => 'add'));
+
 	Router::connect('/*', array('controller' => 'site', 'action' => 'perfil'));
 
 /**

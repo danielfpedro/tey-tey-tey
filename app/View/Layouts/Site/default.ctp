@@ -11,9 +11,12 @@
 		echo $this->Html->css('Site/style');
 		echo $this->Html->css('Site/cake-style');
 		// Estilo dos plugin jquery, estou apenas seguinte como estava
-		echo $this->Html->css('Site/plugins');
+		echo $this->Html->css('Site/js');
 
-		echo $this->Html->script('../lib/jquery/dist/jquery.min');
+		echo $this->Html->script('jquery-1.3.min');
+		
+		echo $this->Html->script('Site/plugins');
+		echo $this->Html->script('Site/custom');
 		
 		// Não faço ideia oq faz, provavelmente instruçoes para alguns plugins
 		// echo $this->Html->script('Site/plugins');
@@ -29,6 +32,8 @@
 <body style="background-repeat: no-repeat;"> 	
 
 	<?php echo $this->Session->flash(); ?>
+
+	<?php echo $this->element('Site/navbar'); ?>
 
 	<?php echo $this->fetch('content'); ?>	
 

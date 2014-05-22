@@ -51,16 +51,20 @@ public $layout = 'BootstrapAdmin.default';
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			$this->Usuario->create();
-			if ($this->Usuario->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>usuario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
-				return $this->redirect(array('action' => 'index'));
+			if ($this->request->data['Usuario']['repetir_senha'] != $this->request->data['Usuario']['senha']) {
+				$this->Session->setFlash(
+					'Você não repetiu a senha corretamente',
+					'default',
+					array('class'=> 'alert alert-danger'));
 			} else {
-				$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+				$this->Usuario->create();
+				if ($this->Usuario->save($this->request->data)) {
+					$this->Session->setFlash(__('O <strong>usuario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+				} else {
+					$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+				}
 			}
 		}
-		$perfis = $this->Usuario->Perfil->find('list');
-		$this->set(compact('perfis'));
 	}
 
 /**
