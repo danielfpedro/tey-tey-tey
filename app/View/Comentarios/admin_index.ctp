@@ -1,24 +1,10 @@
 <div class="breadcrumb breadcrumb-admin">
 	<li class="active">
-		Comentarios
+		Comentários
 	</li>
 </div>
 
 <div class="wrap-internal-page">
-	<?php echo $this->Session->flash(); ?>	<div class="row">
-		<div class="col-md-12">
-			<?php
-			echo $this->Html->link(
-				"Novo comentario",
-				array('action'=> 'add'),
-				array('class'=> 'btn btn-success btn-novo',
-					'escape'=> false
-				));
-			?>
-		</div>
-	</div>
-	
-	<br>
 	<div class="well well-sm">
 		<div class="row clearfix">
 			<div class="col-md-12">
@@ -29,6 +15,26 @@
 						placeholder="Pesquisar"
 						name="q"
 						value="<?php echo $this->request->query['q']; ?>">
+
+					<?php
+						echo $this->Form->input('estabelecimento', array(
+							'value'=> $this->request->query['estabelecimento'],
+							'empty'=> 'Todos os estabelecimentos',
+							'name'=> 'estabelecimento',
+							'label'=> false,
+							'class'=>
+							'form-control',
+							'div'=> false));
+						echo '&nbsp;';
+						echo $this->Form->input('ativo', array(
+							'options'=> array(1=> 'Somente os liberados', 2=> 'Somente os pendentes'),
+							'value'=> $this->request->query['ativo'],
+							'empty'=> 'Todos os comentários',
+							'name'=> 'ativo',
+							'label'=> false,
+							'class'=> 'form-control',
+							'div'=> false));
+						?>
 					<button class="btn btn-default hidden-xs">
 						<span class="glyphicon glyphicon-search"></span>
 					</button>
@@ -42,21 +48,12 @@
 			<thead>
 				<tr>
 					<th>
-						<?php echo $this->Paginator->sort('id'); ?>
+						<?php echo $this->Paginator->sort('texto'); ?>
 					</th>
-					<th>
-						<?php echo $this->Paginator->sort('name'); ?>
+					<th class="text-center">
+						<?php echo $this->Paginator->sort('ativo', 'Status'); ?>
 					</th>
-					<th>
-						<?php echo $this->Paginator->sort('created'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('modified'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('usuario_id'); ?>
-					</th>
-					<th></th>
+					<th style="width:90px;"></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -64,43 +61,43 @@
 					<?php foreach ($comentarios as $comentario): ?>						
 						<tr>
 							<td>
-								<?php echo h($comentario['Comentario']['id']); ?>
-							</td>
-							<td>
-								<?php echo h($comentario['Comentario']['name']); ?>
-							</td>
-							<td>
-								<?php echo h($comentario['Comentario']['created']); ?>
-							</td>
-							<td>
-								<?php echo h($comentario['Comentario']['modified']); ?>
-							</td>
-							<td>
 								<?php
-									echo $this->Html->link(
-										$comentario['Usuario']['id'],
+									$usuario = $this->Html->link(
+										$comentario['Usuario']['Perfil']['name'],
 										array(
 											'controller' => 'usuarios',
 											'action' => 'view',
 											$comentario['Usuario']['id']
 										));
-									
+									$estabelecimento = $this->Html->link(
+										$comentario['Estabelecimento']['name'],
+										array(
+											'controller' => 'estabelecimentos',
+											'action' => 'view',
+											$comentario['Estabelecimento']['id']
+										));
+									$data = $this->Time->format('d/m/y', $comentario['Comentario']['created']);
 								?>
-							</td>						
-							<td class="text-center" style="width:90px;">
+								<em class="text-muted">
+									Comentário de "<?php echo $usuario; ?>" feito no perfil de "<?php echo $estabelecimento ?>" dia <?php echo $data; ?>:
+								</em>
+								<p>
+									<?php echo h($comentario['Comentario']['texto']); ?>
+								</p>
+							</td>
+							<td class="text-center">
 								<?php
-									echo $this->Html->link(
-										"<span class='glyphicon glyphicon-pencil'></span>",
-										array(
-											'action' => 'edit',
-											$comentario['Comentario']['id']),
-										array(
-											'class'=> 'btn btn-sm btn-primary tt',
-											'title'=> 'Editar',
-											'escape'=> false
-										)
-									);
-									echo "&nbsp;";
+									echo $this->Form->create('Comentario', array('inputDefaults'=> array('div'=> false)));
+										echo $this->Form->input('ativo', array(
+										'label'=> false,
+										'type'=> 'checkbox',
+										'checked'=> $comentario['Comentario']['ativo']));
+									echo $this->Form->end();
+								?>
+
+							</td>						
+							<td class="text-center">
+								<?php
 									echo $this->Form->postLink(
 										"<span class='glyphicon glyphicon-remove'></span>",
 										array(
@@ -119,7 +116,7 @@
 						<tr>					
 					<?php endforeach; ?>
 				<?php else: ?>
-					<td colspan="6">Nenhuma informação encontrada.</td>
+					<td colspan="8">Nenhuma informação encontrada.</td>
 				<?php endif; ?>
 			</tbody>
 		</table>

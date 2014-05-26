@@ -1,5 +1,5 @@
 $(function(){
-	var aba_active = 'ui-tabs-selected';
+	var aba_active = 'ui-tab-selected';
 
 	// Insere active para a primeira aba.
 	$('#widget-abas li[rel=1]').addClass(aba_active);

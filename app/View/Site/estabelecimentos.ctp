@@ -88,9 +88,6 @@
                         		?>
                         	</div>
                             <div class="post-meta">
-                                <div class="date"> 
-                                	10/10/2010
-                                </div>
                                 <div class="comments">
                                 	<?php
                                 		echo $this->Html->link(
@@ -107,7 +104,11 @@
                     <div class="clearer"></div>                        
 				<?php endforeach ?>
 				<br class="clearer" />
-				<?php echo $this->element('Site/paginator'); ?>
+				<br class="clearer" />
+				<br class="clearer" />
+				<div style="text-align: center;">
+					<?php echo $this->element('Site/paginator'); ?>
+				</div>
 			</div><!-- categorypanels -->
 			<br class="clearer" />
 		</div><!-- main-content-left -->

@@ -32,36 +32,23 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
 
-	public $site_name = 'Agito Riosul';
+	public $site_name = 'Agito Rio Sul';
 
 	function beforeFilter(){
-		$items_menu = array(
-		    array(
-		      'label'=> 'Destaque home',
-		      'icon'=> 'th-large',
-		      'url'=> array('controller'=> 'destaques_home')
-		      ),
-		    array(
-		      'label'=> 'Estabelecimentos',
-		      'icon'=> 'th',
-		      'url'=> array('controller'=> 'estabelecimentos')
-		      ),
-		    array(
-		      'label'=> 'Comentários',
-		      'icon'=> 'comment',
-		      'url'=> array('controller'=> 'comentarios')
-		      ),
-		    array(
-		      'label'=> 'Usuários',
-		      'icon'=> 'user',
-		      'url'=> array('controller'=> 'usuarios')
-		      ),
-		    array(
-		      'label'=> 'Contatos',
-		      'icon'=> 'envelope',
-		      'url'=> array('controller'=> 'contatos')
-		      ),
-    	);
-		$this->set(compact('items_menu'));
+		$this->loadModel('AdminMainMenu');;
+		$items_menu = $this->AdminMainMenu->get();
+
+		$site_name = $this->site_name;
+		$this->set(compact('items_menu', 'site_name'));
+	}
+
+	public function beforeSave($options = array()) {
+		if (!empty($this->request->data['UsuariosAdministrativo']['senha'])) {
+			$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
+				$this->request->data['UsuariosAdministrativo']['senha'] = $passwordHasher->hash(
+				$this->request->data['UsuariosAdministrativo']['senha']
+			);
+		}
+		return true;
 	}
 }

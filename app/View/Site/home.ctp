@@ -87,7 +87,7 @@
 						<div class="vertical">
 							<?php
 								$perfil_url = array(
-									'controller'=> 'perfil',
+									'controller'=> 'site',
 									'action'=> 'perfil',
 									$value['Estabelecimento']['slug']);
 								$image = $this->Html->image(
@@ -100,7 +100,7 @@
 							<h2>
 								<?php
 									$label_link = 
-									$value['Estabelecimento']['name'] .' ('. $value['Estabelecimento']['cidade'] .')';
+									$value['Estabelecimento']['name'];
 									echo $this->Html->link(
 										$label_link,
 										$perfil_url); 

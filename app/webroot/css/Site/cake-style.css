@@ -3,7 +3,14 @@ hr{
 	border: 0;
 	background-color: #E7E7E7;	
 }
-
+.btn{
+	width: 100%;
+	cursor: pointer;
+	border: 0;
+	background-color: #EEE;
+	padding: 10px 20px;
+	border: 1px solid #A9A9A9;
+}
 .tabdiv{
 	display: none;
 }
@@ -23,7 +30,7 @@ hr{
 	border: 0;
 	background-color: #EEE;
 	padding: 10px 20px;
-	border: 1px solid #E7E7E7;
+	border: 1px solid #A9A9A9;
 }
 
 
@@ -62,6 +69,7 @@ hr{
 
 
 .wrap-form-contato{
+	/*width: 500px;*/
 	margin-top: 40px;
 }
 .wrap-form-contato label{
@@ -72,6 +80,10 @@ hr{
 	margin-bottom: 8px;
 }
 .wrap-form-contato input{
+	-webkit-box-sizing : border-box;‌​
+    -moz-box-sizing : border-box;
+    box-sizing : border-box;
+	padding: 10px;
 	height: 30px;
 	margin-bottom: 20px;
 }
@@ -79,6 +91,9 @@ hr{
 	width: 100%;
 }
 .wrap-form-contato textarea{
+	-webkit-box-sizing : border-box;‌​
+    -moz-box-sizing : border-box;
+    box-sizing : border-box;
 	font-family: arial;
 	font-size: 13px;
 	padding: 10px;
@@ -94,5 +109,26 @@ hr{
 	border: 0;
 	background-color: #EEE;
 	padding: 10px 20px;
+	border: 1px solid #A9A9A9;
+}
+
+
+span.paginator-number{
+	font-weight: bold;
+	color: #3498db;
 	border: 1px solid #E7E7E7;
+	padding: 2px 7px;
+	border-radius: 2px;
+}
+span.paginator-number.current{
+	background-color: #3498db;
+	font-weight: bold;
+	color: #FFF;
+	border: 1px solid #2980b9;
+	padding: 2px 7px;
+	border-radius: 2px;
+}
+span.paginator-side{
+	/*font-weight: bold;*/
+	color: #3498db;
 }

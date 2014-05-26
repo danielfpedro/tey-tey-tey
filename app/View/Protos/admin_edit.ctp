@@ -9,7 +9,7 @@
 
 <div class="wrap-internal-page">
 	<div class="row">
-		<div class="col-md-11">
+		<div class="col-md-12">
 			<?php echo $this->Form->create('Proto'); ?>
 				
 		<div class="form-group">

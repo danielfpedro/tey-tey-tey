@@ -7,9 +7,24 @@
 			<?php echo h($contato['Contato']['id']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Name'); ?></dt>
+		<dt><?php echo __('Nome'); ?></dt>
 		<dd>
-			<?php echo h($contato['Contato']['name']); ?>
+			<?php echo h($contato['Contato']['nome']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Email'); ?></dt>
+		<dd>
+			<?php echo h($contato['Contato']['email']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Telefone'); ?></dt>
+		<dd>
+			<?php echo h($contato['Contato']['telefone']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Cidade'); ?></dt>
+		<dd>
+			<?php echo h($contato['Contato']['cidade']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Texto'); ?></dt>
@@ -25,11 +40,6 @@
 		<dt><?php echo __('Modified'); ?></dt>
 		<dd>
 			<?php echo h($contato['Contato']['modified']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Email'); ?></dt>
-		<dd>
-			<?php echo h($contato['Contato']['email']); ?>
 			&nbsp;
 		</dd>
 	</dl>

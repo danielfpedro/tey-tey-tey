@@ -97,6 +97,11 @@
 			<?php echo h($estabelecimento['Estabelecimento']['cidade']); ?>
 			&nbsp;
 		</dd>
+		<dt><?php echo __('Slug'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['slug']); ?>
+			&nbsp;
+		</dd>
 	</dl>
 </div>
 <div class="actions">
@@ -120,19 +125,23 @@
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
 		<th><?php echo __('Id'); ?></th>
-		<th><?php echo __('Name'); ?></th>
+		<th><?php echo __('Texto'); ?></th>
 		<th><?php echo __('Created'); ?></th>
 		<th><?php echo __('Modified'); ?></th>
 		<th><?php echo __('Usuario Id'); ?></th>
+		<th><?php echo __('Estabelecimento Id'); ?></th>
+		<th><?php echo __('Ativo'); ?></th>
 		<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($estabelecimento['Comentario'] as $comentario): ?>
 		<tr>
 			<td><?php echo $comentario['id']; ?></td>
-			<td><?php echo $comentario['name']; ?></td>
+			<td><?php echo $comentario['texto']; ?></td>
 			<td><?php echo $comentario['created']; ?></td>
 			<td><?php echo $comentario['modified']; ?></td>
 			<td><?php echo $comentario['usuario_id']; ?></td>
+			<td><?php echo $comentario['estabelecimento_id']; ?></td>
+			<td><?php echo $comentario['ativo']; ?></td>
 			<td class="actions">
 				<?php echo $this->Html->link(__('View'), array('controller' => 'comentarios', 'action' => 'view', $comentario['id'])); ?>
 				<?php echo $this->Html->link(__('Edit'), array('controller' => 'comentarios', 'action' => 'edit', $comentario['id'])); ?>

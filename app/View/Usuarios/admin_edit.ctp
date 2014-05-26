@@ -9,7 +9,7 @@
 
 <div class="wrap-internal-page">
 	<div class="row">
-		<div class="col-md-11">
+		<div class="col-md-12">
 			<?php echo $this->Form->create('Usuario'); ?>
 				
 		<div class="form-group">
@@ -20,9 +20,6 @@
 		</div>
 		<div class="form-group">
 			<?php echo $this->Form->input('senha', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
-		</div>
-		<div class="form-group">
-			<?php echo $this->Form->input('perfil_id', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
 		</div>
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary">

@@ -22,10 +22,16 @@ public $layout = 'BootstrapAdmin.default';
  * @return void
  */
 	public function index() {
-		if (!isset($this->request->query['q'])) {
+		$options = array();
+		if (!empty($this->request->query['q'])) {
+			$q = str_replace(' ', '%', $this->request->query['q']);
+			$options['conditions'][] = array('Usuario.name LIKE'=> '%'.$q.'%');
+		} else {
 			$this->request->query['q'] = '';
 		}
 		$this->Usuario->recursive = 0;
+
+		$this->Paginator->settings = $options;
 		$this->set('usuarios', $this->Paginator->paginate());
 	}
 
@@ -51,18 +57,12 @@ public $layout = 'BootstrapAdmin.default';
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			if ($this->request->data['Usuario']['repetir_senha'] != $this->request->data['Usuario']['senha']) {
-				$this->Session->setFlash(
-					'Você não repetiu a senha corretamente',
-					'default',
-					array('class'=> 'alert alert-danger'));
+			$this->Usuario->create();
+			if ($this->Usuario->save($this->request->data)) {
+				$this->Session->setFlash(__('O <strong>usuario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
+				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Usuario->create();
-				if ($this->Usuario->save($this->request->data)) {
-					$this->Session->setFlash(__('O <strong>usuario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
-				} else {
-					$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
-				}
+				$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
 	}
@@ -80,17 +80,15 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Usuario->save($this->request->data)) {
-				$this->Session->setFlash(__('The usuario has been saved.'));
+				$this->Session->setFlash(__('O <strong>usuario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The usuario could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		} else {
 			$options = array('conditions' => array('Usuario.' . $this->Usuario->primaryKey => $id));
 			$this->request->data = $this->Usuario->find('first', $options);
 		}
-		$perfis = $this->Usuario->Perfil->find('list');
-		$this->set(compact('perfis'));
 	}
 
 /**
@@ -107,7 +105,7 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Usuario->delete()) {
-			$this->Session->setFlash(__('O <strong>usuario</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+			$this->Session->setFlash(__('O <strong>usuario</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 		} else {
 			$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 		}
@@ -120,10 +118,16 @@ public $layout = 'BootstrapAdmin.default';
  * @return void
  */
 	public function admin_index() {
-		if (!isset($this->request->query['q'])) {
+		$options = array();
+		if (!empty($this->request->query['q'])) {
+			$q = str_replace(' ', '%', $this->request->query['q']);
+			$options['conditions'][] = array('Usuario.name LIKE'=> '%'.$q.'%');
+		} else {
 			$this->request->query['q'] = '';
 		}
 		$this->Usuario->recursive = 0;
+
+		$this->Paginator->settings = $options;
 		$this->set('usuarios', $this->Paginator->paginate());
 	}
 
@@ -151,14 +155,12 @@ public $layout = 'BootstrapAdmin.default';
 		if ($this->request->is('post')) {
 			$this->Usuario->create();
 			if ($this->Usuario->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>usuario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+				$this->Session->setFlash(__('O <strong>usuario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
-		$perfis = $this->Usuario->Perfil->find('list');
-		$this->set(compact('perfis'));
 	}
 
 /**
@@ -174,17 +176,15 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Usuario->save($this->request->data)) {
-				$this->Session->setFlash(__('The usuario has been saved.'));
+				$this->Session->setFlash(__('O <strong>usuario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The usuario could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		} else {
 			$options = array('conditions' => array('Usuario.' . $this->Usuario->primaryKey => $id));
 			$this->request->data = $this->Usuario->find('first', $options);
 		}
-		$perfis = $this->Usuario->Perfil->find('list');
-		$this->set(compact('perfis'));
 	}
 
 /**
@@ -201,7 +201,7 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Usuario->delete()) {
-			$this->Session->setFlash(__('O <strong>usuario</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+			$this->Session->setFlash(__('O <strong>usuario</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 		} else {
 			$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 		}

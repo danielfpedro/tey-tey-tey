@@ -87,53 +87,93 @@ class SiteController extends AppController {
 		$options['conditions'] = array('Estabelecimento.categoria_id'=> 3);
 		$bares = $this->Estabelecimento->find('all', $options);
 
-		$options['conditions'] = array();
-		$todos = $this->Estabelecimento->find('all', $options);
+		// $options['conditions'] = array();
+		// $todos = $this->Estabelecimento->find('all', $options);
 
 		$estabelecimentos['restaurantes'] = $restaurantes;
 		$estabelecimentos['bares'] = $bares;
 		$estabelecimentos['boates'] = $boates;
-		$estabelecimentos['todos'] = $todos;
+		// $estabelecimentos['todos'] = $todos;
 
 		// Debugger::dump($estabelecimentos['restaurantes']);
 
 		return $estabelecimentos;
 	}
 
+	public function mais_comentarios() {
+		$this->loadModel('Comentario');
+		$this->Comentario->recursive = 3;
+
+		$estabelecimento = $this->request->data['estabelecimento'];
+		$page = $this->request->data['page'];
+		$limit = $this->Comentario->perfil_limit;
+
+		$offset = $page * $limit;
+
+		$comentarios = $this->Comentario->find('all', array(
+			'conditions'=> array(
+				'Comentario.estabelecimento_id'=> $estabelecimento),
+			'limit'=> $limit,
+			'offset'=> $offset,
+			'order'=> 'Comentario.created DESC'));
+
+		$comentarios = json_encode($comentarios);
+		echo $comentarios;
+
+		$this->autoRender = false;
+	}
 	public function perfil($slug = null) {
 		
 		$this->loadModel('Estabelecimento');
-		$this->Estabelecimento->recursive = -1;
+		$this->Estabelecimento->recursive = 3;
 
-		$this->loadModel('Comentario');
-		$this->Comentario->recursive = -1;
+		// $this->loadModel('Comentario');
+		// $this->Comentario->recursive = 3;
 
 		//Conta comentarios por que ele só exibe 10 mas precisa exibir também quantos tem ao todo
-		$comentarios_count = $this->Comentario->find('count', array('conditions'=> array('Comentario.ativo'=> 1)));
+		// $comentarios_count = $this->Comentario->find('count', array('conditions'=> array('Comentario.ativo'=> 1)));
 
 		$estabelecimento = $this->Estabelecimento->find(
 			'first',
-			array(
-				'contain'=> array('Comentario'=> array('Usuario'=> array('Perfil'))),
-				'conditions'=> array('Estabelecimento.slug'=> $slug)
-			)
+			array('conditions'=> array('Estabelecimento.slug'=> $slug))
 		);
+
+		$this->loadModel('Comentario');
+		$this->Comentario->recursive = 3;
+		$comentarios = $this->Comentario->find('all', array(
+			'conditions'=> array(
+				'Comentario.estabelecimento_id'=> $estabelecimento['Estabelecimento']['id']),
+			'limit'=> $this->Comentario->perfil_limit,
+			'order'=> array('Comentario.created DESC'))
+		);
+
+		$comentarios_count = $this->Comentario->find('count',
+			array(
+				'conditions'=> array(
+					'Comentario.estabelecimento_id'=> $estabelecimento['Estabelecimento']['id'])));
+		$show_paginator = ($comentarios_count > $this->Comentario->perfil_limit)? true : false;
 
 		if (!empty($estabelecimento)) {
 			$title_for_layout = $estabelecimento['Estabelecimento']['name'] .' - ' . $this->site_name;
 
 			$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
-			$this->set(compact('title_for_layout', 'estabelecimento', 'widget_estabelecimentos', 'comentarios_count'));
+			$this->set(compact(
+				'show_paginator',
+				'title_for_layout',
+				'estabelecimento', 'widget_estabelecimentos', 'comentarios', 'comentarios_count'));
 
-			//Debugger::dump($estabelecimento);
+			//Debugger::dump($estabelecimento['Comentario'][0]['Usuario']['Perfil']);
 		} else {
 			throw new NotFoundException('Este estabelecimento não existe.');
 		}
 	}
 
 	public function estabelecimentos($categoria = null){
+		
+		$title_for_layout = ucfirst($categoria) .' - ' . $this->site_name;
+
 		$this->loadModel('Estabelecimento');
-		$this->Estabelecimento->recursive = -1;
+		$this->Estabelecimento->recursive = 3;
 
 		$this->Paginator->settings = $this->paginate;
     	// similar to findAll(), but fetches paged results
@@ -141,13 +181,28 @@ class SiteController extends AppController {
 
 		$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
 		//Debugger::dump($estabelecimentos);
-		$this->set(compact('estabelecimentos','widget_estabelecimentos','categoria'));
+		$this->set(compact('estabelecimentos','widget_estabelecimentos','categoria', 'title_for_layout'));
 	}
 
 	public function contato(){
-		$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
-		$this->set(compact('widget_estabelecimentos'));
+		$title_for_layout = 'Contato - ' . $this->site_name;
+
+		if ($this->request->is('post')) {
+			$this->loadModel('Contato');
+			$this->Contato->create();
+			if ($this->Contato->save($this->request->data)) {
+				$this->Session->setFlash(__('A <strong>mensagem</strong> foi enviada com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+			} else {
+				$this->Session->setFlash(__('A <strong>mensagem</strong> não pode ser salva. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+			}
+			return $this->redirect($this->referer());
+		} else {
+			$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
+			$this->set(compact('widget_estabelecimentos'));
+		}
+		$this->set(compact('title_for_layout'));
 	}
+
 	public function cadastro(){
 		$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
 		$title_for_layout = 'Cadastro de usuário - ' . $this->site_name;
@@ -167,9 +222,9 @@ class SiteController extends AppController {
 					if (!empty($this->request->data)) {
 						$this->request->data['Perfil']['usuario_id'] = $this->Usuario->id;
 						if ($this->Usuario->Perfil->save($this->request->data)) {
-							$this->Session->setFlash(__('O <strong>usuario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+							$this->Session->setFlash(__('A <strong>mensagem</strong> foi enviada com sucesso.'), 'default', array('class'=> 'alert alert-success'));
 						} else {
-							$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+							$this->Session->setFlash(__('A <strong>mensagem</strong> não pode ser salva. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 						};
 					}
 				} else {

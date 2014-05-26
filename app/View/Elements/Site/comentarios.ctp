@@ -20,7 +20,9 @@ comments ele perde o estilo pq o estilo estah no id -->
 				</p>
 				
 				<div class="comment-form-comment">
-					<div class="label"><label for="comment">Comentário</label></div>
+					<div class="label">
+						<div id="set-estrelas"></div>
+					</div>
 					<div class="input-wrapper">
 						<div class="shadow">
 							<div class="icon">
@@ -55,12 +57,13 @@ comments ele perde o estilo pq o estilo estah no id -->
 	<br>
 
 	<!-- Lista comentarios -->
-	<?php if (!empty($estabelecimento['Comentario'])): ?>
-		<?php foreach ($estabelecimento['Comentario'] as $comentario): ?>
+	<?php if (!empty($comentarios)): ?>
+		<input type="hidden" id="comentarios-page" value="1">
+
+		<?php foreach ($comentarios as $comentario): ?>
 			<div class="media-wrap">
 				<div class="media-thumb">
 					<?php
-
 						$img_url = ''.
 							'Usuarios/' . 
 							$comentario['Usuario']['id'] .
@@ -75,12 +78,25 @@ comments ele perde o estilo pq o estilo estah no id -->
 						<?php echo $comentario['Usuario']['Perfil']['name']; ?>
 					</h4>
 					<p>
-						<?php echo $comentario['texto']; ?>
+						<?php echo $comentario['Comentario']['texto']; ?>
 					</p>
 				</div>
 				<br style="clear: both;">
 			</div>
 		<?php endforeach ?>
+
+
+		<?php if ($show_paginator): ?>
+			<div id="comentarios-container-pagination"></div>
+
+			<button
+				type="button"
+				class="btn"
+				id="btn-mais-comentarios"
+				data-estabelecimento-id="<?php echo $estabelecimento['Estabelecimento']['id']; ?>">Carregar mais</button>
+		<?php endif ?>
+		<br style="clear: both;">
+		<br>
 	<?php endif ?>
 
 </div>

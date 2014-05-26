@@ -1,15 +1,15 @@
 <div class="breadcrumb breadcrumb-admin">
 	<li class="active">
-		UsuariosAdministrativos
+		Usuários
 	</li>
 </div>
 
 <div class="wrap-internal-page">
-	<?php echo $this->Session->flash(); ?>	<div class="row">
+	<div class="row">
 		<div class="col-md-12">
 			<?php
 			echo $this->Html->link(
-				"Novo usuarios administrativo",
+				"Novo usuário",
 				array('action'=> 'add'),
 				array('class'=> 'btn btn-success btn-novo',
 					'escape'=> false
@@ -42,22 +42,10 @@
 			<thead>
 				<tr>
 					<th>
-						<?php echo $this->Paginator->sort('id'); ?>
+						<?php echo $this->Paginator->sort('name', 'Nome'); ?>
 					</th>
 					<th>
-						<?php echo $this->Paginator->sort('name'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('created'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('modified'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('login'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('senha'); ?>
+						<?php echo $this->Paginator->sort('email'); ?>
 					</th>
 					<th></th>
 				</tr>
@@ -67,23 +55,11 @@
 					<?php foreach ($usuariosAdministrativos as $usuariosAdministrativo): ?>						
 						<tr>
 							<td>
-								<?php echo h($usuariosAdministrativo['UsuariosAdministrativo']['id']); ?>
-							</td>
-							<td>
 								<?php echo h($usuariosAdministrativo['UsuariosAdministrativo']['name']); ?>
 							</td>
 							<td>
-								<?php echo h($usuariosAdministrativo['UsuariosAdministrativo']['created']); ?>
+								<?php echo h($usuariosAdministrativo['UsuariosAdministrativo']['email']); ?>
 							</td>
-							<td>
-								<?php echo h($usuariosAdministrativo['UsuariosAdministrativo']['modified']); ?>
-							</td>
-							<td>
-								<?php echo h($usuariosAdministrativo['UsuariosAdministrativo']['login']); ?>
-							</td>
-							<td>
-								<?php echo h($usuariosAdministrativo['UsuariosAdministrativo']['senha']); ?>
-							</td>						
 							<td class="text-center" style="width:90px;">
 								<?php
 									echo $this->Html->link(

@@ -22,10 +22,16 @@ public $layout = 'BootstrapAdmin.default';
  * @return void
  */
 	public function index() {
-		if (!isset($this->request->query['q'])) {
+		$options = array();
+		if (!empty($this->request->query['q'])) {
+			$q = str_replace(' ', '%', $this->request->query['q']);
+			$options['conditions'][] = array('Comentario.name LIKE'=> '%'.$q.'%');
+		} else {
 			$this->request->query['q'] = '';
 		}
 		$this->Comentario->recursive = 0;
+
+		$this->Paginator->settings = $options;
 		$this->set('comentarios', $this->Paginator->paginate());
 	}
 
@@ -52,22 +58,16 @@ public $layout = 'BootstrapAdmin.default';
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->Comentario->create();
-
-			$this->request->data['Comentario']['usuario_id'] = 1;
-
 			if ($this->Comentario->save($this->request->data)) {
-				$this->Session->setFlash(
-					__('O seu <strong>comentário</strong> foi salvo com sucesso, ele será analisado e em breve aparecerá no site.'),
-					'default',
-					array(
-						'class'=> 'alert alert-success'
-					)
-				);				
+				$this->Session->setFlash(__('O <strong>comentario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
+				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('O <strong>comentario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
-			return $this->redirect($this->referer());
 		}
+		$usuarios = $this->Comentario->Usuario->find('list');
+		$estabelecimentos = $this->Comentario->Estabelecimento->find('list');
+		$this->set(compact('usuarios', 'estabelecimentos'));
 	}
 
 /**
@@ -83,10 +83,10 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Comentario->save($this->request->data)) {
-				$this->Session->setFlash(__('The comentario has been saved.'));
+				$this->Session->setFlash(__('O <strong>comentario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The comentario could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('O <strong>comentario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		} else {
 			$options = array('conditions' => array('Comentario.' . $this->Comentario->primaryKey => $id));
@@ -111,7 +111,7 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Comentario->delete()) {
-			$this->Session->setFlash(__('O <strong>comentario</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+			$this->Session->setFlash(__('O <strong>comentario</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 		} else {
 			$this->Session->setFlash(__('O <strong>comentario</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 		}
@@ -124,11 +124,39 @@ public $layout = 'BootstrapAdmin.default';
  * @return void
  */
 	public function admin_index() {
-		if (!isset($this->request->query['q'])) {
+		$options = array();
+		if (!empty($this->request->query['q'])) {
+			$q = str_replace(' ', '%', $this->request->query['q']);
+			$options['conditions'][] = array('Comentario.texto LIKE'=> '%'.$q.'%');
+		} else {
 			$this->request->query['q'] = '';
 		}
-		$this->Comentario->recursive = 0;
+
+		if (!empty($this->request->query['estabelecimento'])) {
+			$estabelecimento = $this->request->query['estabelecimento'];
+			$options['conditions'][] = array('Comentario.estabelecimento_id'=> $estabelecimento);
+		} else {
+			$this->request->query['estabelecimento'] = '';
+		}
+
+		if (!empty($this->request->query['ativo'])) {
+			$ativo = $this->request->query['ativo'];
+			$ativo = ($ativo == 1) ? 1 : 0;
+			$options['conditions'][] = array('Comentario.ativo'=> $ativo);
+		} else {	
+			$this->request->query['ativo'] = '';
+		}
+
+		$this->Comentario->recursive = 2;
+
+		$options['order'] = array('Comentario.created');
+
+		// Debugger::dump($options);
+		$this->Paginator->settings = $options;
 		$this->set('comentarios', $this->Paginator->paginate());
+
+		$estabelecimentos = $this->Comentario->Estabelecimento->find('list');
+		$this->set(compact('estabelecimentos'));
 	}
 
 /**
@@ -155,7 +183,7 @@ public $layout = 'BootstrapAdmin.default';
 		if ($this->request->is('post')) {
 			$this->Comentario->create();
 			if ($this->Comentario->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>comentario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+				$this->Session->setFlash(__('O <strong>comentario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('O <strong>comentario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
@@ -179,10 +207,10 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Comentario->save($this->request->data)) {
-				$this->Session->setFlash(__('The comentario has been saved.'));
+				$this->Session->setFlash(__('O <strong>comentario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The comentario could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('O <strong>comentario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		} else {
 			$options = array('conditions' => array('Comentario.' . $this->Comentario->primaryKey => $id));
@@ -207,7 +235,7 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Comentario->delete()) {
-			$this->Session->setFlash(__('O <strong>comentario</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+			$this->Session->setFlash(__('O <strong>comentario</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 		} else {
 			$this->Session->setFlash(__('O <strong>comentario</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 		}

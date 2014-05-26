@@ -22,10 +22,16 @@ public $layout = 'BootstrapAdmin.default';
  * @return void
  */
 	public function index() {
-		if (!isset($this->request->query['q'])) {
+		$options = array();
+		if (!empty($this->request->query['q'])) {
+			$q = str_replace(' ', '%', $this->request->query['q']);
+			$options['conditions'][] = array('Perfil.name LIKE'=> '%'.$q.'%');
+		} else {
 			$this->request->query['q'] = '';
 		}
 		$this->Perfil->recursive = 0;
+
+		$this->Paginator->settings = $options;
 		$this->set('perfis', $this->Paginator->paginate());
 	}
 
@@ -53,12 +59,14 @@ public $layout = 'BootstrapAdmin.default';
 		if ($this->request->is('post')) {
 			$this->Perfil->create();
 			if ($this->Perfil->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>perfil</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+				$this->Session->setFlash(__('O <strong>perfil</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('O <strong>perfil</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
+		$usuarios = $this->Perfil->Usuario->find('list');
+		$this->set(compact('usuarios'));
 	}
 
 /**
@@ -74,15 +82,17 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Perfil->save($this->request->data)) {
-				$this->Session->setFlash(__('The perfil has been saved.'));
+				$this->Session->setFlash(__('O <strong>perfil</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The perfil could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('O <strong>perfil</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		} else {
 			$options = array('conditions' => array('Perfil.' . $this->Perfil->primaryKey => $id));
 			$this->request->data = $this->Perfil->find('first', $options);
 		}
+		$usuarios = $this->Perfil->Usuario->find('list');
+		$this->set(compact('usuarios'));
 	}
 
 /**
@@ -99,7 +109,7 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Perfil->delete()) {
-			$this->Session->setFlash(__('O <strong>perfil</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+			$this->Session->setFlash(__('O <strong>perfil</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 		} else {
 			$this->Session->setFlash(__('O <strong>perfil</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 		}
@@ -112,10 +122,16 @@ public $layout = 'BootstrapAdmin.default';
  * @return void
  */
 	public function admin_index() {
-		if (!isset($this->request->query['q'])) {
+		$options = array();
+		if (!empty($this->request->query['q'])) {
+			$q = str_replace(' ', '%', $this->request->query['q']);
+			$options['conditions'][] = array('Perfil.name LIKE'=> '%'.$q.'%');
+		} else {
 			$this->request->query['q'] = '';
 		}
 		$this->Perfil->recursive = 0;
+
+		$this->Paginator->settings = $options;
 		$this->set('perfis', $this->Paginator->paginate());
 	}
 
@@ -143,12 +159,14 @@ public $layout = 'BootstrapAdmin.default';
 		if ($this->request->is('post')) {
 			$this->Perfil->create();
 			if ($this->Perfil->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>perfil</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+				$this->Session->setFlash(__('O <strong>perfil</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('O <strong>perfil</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
+		$usuarios = $this->Perfil->Usuario->find('list');
+		$this->set(compact('usuarios'));
 	}
 
 /**
@@ -164,15 +182,17 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Perfil->save($this->request->data)) {
-				$this->Session->setFlash(__('The perfil has been saved.'));
+				$this->Session->setFlash(__('O <strong>perfil</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The perfil could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('O <strong>perfil</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		} else {
 			$options = array('conditions' => array('Perfil.' . $this->Perfil->primaryKey => $id));
 			$this->request->data = $this->Perfil->find('first', $options);
 		}
+		$usuarios = $this->Perfil->Usuario->find('list');
+		$this->set(compact('usuarios'));
 	}
 
 /**
@@ -189,7 +209,7 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Perfil->delete()) {
-			$this->Session->setFlash(__('O <strong>perfil</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+			$this->Session->setFlash(__('O <strong>perfil</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 		} else {
 			$this->Session->setFlash(__('O <strong>perfil</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 		}

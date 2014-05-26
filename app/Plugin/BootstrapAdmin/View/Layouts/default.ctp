@@ -29,6 +29,10 @@
 </head>
 <body>
 
+	<div id="container-flash" class="container-flash">
+		<?php echo $this->Session->flash(); ?>
+	</div>
+	
 	<?php echo $this->element('BootstrapAdmin.navbar'); ?>
 
 	<div class="page-wrap">

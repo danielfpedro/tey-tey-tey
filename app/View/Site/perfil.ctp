@@ -1,5 +1,9 @@
 <?php echo $this->Html->script('Site/widget_estabelecimentos', array('inline'=> false)); ?>
 
+<?php echo $this->Html->script('../lib/raty-2.5.2/lib/jquery.raty.min', array('inline'=> false)); ?>
+
+<?php echo $this->Html->script('Site/perfil', array('inline'=> false)); ?>
+
 <div id="page-wrapper"> <!-- everything below the top menu should be inside the page wrapper div -->
 	<div id="logo-bar"> <!--begin the main header logo area-->
 		<div id="logo-wrapper">
@@ -38,7 +42,7 @@
 			 <div class="content-panel"> 
 				<div class="page-content review">                   
 					<h1 class="title">
-						<?php echo $estabelecimento['Estabelecimento']['name']; ?> (<?php echo $estabelecimento['Estabelecimento']['cidade']; ?>)
+						<?php echo $estabelecimento['Estabelecimento']['name']; ?>
 					</h1>
 
 					<!-- Barrinha com o icone de comentarios -->
@@ -49,7 +53,7 @@
 							</a>  
 						</div>
 						<div class="section">
-							20 de Janeiro, 2013 por <a href="#" title="" rel="external">Administrador</a>	
+							<div id="estrelas-readonly"></div>
 						</div>        
 					</div>
 					<div class="overview">
@@ -73,12 +77,12 @@
 					  	</div>										  
 						<div class="right-panel">
 							<div class="inner">
-								<h2>Nossa Tomada!!</h2>
-						
 								<span class="taxName">Site</span>: 
 								
 								<span class="metaContent">
-									<a href="http://<?php echo $estabelecimento['Estabelecimento']['site']; ?>">
+									<a
+										href="http://<?php echo $estabelecimento['Estabelecimento']['site']; ?>"
+										target="_blank">
 										<?php echo $estabelecimento['Estabelecimento']['site']; ?>
 									</a>
 								</span>
@@ -137,11 +141,13 @@
 								
 								<div class="separator">&nbsp;</div>
 
-								<div class="bottom-line">Desde</div>
+								<span class="metaName">Desde</span>: 
 								
 								<span class="metaContent">
 									<?php echo $estabelecimento['Estabelecimento']['desde']; ?>
 								</span>
+								<div class="separator">&nbsp;</div>
+
 							</div><!-- inner -->
 						</div><!-- right panel -->
 						<br class="clearer" />

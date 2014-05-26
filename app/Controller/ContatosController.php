@@ -22,10 +22,16 @@ public $layout = 'BootstrapAdmin.default';
  * @return void
  */
 	public function index() {
-		if (!isset($this->request->query['q'])) {
+		$options = array();
+		if (!empty($this->request->query['q'])) {
+			$q = str_replace(' ', '%', $this->request->query['q']);
+			$options['conditions'][] = array('Contato.name LIKE'=> '%'.$q.'%');
+		} else {
 			$this->request->query['q'] = '';
 		}
 		$this->Contato->recursive = 0;
+
+		$this->Paginator->settings = $options;
 		$this->set('contatos', $this->Paginator->paginate());
 	}
 
@@ -53,11 +59,11 @@ public $layout = 'BootstrapAdmin.default';
 		if ($this->request->is('post')) {
 			$this->Contato->create();
 			if ($this->Contato->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>contato</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+				$this->Session->setFlash(__('O <strong>contato</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
+				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('O <strong>contato</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
-			return $this->redirect($this->referer());
 		}
 	}
 
@@ -74,10 +80,10 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Contato->save($this->request->data)) {
-				$this->Session->setFlash(__('The contato has been saved.'));
+				$this->Session->setFlash(__('O <strong>contato</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The contato could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('O <strong>contato</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		} else {
 			$options = array('conditions' => array('Contato.' . $this->Contato->primaryKey => $id));
@@ -99,7 +105,7 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Contato->delete()) {
-			$this->Session->setFlash(__('O <strong>contato</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+			$this->Session->setFlash(__('O <strong>contato</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 		} else {
 			$this->Session->setFlash(__('O <strong>contato</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 		}
@@ -112,10 +118,16 @@ public $layout = 'BootstrapAdmin.default';
  * @return void
  */
 	public function admin_index() {
-		if (!isset($this->request->query['q'])) {
+		$options = array();
+		if (!empty($this->request->query['q'])) {
+			$q = str_replace(' ', '%', $this->request->query['q']);
+			$options['conditions'][] = array('Contato.name LIKE'=> '%'.$q.'%');
+		} else {
 			$this->request->query['q'] = '';
 		}
 		$this->Contato->recursive = 0;
+
+		$this->Paginator->settings = $options;
 		$this->set('contatos', $this->Paginator->paginate());
 	}
 
@@ -143,7 +155,7 @@ public $layout = 'BootstrapAdmin.default';
 		if ($this->request->is('post')) {
 			$this->Contato->create();
 			if ($this->Contato->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>contato</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+				$this->Session->setFlash(__('O <strong>contato</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('O <strong>contato</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
@@ -164,10 +176,10 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Contato->save($this->request->data)) {
-				$this->Session->setFlash(__('The contato has been saved.'));
+				$this->Session->setFlash(__('O <strong>contato</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The contato could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('O <strong>contato</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		} else {
 			$options = array('conditions' => array('Contato.' . $this->Contato->primaryKey => $id));
@@ -189,7 +201,7 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Contato->delete()) {
-			$this->Session->setFlash(__('O <strong>contato</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+			$this->Session->setFlash(__('O <strong>contato</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 		} else {
 			$this->Session->setFlash(__('O <strong>contato</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 		}

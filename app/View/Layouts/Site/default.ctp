@@ -6,8 +6,6 @@
 		<?php echo $title_for_layout; ?>
 	</title>
 	<?php
-		echo $this->Html->meta('icon');
-
 		echo $this->Html->css('Site/style');
 		echo $this->Html->css('Site/cake-style');
 		// Estilo dos plugin jquery, estou apenas seguinte como estava
@@ -27,6 +25,9 @@
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 	?>
+	<script type="text/javascript">
+		var webroot = <?php echo $this->webroot; ?>
+	</script>
 </head>
 
 <body style="background-repeat: no-repeat;"> 	

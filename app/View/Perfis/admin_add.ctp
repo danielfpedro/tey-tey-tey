@@ -9,14 +9,17 @@
 
 <div class="wrap-internal-page">
 	<div class="row">
-		<div class="col-md-11">
+		<div class="col-md-12">
 			<?php echo $this->Form->create('Perfil'); ?>
 				
 		<div class="form-group">
 			<?php echo $this->Form->input('name', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
 		</div>
 		<div class="form-group">
-			<?php echo $this->Form->input('avatar_squared', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
+			<?php echo $this->Form->input('imagem', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
+		</div>
+		<div class="form-group">
+			<?php echo $this->Form->input('usuario_id', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
 		</div>
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary">

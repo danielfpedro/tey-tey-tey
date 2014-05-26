@@ -144,7 +144,7 @@ ratings
 section headers
 *************************************************/
 .section-wrapper {border:1px solid #DFDFDF;border-radius: 3px;-moz-border-radius: 3px;-webkit-border-radius: 3px;}
-.section {background:#EFEFEF url(images/section-bullet-2.png) no-repeat 6px 9px;padding:7px 10px 5px 28px;color:#666;text-transform:uppercase;font-size:18px;font-family:BebasNeueRegular, Arial, Sans-Serif;}
+.section {background:#EFEFEF;padding:7px 10px 5px 10px;color:#666;text-transform:uppercase;font-size:18px;font-family:BebasNeueRegular, Arial, Sans-Serif;}
 .section-wrapper a.more {float:right;background:#FAFAFA url(images/arrows-more.png) no-repeat 9px 12px;width:33px;height:33px;display:block;}
 .section-wrapper a.more:hover {background:#FFF url(images/arrows-more.png) no-repeat 9px 12px;}
 /*dark*/
@@ -569,7 +569,7 @@ page content
 .section-wrapper .comment-bubble a:hover {background:#FFF url(images/comment-tiny.png) no-repeat 8px 9px;}
 .review .overview {padding:15px 0px 10px 10px;}
 .review .overview .left-panel {float:left;width:260px;}
-.review .overview .right-panel {float:left;width:362px;margin-left:8px;background:url(images/meta-info-bg.png) no-repeat 0px 0px;font-size:12px;color:#333;}
+.review .overview .right-panel {float:left;width:362px;margin-left:8px; font-size:12px;color:#333;}
 .full-width .review .overview .right-panel {margin-left:30px;}
 .full-width .review .overview .right-panel.no-margin {margin-left:0px;}
 .full-width .rating-info {float:left;margin-left:30px;}
@@ -653,7 +653,7 @@ page content
 #related ul.tabnav li.title {height:29px;float:left;padding:9px 6px 0px 24px !important;background:#2b2b2b url(images/section-bullet-2.png) no-repeat 4px 11px;color:#FFF;text-transform:uppercase;font-size:18px;font-family:BebasNeueRegular, Arial, Sans-Serif;}
 #related ul.tabnav li.arrow {width:11px;height:37px;background:url(images/arrow-related-right.png) no-repeat 0px 0px;}
 #related ul.tabnav li a {padding:9px 10px 9px 10px;height:27px;font-family:Arial, Helvetica, sans-serif;color:#AAA;font-size:11px;text-transform:uppercase;}
-#related ul.tabnav li a:hover, #related ul.tabnav li a:active, #related ul.tabnav li.ui-tabs-selected a, #related .tabdiv li.more a:hover {background:url(images/arrow-related-down.png) no-repeat center bottom !important;}
+#related ul.tabnav li a:hover, #related ul.tabnav li a:active, #related ul.tabnav li.ui-tab-selected a, #related .tabdiv li.more a:hover {background:url(images/arrow-related-down.png) no-repeat center bottom !important;}
 #related .tabdiv-wrapper {border:1px solid #DFDFDF;background:#F7F7F7;padding:15px 11px 15px 13px;}
 .full-width #related .tabdiv-wrapper {padding:20px 20px 15px 28px;}
 #related .panel {float:left;width:110px;margin:0px 20px 20px 0px;}
@@ -823,7 +823,7 @@ sidebar
 ul.tabnav {margin:0px;padding:0px;float:left;width:100%;border-bottom:1px solid #DFDFDF;background:#EFEFEF;}
 ul.tabnav li {display: inline;list-style: none;padding:0px !important;float:left;border-bottom:none !important;border-top:none !important;}
 ul.tabnav li a {display:block;outline: none;padding:5px 14px 5px 14px;color:#666;text-transform:uppercase;font-size:16px;font-family:BebasNeueRegular, Arial, Sans-Serif;}
-ul.tabnav li a:hover, ul.tabnav li a:active, ul.tabnav li.ui-tabs-selected a, .tabdiv li.more a:hover {color:#FFF !important;background:#444 !important;-moz-border-radius-topleft: 3px;border-top-left-radius: 3px;-moz-border-radius-topright: 3px;border-top-right-radius: 3px;}
+ul.tabnav li a:hover, ul.tabnav li a:active, ul.tabnav li.ui-tab-selected a, .tabdiv li.more a:hover {color:#FFF !important;background:#444 !important;-moz-border-radius-topleft: 3px;border-top-left-radius: 3px;-moz-border-radius-topright: 3px;border-top-right-radius: 3px;}
 .tabdiv-wrapper {}
 .tabdiv {}
 .tabdiv ul {margin-bottom:0px;}
@@ -935,7 +935,7 @@ footer
 /*latest reviews - TABBED*/
 #footer ul.tabnav {border-bottom:none;background:#242424;}
 #footer ul.tabnav li a {color:#FFF;padding:5px 10px 5px 10px;}
-#footer ul.tabnav li a:hover, #footer ul.tabnav li a:active, #footer ul.tabnav li.ui-tabs-selected a, #footer .tabdiv li.more a:hover {color:#FFF !important;background:#000 !important;}
+#footer ul.tabnav li a:hover, #footer ul.tabnav li a:active, #footer ul.tabnav li.ui-tab-selected a, #footer .tabdiv li.more a:hover {color:#FFF !important;background:#000 !important;}
 #footer .tabdiv li.more a {color:#EEE;}
 /*subscribe form*/
 #footer form.subscribe {text-align:left;padding:15px 0px;}

@@ -5,7 +5,7 @@
 </div>
 
 <div class="wrap-internal-page">
-	<?php echo $this->Session->flash(); ?>	<div class="row">
+	<div class="row">
 		<div class="col-md-12">
 			<?php
 			echo $this->Html->link(
@@ -98,6 +98,9 @@
 					<th>
 						<?php echo $this->Paginator->sort('cidade'); ?>
 					</th>
+					<th>
+						<?php echo $this->Paginator->sort('slug'); ?>
+					</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -179,6 +182,9 @@
 							</td>
 							<td>
 								<?php echo h($estabelecimento['Estabelecimento']['cidade']); ?>
+							</td>
+							<td>
+								<?php echo h($estabelecimento['Estabelecimento']['slug']); ?>
 							</td>						
 							<td class="text-center" style="width:90px;">
 								<?php
@@ -212,7 +218,7 @@
 						<tr>					
 					<?php endforeach; ?>
 				<?php else: ?>
-					<td colspan="20">Nenhuma informação encontrada.</td>
+					<td colspan="21">Nenhuma informação encontrada.</td>
 				<?php endif; ?>
 			</tbody>
 		</table>

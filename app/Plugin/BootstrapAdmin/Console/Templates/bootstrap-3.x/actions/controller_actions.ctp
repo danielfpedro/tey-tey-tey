@@ -22,10 +22,16 @@
  * @return void
  */
 	public function <?php echo $admin ?>index() {
-		if (!isset($this->request->query['q'])) {
+		$options = array();
+		if (!empty($this->request->query['q'])) {
+			$q = str_replace(' ', '%', $this->request->query['q']);
+			$options['conditions'][] = array('<?php echo $currentModelName ?>.name LIKE'=> '%'.$q.'%');
+		} else {
 			$this->request->query['q'] = '';
 		}
 		$this-><?php echo $currentModelName ?>->recursive = 0;
+
+		$this->Paginator->settings = $options;
 		$this->set('<?php echo $pluralName ?>', $this->Paginator->paginate());
 	}
 
@@ -55,12 +61,12 @@
 			$this-><?php echo $currentModelName; ?>->create();
 			if ($this-><?php echo $currentModelName; ?>->save($this->request->data)) {
 <?php if ($wannaUseSession): ?>
-				$this->Session->setFlash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+				$this->Session->setFlash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 <?php else: ?>
-				return $this->flash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> foi salvo com sucesso.'), array('action' => 'index'), array('class'=> 'alert alert-success'));
+				return $this->flash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> foi salvo com sucesso.'), array('action' => 'index'), array('class'=> 'alert alert-custom'));
 <?php endif; ?>
 			}
 		}
@@ -96,12 +102,12 @@
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this-><?php echo $currentModelName; ?>->save($this->request->data)) {
 <?php if ($wannaUseSession): ?>
-				$this->Session->setFlash(__('The <?php echo strtolower($singularHumanName); ?> has been saved.'));
+				$this->Session->setFlash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The <?php echo strtolower($singularHumanName); ?> could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 <?php else: ?>
-				return $this->flash(__('The <?php echo strtolower($singularHumanName); ?> has been saved.'), array('action' => 'index'));
+				return $this->flash(__('O <?php echo strtolower($singularHumanName); ?> foi salvo com sucesso.'), array('action' => 'index'));
 <?php endif; ?>
 			}
 		} else {
@@ -140,7 +146,7 @@
 		$this->request->onlyAllow('post', 'delete');
 		if ($this-><?php echo $currentModelName; ?>->delete()) {
 <?php if ($wannaUseSession): ?>
-			$this->Session->setFlash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+			$this->Session->setFlash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 		} else {
 			$this->Session->setFlash(__('O <strong><?php echo strtolower($singularHumanName); ?></strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 		}

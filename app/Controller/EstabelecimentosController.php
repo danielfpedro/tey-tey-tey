@@ -22,10 +22,16 @@ public $layout = 'BootstrapAdmin.default';
  * @return void
  */
 	public function index() {
-		if (!isset($this->request->query['q'])) {
+		$options = array();
+		if (!empty($this->request->query['q'])) {
+			$q = str_replace(' ', '%', $this->request->query['q']);
+			$options['conditions'][] = array('Estabelecimento.name LIKE'=> '%'.$q.'%');
+		} else {
 			$this->request->query['q'] = '';
 		}
 		$this->Estabelecimento->recursive = 0;
+
+		$this->Paginator->settings = $options;
 		$this->set('estabelecimentos', $this->Paginator->paginate());
 	}
 
@@ -53,7 +59,7 @@ public $layout = 'BootstrapAdmin.default';
 		if ($this->request->is('post')) {
 			$this->Estabelecimento->create();
 			if ($this->Estabelecimento->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+				$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
@@ -61,8 +67,7 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$categorias = $this->Estabelecimento->Categorium->find('list');
 		$usuariosAdministrativos = $this->Estabelecimento->UsuariosAdministrativo->find('list');
-		$comentarios = $this->Estabelecimento->Comentario->find('list');
-		$this->set(compact('categorias', 'usuariosAdministrativos', 'comentarios'));
+		$this->set(compact('categorias', 'usuariosAdministrativos'));
 	}
 
 /**
@@ -78,10 +83,10 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Estabelecimento->save($this->request->data)) {
-				$this->Session->setFlash(__('The estabelecimento has been saved.'));
+				$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The estabelecimento could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		} else {
 			$options = array('conditions' => array('Estabelecimento.' . $this->Estabelecimento->primaryKey => $id));
@@ -89,8 +94,7 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$categorias = $this->Estabelecimento->Categorium->find('list');
 		$usuariosAdministrativos = $this->Estabelecimento->UsuariosAdministrativo->find('list');
-		$comentarios = $this->Estabelecimento->Comentario->find('list');
-		$this->set(compact('categorias', 'usuariosAdministrativos', 'comentarios'));
+		$this->set(compact('categorias', 'usuariosAdministrativos'));
 	}
 
 /**
@@ -107,7 +111,7 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Estabelecimento->delete()) {
-			$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+			$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 		} else {
 			$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 		}
@@ -120,10 +124,16 @@ public $layout = 'BootstrapAdmin.default';
  * @return void
  */
 	public function admin_index() {
-		if (!isset($this->request->query['q'])) {
+		$options = array();
+		if (!empty($this->request->query['q'])) {
+			$q = str_replace(' ', '%', $this->request->query['q']);
+			$options['conditions'][] = array('Estabelecimento.name LIKE'=> '%'.$q.'%');
+		} else {
 			$this->request->query['q'] = '';
 		}
 		$this->Estabelecimento->recursive = 0;
+
+		$this->Paginator->settings = $options;
 		$this->set('estabelecimentos', $this->Paginator->paginate());
 	}
 
@@ -151,16 +161,15 @@ public $layout = 'BootstrapAdmin.default';
 		if ($this->request->is('post')) {
 			$this->Estabelecimento->create();
 			if ($this->Estabelecimento->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+				$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
-		$categorias = $this->Estabelecimento->Categorium->find('list');
+		$categorias = $this->Estabelecimento->Categoria->find('list');
 		$usuariosAdministrativos = $this->Estabelecimento->UsuariosAdministrativo->find('list');
-		$comentarios = $this->Estabelecimento->Comentario->find('list');
-		$this->set(compact('categorias', 'usuariosAdministrativos', 'comentarios'));
+		$this->set(compact('categorias', 'usuariosAdministrativos'));
 	}
 
 /**
@@ -176,10 +185,10 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Estabelecimento->save($this->request->data)) {
-				$this->Session->setFlash(__('The estabelecimento has been saved.'));
+				$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The estabelecimento could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		} else {
 			$options = array('conditions' => array('Estabelecimento.' . $this->Estabelecimento->primaryKey => $id));
@@ -187,8 +196,7 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$categorias = $this->Estabelecimento->Categorium->find('list');
 		$usuariosAdministrativos = $this->Estabelecimento->UsuariosAdministrativo->find('list');
-		$comentarios = $this->Estabelecimento->Comentario->find('list');
-		$this->set(compact('categorias', 'usuariosAdministrativos', 'comentarios'));
+		$this->set(compact('categorias', 'usuariosAdministrativos'));
 	}
 
 /**
@@ -205,7 +213,7 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Estabelecimento->delete()) {
-			$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+			$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 		} else {
 			$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 		}

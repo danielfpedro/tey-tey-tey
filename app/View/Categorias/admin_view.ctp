@@ -22,6 +22,16 @@
 			<?php echo h($categoria['Categoria']['modified']); ?>
 			&nbsp;
 		</dd>
+		<dt><?php echo __('Imagem'); ?></dt>
+		<dd>
+			<?php echo h($categoria['Categoria']['imagem']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Slug'); ?></dt>
+		<dd>
+			<?php echo h($categoria['Categoria']['slug']); ?>
+			&nbsp;
+		</dd>
 	</dl>
 </div>
 <div class="actions">
@@ -59,6 +69,7 @@
 		<th><?php echo __('Desde'); ?></th>
 		<th><?php echo __('Imagem'); ?></th>
 		<th><?php echo __('Cidade'); ?></th>
+		<th><?php echo __('Slug'); ?></th>
 		<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($categoria['Estabelecimento'] as $estabelecimento): ?>
@@ -82,6 +93,7 @@
 			<td><?php echo $estabelecimento['desde']; ?></td>
 			<td><?php echo $estabelecimento['imagem']; ?></td>
 			<td><?php echo $estabelecimento['cidade']; ?></td>
+			<td><?php echo $estabelecimento['slug']; ?></td>
 			<td class="actions">
 				<?php echo $this->Html->link(__('View'), array('controller' => 'estabelecimentos', 'action' => 'view', $estabelecimento['id'])); ?>
 				<?php echo $this->Html->link(__('Edit'), array('controller' => 'estabelecimentos', 'action' => 'edit', $estabelecimento['id'])); ?>

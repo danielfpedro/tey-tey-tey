@@ -5,20 +5,7 @@
 </div>
 
 <div class="wrap-internal-page">
-	<?php echo $this->Session->flash(); ?>	<div class="row">
-		<div class="col-md-12">
-			<?php
-			echo $this->Html->link(
-				"Novo contato",
-				array('action'=> 'add'),
-				array('class'=> 'btn btn-success btn-novo',
-					'escape'=> false
-				));
-			?>
-		</div>
-	</div>
 	
-	<br>
 	<div class="well well-sm">
 		<div class="row clearfix">
 			<div class="col-md-12">
@@ -42,22 +29,22 @@
 			<thead>
 				<tr>
 					<th>
-						<?php echo $this->Paginator->sort('id'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('name'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('texto'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('created'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('modified'); ?>
+						<?php echo $this->Paginator->sort('nome'); ?>
 					</th>
 					<th>
 						<?php echo $this->Paginator->sort('email'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('telefone'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('cidade'); ?>
+					</th>
+					<th style="width: 140px;">
+						<?php echo $this->Paginator->sort('texto'); ?>
+					</th>
+					<th style="width: 60px;">
+						<?php echo $this->Paginator->sort('created', 'Data'); ?>
 					</th>
 					<th></th>
 				</tr>
@@ -67,37 +54,27 @@
 					<?php foreach ($contatos as $contato): ?>						
 						<tr>
 							<td>
-								<?php echo h($contato['Contato']['id']); ?>
+								<?php echo h($contato['Contato']['nome']); ?>
 							</td>
 							<td>
-								<?php echo h($contato['Contato']['name']); ?>
+								<?php echo h($contato['Contato']['email']); ?>
+							</td>
+							<td>
+								<?php echo h($contato['Contato']['telefone']); ?>
+							</td>
+							<td>
+								<?php echo h($contato['Contato']['cidade']); ?>
 							</td>
 							<td>
 								<?php echo h($contato['Contato']['texto']); ?>
 							</td>
 							<td>
-								<?php echo h($contato['Contato']['created']); ?>
-							</td>
-							<td>
-								<?php echo h($contato['Contato']['modified']); ?>
-							</td>
-							<td>
-								<?php echo h($contato['Contato']['email']); ?>
-							</td>						
-							<td class="text-center" style="width:90px;">
+								<em class="text-muted">
+									<?php echo $this->Time->format('d/m/y', $contato['Contato']['created']); ?>
+								</em>
+							</td>					
+							<td class="text-center">
 								<?php
-									echo $this->Html->link(
-										"<span class='glyphicon glyphicon-pencil'></span>",
-										array(
-											'action' => 'edit',
-											$contato['Contato']['id']),
-										array(
-											'class'=> 'btn btn-sm btn-primary tt',
-											'title'=> 'Editar',
-											'escape'=> false
-										)
-									);
-									echo "&nbsp;";
 									echo $this->Form->postLink(
 										"<span class='glyphicon glyphicon-remove'></span>",
 										array(
@@ -116,7 +93,7 @@
 						<tr>					
 					<?php endforeach; ?>
 				<?php else: ?>
-					<td colspan="7">Nenhuma informação encontrada.</td>
+					<td colspan="9">Nenhuma informação encontrada.</td>
 				<?php endif; ?>
 			</tbody>
 		</table>

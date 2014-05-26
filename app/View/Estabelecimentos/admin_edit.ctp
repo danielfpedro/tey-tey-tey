@@ -9,7 +9,7 @@
 
 <div class="wrap-internal-page">
 	<div class="row">
-		<div class="col-md-11">
+		<div class="col-md-12">
 			<?php echo $this->Form->create('Estabelecimento'); ?>
 				
 		<div class="form-group">
@@ -64,7 +64,7 @@
 			<?php echo $this->Form->input('cidade', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
 		</div>
 		<div class="form-group">
-			<?php echo $this->Form->input('Comentario', array('class'=> 'form-control')); ?>
+			<?php echo $this->Form->input('slug', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
 		</div>
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary">

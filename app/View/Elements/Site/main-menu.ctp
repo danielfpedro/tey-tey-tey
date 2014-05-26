@@ -8,7 +8,7 @@
 			<li>
 				<?php echo $this->Html->image(
 					'home2.png',
-					array('url'=> '/', 'style'=> 'border-left: none;')); ?>
+					array('url'=> array('action'=> 'home'), 'style'=> 'border-left: none;')); ?>
 			</li>
 			<li>
 				<?php
@@ -21,8 +21,8 @@
 			<li>
 				<?php
 					echo $this->Html->image(
-						'festas.png',
-						array('url'=> array('controller'=> 'site', 'action'=> 'estabelecimentos', 'festas'))
+						'baladas.png',
+						array('url'=> array('controller'=> 'site', 'action'=> 'estabelecimentos', 'baladas'))
 					);
 				?>
 			</li>

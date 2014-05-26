@@ -46,15 +46,17 @@
 					<?php
 						echo $this->Form->create(
 							'Contato',
-							array(
-								'url'=> array('controller'=> 'contatos', 'action'=> 'add'),
-								'inputDefaults'=> array('label'=> false))
+							array('inputDefaults'=> array('label'=> false))
 						);
 					?>
-						<label>Nome</label>
-						<?php echo $this->Form->input('name'); ?>
-						<label>Email</label>
-						<?php echo $this->Form->input('email'); ?>
+						<?php echo $this->Form->input('nome', array('placeholder'=> 'Nome')); ?>
+						<?php echo $this->Form->input('email', array('placeholder'=> 'Email')); ?>
+						<div style="float: left;width: 48%">
+							<?php echo $this->Form->input('telefone', array('placeholder'=> 'Telefone')); ?>	
+						</div>
+						<div style="float: right;width: 48%">
+							<?php echo $this->Form->input('cidade', array('placeholder'=> 'Cidade')); ?>
+						</div>
 						<?php echo $this->Form->textArea('texto', array('placeholder'=> 'Digite aqui a sua mensagem...')); ?>
 						<button type="submit">Enviar</button>
 					<?php echo $this->Form->end() ?>

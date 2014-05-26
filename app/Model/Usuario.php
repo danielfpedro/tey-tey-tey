@@ -72,4 +72,20 @@ class Usuario extends AppModel {
 		)
 	);
 
+	public $hasOne = array(
+		'Perfil' => array(
+			'className' => 'Perfil',
+			'foreignKey' => 'usuario_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)
+	);
+
 }

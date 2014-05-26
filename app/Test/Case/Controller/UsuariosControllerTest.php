@@ -18,8 +18,7 @@ class UsuariosControllerTest extends ControllerTestCase {
 		'app.comentario',
 		'app.estabelecimento',
 		'app.categoria',
-		'app.usuarios_administrativo',
-		'app.comentarios_estabelecimento'
+		'app.usuarios_administrativo'
 	);
 
 /**

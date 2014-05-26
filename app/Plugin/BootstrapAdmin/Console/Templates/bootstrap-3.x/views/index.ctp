@@ -5,7 +5,6 @@
 </div>
 
 <div class="wrap-internal-page">
-	<?php echo "<?php echo \$this->Session->flash(); ?>" ?>
 	<div class="row">
 		<div class="col-md-12">
 			<?php echo "<?php

@@ -18,8 +18,7 @@ class ComentariosControllerTest extends ControllerTestCase {
 		'app.perfil',
 		'app.estabelecimento',
 		'app.categoria',
-		'app.usuarios_administrativo',
-		'app.comentarios_estabelecimento'
+		'app.usuarios_administrativo'
 	);
 
 /**

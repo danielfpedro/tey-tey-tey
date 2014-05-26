@@ -84,7 +84,7 @@ class Estabelecimento extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
-			'limit' => '',
+			'limit' => 5,
 			'offset' => '',
 			'exclusive' => '',
 			'finderQuery' => '',

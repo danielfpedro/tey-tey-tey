@@ -12,9 +12,9 @@
 				<li rel="3">
 					<a href="#">Boates</a>
 				</li>
-				<li rel="4">
+				<!-- <li rel="4">
 					<a href="#">Todos</a>
-				</li>
+				</li> -->
 			</ul>
 
 			<br class="clearer" />

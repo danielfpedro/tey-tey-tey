@@ -5,7 +5,7 @@
 </div>
 
 <div class="wrap-internal-page">
-	<?php echo $this->Session->flash(); ?>	<div class="row">
+	<div class="row">
 		<div class="col-md-12">
 			<?php
 			echo $this->Html->link(
@@ -48,13 +48,16 @@
 						<?php echo $this->Paginator->sort('name'); ?>
 					</th>
 					<th>
+						<?php echo $this->Paginator->sort('imagem'); ?>
+					</th>
+					<th>
 						<?php echo $this->Paginator->sort('created'); ?>
 					</th>
 					<th>
 						<?php echo $this->Paginator->sort('modified'); ?>
 					</th>
 					<th>
-						<?php echo $this->Paginator->sort('avatar_squared'); ?>
+						<?php echo $this->Paginator->sort('usuario_id'); ?>
 					</th>
 					<th></th>
 				</tr>
@@ -70,13 +73,25 @@
 								<?php echo h($perfil['Perfil']['name']); ?>
 							</td>
 							<td>
+								<?php echo h($perfil['Perfil']['imagem']); ?>
+							</td>
+							<td>
 								<?php echo h($perfil['Perfil']['created']); ?>
 							</td>
 							<td>
 								<?php echo h($perfil['Perfil']['modified']); ?>
 							</td>
 							<td>
-								<?php echo h($perfil['Perfil']['avatar_squared']); ?>
+								<?php
+									echo $this->Html->link(
+										$perfil['Usuario']['id'],
+										array(
+											'controller' => 'usuarios',
+											'action' => 'view',
+											$perfil['Usuario']['id']
+										));
+									
+								?>
 							</td>						
 							<td class="text-center" style="width:90px;">
 								<?php
@@ -110,7 +125,7 @@
 						<tr>					
 					<?php endforeach; ?>
 				<?php else: ?>
-					<td colspan="6">Nenhuma informação encontrada.</td>
+					<td colspan="7">Nenhuma informação encontrada.</td>
 				<?php endif; ?>
 			</tbody>
 		</table>
