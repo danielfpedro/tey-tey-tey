@@ -15,7 +15,7 @@ class SiteController extends AppController {
 		$this->set(compact('widget_estabelecimentos'));
 
 		$this->loadModel('Estabelecimento');
-		$this->Estabelecimento->recursive = 1;
+		$this->Estabelecimento->recursive = 3;
 
 		$options = array();
 
@@ -41,12 +41,13 @@ class SiteController extends AppController {
 
 	public $paginate = array(
 		'Estabelecimento'=> array(
-			'limit'=> 1,
+			'limit'=> 10,
 			'fields'=> array(
 				'Estabelecimento.id',
 				'Estabelecimento.name',
 				'Estabelecimento.descricao',
 				'Estabelecimento.slug',
+				'Estabelecimento.rate',
 				'Estabelecimento.imagem',
 			),
 			'contain'=> 'Comentario'
@@ -72,8 +73,8 @@ class SiteController extends AppController {
 
 		$restaurantes = array();
 		$bares = array();
-		$boates = array();
-		$todos = array();
+		$baladas = array();
+		$recentes = array();
 
 		$options['contain'] = array('Categoria');
 		$options['limit'] = 5;
@@ -82,18 +83,19 @@ class SiteController extends AppController {
 		$restaurantes = $this->Estabelecimento->find('all', $options);
 
 		$options['conditions'] = array('Estabelecimento.categoria_id'=> 1);
-		$boates = $this->Estabelecimento->find('all', $options);
+		$baladas = $this->Estabelecimento->find('all', $options);
 
 		$options['conditions'] = array('Estabelecimento.categoria_id'=> 3);
 		$bares = $this->Estabelecimento->find('all', $options);
 
-		// $options['conditions'] = array();
-		// $todos = $this->Estabelecimento->find('all', $options);
+		$options['conditions'] = array();
+		$options['order'] = array('Estabelecimento.created DESC');
+		$recentes = $this->Estabelecimento->find('all', $options);
 
 		$estabelecimentos['restaurantes'] = $restaurantes;
 		$estabelecimentos['bares'] = $bares;
-		$estabelecimentos['boates'] = $boates;
-		// $estabelecimentos['todos'] = $todos;
+		$estabelecimentos['baladas'] = $baladas;
+		$estabelecimentos['recentes'] = $recentes;
 
 		// Debugger::dump($estabelecimentos['restaurantes']);
 
@@ -123,6 +125,17 @@ class SiteController extends AppController {
 		$this->autoRender = false;
 	}
 	public function perfil($slug = null) {
+		$this->loadModel('Comentario');
+
+		if ($this->request->is('post')) {
+			$this->Comentario->create();
+			$this->request->data['Comentario']['usuario_id'] = 1;
+			if ($this->Comentario->save($this->request->data)) {
+				$this->Session->setFlash(__('O <strong>comentario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
+			} else {
+				$this->Session->setFlash(__('O <strong>comentario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+			}
+		}
 		
 		$this->loadModel('Estabelecimento');
 		$this->Estabelecimento->recursive = 3;
@@ -169,13 +182,18 @@ class SiteController extends AppController {
 	}
 
 	public function estabelecimentos($categoria = null){
-		
+		$this->loadModel('Categoria');		
+		$categoria_row = $this->Categoria->find('first', array('conditions'=> array('Categoria.slug'=> $categoria)));
+
 		$title_for_layout = ucfirst($categoria) .' - ' . $this->site_name;
 
 		$this->loadModel('Estabelecimento');
 		$this->Estabelecimento->recursive = 3;
 
 		$this->Paginator->settings = $this->paginate;
+		$this->Paginator->settings = array(
+			'conditions'=> array(
+				'Estabelecimento.categoria_id'=> $categoria_row['Categoria']['id']));
     	// similar to findAll(), but fetches paged results
     	$estabelecimentos = $this->Paginator->paginate('Estabelecimento');
 
@@ -191,9 +209,9 @@ class SiteController extends AppController {
 			$this->loadModel('Contato');
 			$this->Contato->create();
 			if ($this->Contato->save($this->request->data)) {
-				$this->Session->setFlash(__('A <strong>mensagem</strong> foi enviada com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+				$this->Session->setFlash(__('Mensagem enviada com sucesso.'), 'default', array('class'=> 'alert alert-success'));
 			} else {
-				$this->Session->setFlash(__('A <strong>mensagem</strong> não pode ser salva. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+				$this->Session->setFlash(__('Mensagem não enviada. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 			return $this->redirect($this->referer());
 		} else {

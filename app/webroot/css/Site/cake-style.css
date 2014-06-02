@@ -80,10 +80,6 @@ hr{
 	margin-bottom: 8px;
 }
 .wrap-form-contato input{
-	-webkit-box-sizing : border-box;‌​
-    -moz-box-sizing : border-box;
-    box-sizing : border-box;
-	padding: 10px;
 	height: 30px;
 	margin-bottom: 20px;
 }
@@ -91,15 +87,9 @@ hr{
 	width: 100%;
 }
 .wrap-form-contato textarea{
-	-webkit-box-sizing : border-box;‌​
-    -moz-box-sizing : border-box;
-    box-sizing : border-box;
 	font-family: arial;
 	font-size: 13px;
-	padding: 10px;
-	-webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-	box-sizing: border-box;
+	/*padding: 10px;*/
 	height: 200px;
 	resize: vertical;
 }

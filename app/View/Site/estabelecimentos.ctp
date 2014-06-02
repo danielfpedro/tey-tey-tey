@@ -1,5 +1,7 @@
 <?php echo $this->Html->script('Site/widget_estabelecimentos', array('inline'=> false)); ?>
 
+<?php echo $this->Html->script('Site/estabelecimentos', array('inline'=> false)); ?>
+
 <div id="page-wrapper"> <!-- everything below the top menu should be inside the page wrapper div -->
 	<div id="logo-bar"> <!--begin the main header logo area-->
 		<div id="logo-wrapper">
@@ -42,72 +44,99 @@
 					</div><!-- section -->
 				</div><!-- section-wraper -->
 
-				<?php foreach ($estabelecimentos as $estabelecimento): ?>
-					<?php 
-						$perfil_url = array('action'=> 'perfil', $estabelecimento['Estabelecimento']['slug']);
-					?>
-                	<div class="categorypanel wide right vertical">
-                        <div class="left-panel">
-                        	<?php
-                        		$img_url = ''.
-                        			'Estabelecimentos/'.
-                        			$estabelecimento['Estabelecimento']['id'].
-                        			'/300x170_' . $estabelecimento['Estabelecimento']['imagem'];
-                        		$img = $this->Html->image(
-                        			$img_url,
-                        			array(
-                        				'class'=> 'thumb-img attachment-spotlight wp-post-image',
-                        				'height'=> '170',
-                        				'width'=> '300'
-                        			)
-                        		);
-                        		echo $this->Html->link(
-                        			$img,
-                        			$perfil_url,
-                        			array('escape'=> false, 'class'=> 'darken')
-                        			);
-                        	?>
-                   		 	<!-- <a class="darken" href="#"><img style="opacity: 1;" src="" class="attachment-spotlight wp-post-image" alt="test" title="" height="170" width="300"></a> -->
-                        </div><!-- left-panel -->
-                        <div class="right-panel">
-                   			<h2>
-                   				<?php
-                   					echo $this->Html->link(
-                   						$estabelecimento['Estabelecimento']['name'],
-                   						$perfil_url
-                   					);
-                   				?>
-                   			</h2>
-                    		<div class="excerpt">
-                    			<?php echo $estabelecimento['Estabelecimento']['descricao']; ?>
-                    		</div>
-                        	<div class="clearer"></div>
-                        	<div class="more-button">
-                        		<?php 
-                        			echo $this->Html->link('&nbsp', $perfil_url, array('escape'=> false));
-                        		?>
-                        	</div>
-                            <div class="post-meta">
-                                <div class="comments">
-                                	<?php
-                                		echo $this->Html->link(
-                                			count($estabelecimento['Comentario']) . 
-                                			' Comentários',
-                                			array('controller' => 'site', 'action' => 'perfil')
-                                		);
-                                	?>
-                                </div><!-- comments -->     
-                                <div class="clearer"></div>
-                            </div><!-- post-meta -->
-						</div><!-- Right panel -->
-					</div><!-- category panel -->
-                    <div class="clearer"></div>                        
-				<?php endforeach ?>
+				<?php if (!empty($estabelecimentos)): ?>
+					<?php foreach ($estabelecimentos as $estabelecimento): ?>
+						<?php 
+							$perfil_url = array('action'=> 'perfil', $estabelecimento['Estabelecimento']['slug']);
+						?>
+	                	<div class="categorypanel wide right vertical">
+	                        <div class="left-panel">
+	                        	<?php
+	                        		$img_url = ''.
+	                        			'Estabelecimentos/'.
+	                        			$estabelecimento['Estabelecimento']['id'].
+	                        			'/300x170_' . $estabelecimento['Estabelecimento']['imagem'];
+	                        		$img = $this->Html->image(
+	                        			$img_url,
+	                        			array(
+	                        				'class'=> 'attachment-spotlight wp-post-image',
+	                        				'height'=> '170',
+	                        				'width'=> '300'
+	                        			)
+	                        		);
+	                        		echo $this->Html->link(
+	                        			$img,
+	                        			$perfil_url,
+	                        			array('escape'=> false)
+	                        			);
+	                        	?>
+	                   		 	<!-- <a class="darken" href="#"><img style="opacity: 1;" src="" class="attachment-spotlight wp-post-image" alt="test" title="" height="170" width="300"></a> -->
+	                        </div><!-- left-panel -->
+	                        <div class="right-panel" style="position: relative; height: 170px;">
+	                        	
+	                        	<div style="float: left;">
+		                   			<h2 style="font-size: 16px;">
+		                   				<?php
+		                   					echo $this->Html->link(
+		                   						$estabelecimento['Estabelecimento']['name'],
+		                   						$perfil_url
+		                   					);
+		                   				?>
+		                   			</h2>                        	
+	                        	</div>
+	                        	<div style="float: right;">
+	                        		<div
+	                        			id="estrelas-readonly"
+	                        			data-score="<?php echo $estabelecimento['Estabelecimento']['rate']; ?>"></div>
+	                        	</div>
+	                        	<br style="clear: both;">
+
+	                    		<div class="excerpt">
+	                    			<?php echo $estabelecimento['Estabelecimento']['descricao']; ?>
+	                    		</div>
+	                        	<div class="clearer"></div>
+
+	                        	<div style="position: absolute;bottom: 0;width: 100%;">
+		                        	<div class="more-button" style="right: 0;position: absolute;">
+		                        		<?php 
+		                        			echo $this->Html->link('&nbsp', $perfil_url, array('escape'=> false));
+		                        		?>
+		                        	</div>
+		                            <div class="post-meta">
+		                                <div class="comments">
+		                                	<?php
+		                                		echo $this->Html->link(
+		                                			count($estabelecimento['Comentario']) . 
+		                                			' Comentários',
+		                                			array(
+		                                				'controller' => 'site',
+		                                				'action' => 'perfil',
+		                                				$estabelecimento['Estabelecimento']['slug'])
+		                                		);
+		                                	?>
+		                                </div><!-- comments -->     
+		                                <div class="clearer"></div>
+		                            </div><!-- post-meta -->
+	                            </div>
+
+							</div><!-- Right panel -->
+						</div><!-- category panel -->
+	                    <div class="clearer"></div>                        
+					<?php endforeach ?>
+				<?php else: ?>
+					<div style="margin-top: 20px;color: #888;">
+						<em>
+							Nenhuma informação.
+						</em>
+					</div>
+				<?php endif; ?>
 				<br class="clearer" />
 				<br class="clearer" />
 				<br class="clearer" />
 				<div style="text-align: center;">
-					<?php echo $this->element('Site/paginator'); ?>
+					<?php if ($this->Paginator->hasPage(2)): ?>
+						<?php echo $this->element('Site/paginator'); ?>	
+					<?php endif ?>
 				</div>
 			</div><!-- categorypanels -->
 			<br class="clearer" />

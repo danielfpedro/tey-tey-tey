@@ -1,9 +1,4 @@
 $(function(){
-	$('#estrelas-readonly').raty({
-		score: 5,
-		path: webroot + 'lib/raty-2.5.2/lib/img',
-		readOnly: true,
-	});
 	$('#set-estrelas').raty({
 		score: 1,
 		path: webroot + 'lib/raty-2.5.2/lib/img',

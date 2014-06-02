@@ -35,25 +35,20 @@
 		<br />
 
 		<div class="main-content-left">
-
 			<div id="featured-wrapper">
 				<div id="featured">
 					<?php foreach (array(1,2,3,4,5) as $item): ?>
 						<?php
 							echo $this->Html->image('Carrosel/banner1-540x390.jpg', 
-								array('url'=> 'dsada', 'title'=>'#div' . $item, 'style'=> 'margin-bottom: -5px!important;'));
+								array('url'=> '#', 'title'=>'#div' . $item, 'alt'=> 'Image Alt'));
 						?>	
 					<?php endforeach ?>
 				</div><!-- Featured -->
 				<?php foreach (array(1,2,3,4,5) as $item): ?>
 					<div id="div<?php echo $item; ?>" class="nivo-html-caption">
-						<div class="category">            
-							Bar       
-						</div><!-- Category -->
 						<h1>
-							<a href="#" class="bebas">Título do carrosel</a>
+							<a href="#" class="bebas">Pullse</a>
 						</h1>
-						<a class="excerpt" href="#">Descrição do carrosel</a>
 					</div><!-- Div1 -->
 				<?php endforeach; ?>
 			</div><!-- Featured-wrapper -->	   
@@ -80,7 +75,7 @@
 									);
 							?>
 							<div class="section">
-								<?php echo $value['Categoria']['name']; ?> do Momento                    
+								<?php echo $value['Categoria']['name']; ?>
 							</div>
 						</div><!-- section-wrapper -->
 
@@ -95,7 +90,7 @@
 									$value['Estabelecimento']['id'] .'/300x170_'.
 									$value['Estabelecimento']['imagem']);
 
-								echo $this->Html->link($image, $perfil_url, array('escape'=> false,'class'=> 'darken'));
+								echo $this->Html->link($image, $perfil_url, array('escape'=> false));
 							?><!-- Imagem do estabelecimento -->
 							<h2>
 								<?php
@@ -113,7 +108,7 @@
 							<div class="more-button">
 								<?php
 									echo $this->Html->link('&nbsp;',
-										$url_mais,
+										$perfil_url,
 										array('escape'=> false)
 										);
 								?>
@@ -123,6 +118,35 @@
 					</div><!-- Categorypanel -->
 					<?php $i++; ?>
 				<?php endforeach ?>
+
+					<div class="categorypanel right"><!-- Box Do estabelecimento -->
+						<div class="section-wrapper">
+							<!-- categorypanels section -->
+							<?php
+								echo $this->Html->link('&nbsp;',
+									'#',
+									array('escape'=> false, 'class'=> 'more')
+									);
+							?>
+							<div class="section">
+								Fotos
+							</div>
+						</div><!-- section-wrapper -->
+
+						<div class="vertical">
+							<?php
+								$perfil_url = '#';
+								echo $this->Html->image('fotos_baladas.jpg');
+							?><!-- Imagem do estabelecimento -->
+							<h2>
+								Fotos
+							</h2><!-- Titulo -->
+							<div class="excerpt">
+								<?php echo 'Em breve fotos das baldas'; ?>
+							</div><!-- Descrição -->
+							<br class="clearer" />
+						</div><!-- Vertical -->
+					</div><!-- Categorypanel -->
 
 			</div><!-- categorypanels -->
 
@@ -150,7 +174,9 @@
 			</div><!-- unwrapped -->
 
 			<!-- Widget lateral dos estabelecimentos -->
-			<?php echo $this->element('Site/widget_estabelecimentos'); ?>
+			<div style="margin-top: -20px;">
+				<?php echo $this->element('Site/widget_estabelecimentos'); ?>
+			</div>
 
 			<div class="unwrapped">
 				<?php

@@ -22,7 +22,10 @@
 				<?php
 					echo $this->Html->image(
 						'baladas.png',
-						array('url'=> array('controller'=> 'site', 'action'=> 'estabelecimentos', 'baladas'))
+						array('url'=> array(
+							'controller'=> 'site',
+							'action'=> 'estabelecimentos',
+							'baladas'), 'width'=> '110')
 					);
 				?>
 			</li>

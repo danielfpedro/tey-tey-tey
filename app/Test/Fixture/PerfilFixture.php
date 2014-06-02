@@ -35,8 +35,8 @@ class PerfilFixture extends CakeTestFixture {
 			'id' => 1,
 			'name' => 'Lorem ipsum dolor sit amet',
 			'imagem' => 'Lorem ipsum dolor sit amet',
-			'created' => '2014-05-26 01:40:08',
-			'modified' => '2014-05-26 01:40:08',
+			'created' => '2014-05-27 02:29:37',
+			'modified' => '2014-05-27 02:29:37',
 			'usuario_id' => 1
 		),
 	);

@@ -33,7 +33,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle navbar-admin-user" data-toggle="dropdown">
-            <span class="glyphicon glyphicon-user"></span> Donald Cerrone <b class="caret"></b></a>
+            <span class="glyphicon glyphicon-user"></span> Studio Seis <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li>
               <?php echo $this->Html->link("<span class='glyphicon glyphicon-cog'></span> Configurações do meu usuário", array('controller'=> 'usuarios','action'=> 'edit'), array('escape'=> false)) ?>

@@ -42,22 +42,7 @@
 			<thead>
 				<tr>
 					<th>
-						<?php echo $this->Paginator->sort('id'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('name'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('created'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('modified'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('imagem'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('slug'); ?>
+						<?php echo $this->Paginator->sort('name', 'Categoria'); ?>
 					</th>
 					<th></th>
 				</tr>
@@ -67,23 +52,8 @@
 					<?php foreach ($categorias as $categoria): ?>						
 						<tr>
 							<td>
-								<?php echo h($categoria['Categoria']['id']); ?>
-							</td>
-							<td>
 								<?php echo h($categoria['Categoria']['name']); ?>
 							</td>
-							<td>
-								<?php echo h($categoria['Categoria']['created']); ?>
-							</td>
-							<td>
-								<?php echo h($categoria['Categoria']['modified']); ?>
-							</td>
-							<td>
-								<?php echo h($categoria['Categoria']['imagem']); ?>
-							</td>
-							<td>
-								<?php echo h($categoria['Categoria']['slug']); ?>
-							</td>						
 							<td class="text-center" style="width:90px;">
 								<?php
 									echo $this->Html->link(

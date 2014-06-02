@@ -125,7 +125,7 @@ public $layout = 'BootstrapAdmin.default';
 		} else {
 			$this->request->query['q'] = '';
 		}
-		$this->Usuario->recursive = 0;
+		$this->Usuario->recursive = 2;
 
 		$this->Paginator->settings = $options;
 		$this->set('usuarios', $this->Paginator->paginate());

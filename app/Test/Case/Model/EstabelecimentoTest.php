@@ -16,9 +16,15 @@ class EstabelecimentoTest extends CakeTestCase {
 		'app.estabelecimento',
 		'app.categoria',
 		'app.usuarios_administrativo',
+		'app.cliente',
+		'app.estado',
 		'app.comentario',
 		'app.usuario',
-		'app.perfil'
+		'app.perfil',
+		'app.cartao',
+		'app.cartoes_estabelecimento',
+		'app.subcategoria',
+		'app.estabelecimentos_subcategoria'
 	);
 
 /**

@@ -12,6 +12,81 @@
 			<?php echo h($estabelecimento['Estabelecimento']['name']); ?>
 			&nbsp;
 		</dd>
+		<dt><?php echo __('Endereco'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['endereco']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Telefone'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['telefone']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Tipo Comida'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['tipo_comida']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Horario Funcionamento'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['horario_funcionamento']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Site'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['site']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Area Fumantes'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['area_fumantes']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Ar Livre'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['ar_livre']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Ar Condicionado'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['ar_condicionado']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Faz Reserva'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['faz_reserva']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Estacionamento'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['estacionamento']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Faz Entrega'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['faz_entrega']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Wifi'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['wifi']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Acesso Deficiente'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['acesso_deficiente']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Inaugurado'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['inaugurado']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Cartoes'); ?></dt>
+		<dd>
+			<?php echo h($estabelecimento['Estabelecimento']['cartoes']); ?>
+			&nbsp;
+		</dd>
 		<dt><?php echo __('Created'); ?></dt>
 		<dd>
 			<?php echo h($estabelecimento['Estabelecimento']['created']); ?>
@@ -20,46 +95,6 @@
 		<dt><?php echo __('Modified'); ?></dt>
 		<dd>
 			<?php echo h($estabelecimento['Estabelecimento']['modified']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Site'); ?></dt>
-		<dd>
-			<?php echo h($estabelecimento['Estabelecimento']['site']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Telefone'); ?></dt>
-		<dd>
-			<?php echo h($estabelecimento['Estabelecimento']['telefone']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Endereco'); ?></dt>
-		<dd>
-			<?php echo h($estabelecimento['Estabelecimento']['endereco']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Area Fumantes'); ?></dt>
-		<dd>
-			<?php echo h($estabelecimento['Estabelecimento']['area_fumantes']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Faz Reserva'); ?></dt>
-		<dd>
-			<?php echo h($estabelecimento['Estabelecimento']['faz_reserva']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Ar Condicionado'); ?></dt>
-		<dd>
-			<?php echo h($estabelecimento['Estabelecimento']['ar_condicionado']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Estacionamento'); ?></dt>
-		<dd>
-			<?php echo h($estabelecimento['Estabelecimento']['estacionamento']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Ar Livre'); ?></dt>
-		<dd>
-			<?php echo h($estabelecimento['Estabelecimento']['ar_livre']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Descricao'); ?></dt>
@@ -80,11 +115,6 @@
 		<dt><?php echo __('Usuarios Administrativo'); ?></dt>
 		<dd>
 			<?php echo $this->Html->link($estabelecimento['UsuariosAdministrativo']['name'], array('controller' => 'usuarios_administrativos', 'action' => 'view', $estabelecimento['UsuariosAdministrativo']['id'])); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Desde'); ?></dt>
-		<dd>
-			<?php echo h($estabelecimento['Estabelecimento']['desde']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Imagem'); ?></dt>

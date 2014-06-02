@@ -74,13 +74,16 @@ CakePlugin::load('BootstrapAdmin'); //Loads a single plugin named DebugKit
 $_pluralIrregular = array(
 	'abdomens' => 'abdomen',
 	'alemao' => 'alemaes',
-	'perfil' => 'perfis'
+	'perfil' => 'perfis',
+	'cartao' => 'cartoes',
+	'subcategoria' => 'subcategorias',
 );
 
 $_uninflected = array('atlas', 'lapis', 'onibus', 'pires', 'virus', '.*x', 'status');
 
 Inflector::rules('plural', array(
 	'rules' => array(
+	'/^(.*)ia$/i' => '\1ias',
 	'/^(.*)ao$/i' => '\1oes',
 	'/^(.*)(r|s|z)$/i' => '\1\2es',
 	'/^(.*)(a|e|o|u)l$/i' => '\1\2is',

@@ -32,8 +32,8 @@ class CategoriaFixture extends CakeTestFixture {
 		array(
 			'id' => 1,
 			'name' => 'Lorem ipsum dolor sit amet',
-			'created' => '2014-05-26 01:40:07',
-			'modified' => '2014-05-26 01:40:07',
+			'created' => '2014-05-27 02:29:36',
+			'modified' => '2014-05-27 02:29:36',
 			'imagem' => 'Lorem ipsum dolor sit amet',
 			'slug' => 'Lorem ipsum dolor sit amet'
 		),

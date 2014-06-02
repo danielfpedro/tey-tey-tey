@@ -8,8 +8,6 @@ App::uses('AppModel', 'Model');
  */
 class Comentario extends AppModel {
 
-	public $perfil_limit = 5;
-
 /**
  * Validation rules
  *

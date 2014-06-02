@@ -10,9 +10,9 @@
 <div class="wrap-internal-page">
 	<div class="row">
 		<div class="col-md-12">
-			<?php echo $this->Form->create('Estabelecimento'); ?>
-			<?php echo $this->element('Estabelecimentos/form'); ?>
-			<?php echo $this->Form->end(); ?>	
+			<?php echo $this->Form->create('Estabelecimento', array('type'=> 'file')); ?>
+				<?php echo $this->element('Estabelecimentos/form') ?>
+			<?php echo $this->Form->end(); ?>
 		</div>
 	</div>
 </div>

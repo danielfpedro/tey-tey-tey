@@ -58,6 +58,7 @@ public $layout = 'BootstrapAdmin.default';
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->Comentario->create();
+			$this->request->data['Comentario']['usuario_id'] = 1;
 			if ($this->Comentario->save($this->request->data)) {
 				$this->Session->setFlash(__('O <strong>comentario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));

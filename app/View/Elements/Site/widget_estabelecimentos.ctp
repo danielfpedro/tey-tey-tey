@@ -4,17 +4,17 @@
 			
 			<ul id="widget-abas" class="tabnav">
 				<li class="" rel="1">
-					<a href="#">Restaurantes</a>
+					<a href="#" style="font-size: 14px;">Restaurantes</a>
 				</li>
 				<li rel="2">
-					<a href="#">Bares</a>
+					<a href="#" style="font-size: 14px;">Bares</a>
 				</li>
 				<li rel="3">
-					<a href="#">Boates</a>
+					<a href="#" style="font-size: 14px;">Baladas</a>
 				</li>
-				<!-- <li rel="4">
-					<a href="#">Todos</a>
-				</li> -->
+				<li rel="4">
+					<a href="#" style="font-size: 14px;">Recentes</a>
+				</li>
 			</ul>
 
 			<br class="clearer" />
@@ -22,7 +22,7 @@
 			<div class="tabdiv-wrapper" id="aba-contents">
 
 				<?php
-					$items = array('restaurantes', 'bares', 'boates', 'todos');
+					$items = array('restaurantes', 'bares', 'baladas', 'recentes');
 					$i = 1;
 				?>
 				<?php foreach ($items as $value): ?>
@@ -70,6 +70,7 @@
 													array('escape'=> false, 'class'=> 'post-title'));
 											?>
 											<br>
+											<div id="estrelas-readonly" data-score="<?php echo $item['Estabelecimento']['rate']; ?>"></div>
 											<?php echo $item['Estabelecimento']['cidade']; ?>
 										</div>
 										<br class="clearer" /> 
@@ -83,20 +84,6 @@
 									<br class="clearer" /> 
 								</li>
 							<?php endif ?>
-							
-
-							<li class="more">
-								<?php
-									echo $this->Html->link(
-										'Mais',
-										array(
-											'controller' => 'site',
-											'action' => 'estabelecimentos',
-											$item['Categoria']['slug']
-										)
-									);
-								?>
-							</li>
 							<li class="last">&nbsp;</li>
 						</ul>
 					</div>

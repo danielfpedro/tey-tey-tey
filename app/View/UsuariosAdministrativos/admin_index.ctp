@@ -42,10 +42,7 @@
 			<thead>
 				<tr>
 					<th>
-						<?php echo $this->Paginator->sort('name', 'Nome'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('email'); ?>
+						Nome e email
 					</th>
 					<th></th>
 				</tr>
@@ -56,8 +53,7 @@
 						<tr>
 							<td>
 								<?php echo h($usuariosAdministrativo['UsuariosAdministrativo']['name']); ?>
-							</td>
-							<td>
+								<br>
 								<?php echo h($usuariosAdministrativo['UsuariosAdministrativo']['email']); ?>
 							</td>
 							<td class="text-center" style="width:90px;">

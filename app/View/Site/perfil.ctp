@@ -1,7 +1,5 @@
 <?php echo $this->Html->script('Site/widget_estabelecimentos', array('inline'=> false)); ?>
 
-<?php echo $this->Html->script('../lib/raty-2.5.2/lib/jquery.raty.min', array('inline'=> false)); ?>
-
 <?php echo $this->Html->script('Site/perfil', array('inline'=> false)); ?>
 
 <div id="page-wrapper"> <!-- everything below the top menu should be inside the page wrapper div -->
@@ -46,19 +44,28 @@
 					</h1>
 
 					<!-- Barrinha com o icone de comentarios -->
-					<div class="section-wrapper review">
-						<div class="comment-bubble">
-							<a href="#comentarios">
-							<?php echo $comentarios_count; ?>
-							</a>  
-						</div>
-						<div class="section">
-							<div id="estrelas-readonly"></div>
-						</div>        
-					</div>
-					<div class="overview">
+
+					<div class="overview" style="margin-top: -30px;">
 					   <div class="left-panel">       
 							<div class="article-image">
+								
+								<div
+									class="section-wrapper review"
+									style="margin-bottom: 5px; border:0;">
+									<div class="comment-bubble" style="margin-right: -7x;">
+										<a href="#comentarios">
+										<?php echo $comentarios_count; ?>
+										</a>  
+									</div>
+									<div class="section" style="background-color: #FFF;">
+										<div
+											id="estrelas-readonly"
+											style="margin-left: -10px;"
+											data-score="<?php echo $estabelecimento['Estabelecimento']['rate']; ?>">
+										</div>
+									</div>        
+								</div>
+
 								<?php
 									$img_url = ''.
 										'Estabelecimentos/'.
@@ -66,9 +73,10 @@
 										'/300x170_'.
 										$estabelecimento['Estabelecimento']['imagem'];
 
-									echo $this->Html->image(
-										$img_url,
-										array('width'=> '260px')
+									echo $this->Html->link(
+										$this->Html->image($img_url, array('width'=> '260px', 'style'=> 'margin-bottom: -5px;')),
+										'#',
+										array('escape'=> false, 'class'=> 'darken')
 									);
 								?>
 							</div>        
@@ -76,7 +84,39 @@
 							<br class="clearer" />    	
 					  	</div>										  
 						<div class="right-panel">
-							<div class="inner">
+							<div class="inner" style="margin-top: 25px;">
+								<span class="metaName">Endereço</span>: 
+								
+								<span class="metaContent">
+									<?php echo $estabelecimento['Estabelecimento']['endereco']; ?>
+								</span>
+
+								<div class="separator">&nbsp;</div>
+
+								<span class="metaName">Telefone</span>: 
+								
+								<span class="metaContent">
+									<?php echo $estabelecimento['Estabelecimento']['telefone']; ?>
+								</span>
+								
+								<div class="separator">&nbsp;</div>
+
+								<span class="metaName">Tipo de comida</span>: 
+								
+								<span class="metaContent">
+									<?php echo $estabelecimento['Estabelecimento']['telefone']; ?>
+								</span>
+								
+								<div class="separator">&nbsp;</div>
+
+								<span class="metaName">Horário de funcionamento</span>: 
+								
+								<span class="metaContent">
+									<?php echo $estabelecimento['Estabelecimento']['telefone']; ?>
+								</span>
+								
+								<div class="separator">&nbsp;</div>
+
 								<span class="taxName">Site</span>: 
 								
 								<span class="metaContent">
@@ -88,39 +128,11 @@
 								</span>
 								
 								<div class="separator">&nbsp;</div>
-								
-								<span class="metaName">Telefone</span>: 
-								
-								<span class="metaContent"><?php echo $estabelecimento['Estabelecimento']['telefone']; ?></span>
-								
-								<div class="separator">&nbsp;</div>
-								
-								<span class="metaName">Endereço</span>: 
-								
-								<span class="metaContent"><?php echo $estabelecimento['Estabelecimento']['endereco']; ?></span>
-								
-								<div class="separator">&nbsp;</div>
 
 								<span class="metaName">Área para fumantes</span>: 
 								
 								<span class="metaContent">
 									<?php echo ($estabelecimento['Estabelecimento']['area_fumantes']) ? 'Sim' : 'Não'; ?>
-								</span>
-								
-								<div class="separator">&nbsp;</div>
-
-								<span class="metaName">Faz reservas</span>: 
-								
-								<span class="metaContent">
-									<?php echo ($estabelecimento['Estabelecimento']['faz_reserva']) ? 'Sim' : 'Não'; ?>
-								</span>
-								
-								<div class="separator">&nbsp;</div>
-
-								<span class="metaName">Ar condicionado</span>: 
-								
-								<span class="metaContent">
-									<?php echo ($estabelecimento['Estabelecimento']['ar_condicionado']) ? 'Sim' : 'Não'; ?>
 								</span>
 								
 								<div class="separator">&nbsp;</div>
@@ -133,6 +145,22 @@
 								
 								<div class="separator">&nbsp;</div>
 
+								<span class="metaName">Ar condicionado</span>: 
+								
+								<span class="metaContent">
+									<?php echo ($estabelecimento['Estabelecimento']['ar_condicionado']) ? 'Sim' : 'Não'; ?>
+								</span>
+								
+								<div class="separator">&nbsp;</div>
+
+								<span class="metaName">Faz reservas</span>: 
+								
+								<span class="metaContent">
+									<?php echo ($estabelecimento['Estabelecimento']['faz_reserva']) ? 'Sim' : 'Não'; ?>
+								</span>
+								
+								<div class="separator">&nbsp;</div>
+
 								<span class="metaName">Estacionamento</span>: 
 								
 								<span class="metaContent">
@@ -141,11 +169,51 @@
 								
 								<div class="separator">&nbsp;</div>
 
-								<span class="metaName">Desde</span>: 
+								<span class="metaName">Faz entrega</span>: 
 								
 								<span class="metaContent">
-									<?php echo $estabelecimento['Estabelecimento']['desde']; ?>
+									<?php echo ($estabelecimento['Estabelecimento']['estacionamento']) ? 'Sim' : 'Não'; ?>
 								</span>
+								
+								<div class="separator">&nbsp;</div>
+
+								<span class="metaName">Wifi</span>: 
+								
+								<span class="metaContent">
+									<?php echo ($estabelecimento['Estabelecimento']['estacionamento']) ? 'Sim' : 'Não'; ?>
+								</span>
+								
+								<div class="separator">&nbsp;</div>
+
+								<span class="metaName">Acesso a deficiente</span>: 
+								
+								<span class="metaContent">
+									<?php echo ($estabelecimento['Estabelecimento']['estacionamento']) ? 'Sim' : 'Não'; ?>
+								</span>
+								
+								<div class="separator">&nbsp;</div>
+
+								<span class="metaName">Inaugurado</span>: 
+								
+								<span class="metaContent">
+									<?php echo $estabelecimento['Estabelecimento']['inaugurado']; ?>
+								</span>
+								<div class="separator">&nbsp;</div>
+
+								<span class="metaName">Categoria</span>: 
+								
+								<span class="metaContent">
+									<?php echo ($estabelecimento['Estabelecimento']['estacionamento']) ? 'Sim' : 'Não'; ?>
+								</span>
+								
+								<div class="separator">&nbsp;</div>
+
+								<span class="metaName">Cartões</span>: 
+								
+								<span class="metaContent">
+									<?php echo ($estabelecimento['Estabelecimento']['estacionamento']) ? 'Sim' : 'Não'; ?>
+								</span>
+								
 								<div class="separator">&nbsp;</div>
 
 							</div><!-- inner -->

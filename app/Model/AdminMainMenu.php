@@ -6,27 +6,28 @@ App::uses('AppModel', 'Model');
  * @property Estabelecimento $Estabelecimento
  */
 class AdminMainMenu extends AppModel {
+	public $useTable = false;
 
 	public function get() {
 		return array(
 			array(
-				'label'=> 'Carrossel',
+				'label'=> 'Clientes',
 				'url'=> array(
-					'controller'=> 'home_destaques',
+					'controller'=> 'clientes',
 					'action'=> 'index'),
-				'icon'=> 'th-large'),
-			array(
-				'label'=> 'Banners',
-				'url'=> array(
-					'controller'=> 'banners',
-					'action'=> 'index'),
-				'icon'=> 'picture'),
+				'icon'=> 'list-alt'),			
 			array(
 				'label'=> 'Estabelecimentos',
 				'url'=> array(
 					'controller'=> 'estabelecimentos',
 					'action'=> 'index'),
 				'icon'=> 'stats'),
+			array(
+				'label'=> 'Cartões',
+				'url'=> array(
+					'controller'=> 'cartoes',
+					'action'=> 'index'),
+				'icon'=> 'shopping-cart'),
 			array(
 				'label'=> 'Categorias',
 				'url'=> array(
@@ -46,11 +47,24 @@ class AdminMainMenu extends AppModel {
 					'action'=> 'index'),
 				'icon'=> 'envelope'),
 			array(
+				'label'=> 'Subcategorias',
+				'url'=> array(
+					'controller'=> 'subcategorias',
+					'action'=> 'index'),
+				'icon'=> 'align-left'),
+			array(
+				'label'=> 'Banners',
+				'url'=> array(
+					'controller'=> 'banners',
+					'action'=> 'index'),
+				'icon'=> 'picture'),
+			array(
 				'label'=> 'Usuários',
 				'url'=> array(
-					'controller'=> 'usuarios_administrativos',
+					'controller'=> 'usuarios',
 					'action'=> 'index'),
-				'icon'=> 'user'));
+				'icon'=> 'user'),
+			);
 	}
 
 }

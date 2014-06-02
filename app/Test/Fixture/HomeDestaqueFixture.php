@@ -38,8 +38,8 @@ class HomeDestaqueFixture extends CakeTestFixture {
 			'link' => 'Lorem ipsum dolor sit amet',
 			'target' => 'Lorem ipsum dolor sit amet',
 			'imagem' => 'Lorem ipsum dolor sit amet',
-			'created' => '2014-05-26 06:10:42',
-			'modified' => '2014-05-26 06:10:42'
+			'created' => '2014-05-27 02:29:37',
+			'modified' => '2014-05-27 02:29:37'
 		),
 	);
 

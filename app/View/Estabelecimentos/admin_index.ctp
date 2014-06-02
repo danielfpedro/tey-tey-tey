@@ -29,6 +29,18 @@
 						placeholder="Pesquisar"
 						name="q"
 						value="<?php echo $this->request->query['q']; ?>">
+					<?php
+						echo '&nbsp;';
+						echo $this->Form->input('categoria', array(
+							'value'=> $this->request->query['categoria'],
+							'empty'=> 'Todos as categorias',
+							'name'=> 'categoria',
+							'label'=> false,
+							'class'=>
+							'form-control',
+							'div'=> false));
+						echo '&nbsp;';
+					?>
 					<button class="btn btn-default hidden-xs">
 						<span class="glyphicon glyphicon-search"></span>
 					</button>
@@ -41,66 +53,16 @@
 		<table class="table table-condensed table-hover table-striped table-admin">
 			<thead>
 				<tr>
+					<th style="width: 180px; text-align: center;"></th>
 					<th>
-						<?php echo $this->Paginator->sort('id'); ?>
+						<?php echo $this->Paginator->sort('name', 'Nome'); ?>
 					</th>
 					<th>
-						<?php echo $this->Paginator->sort('name'); ?>
-					</th>
+						<?php echo $this->Paginator->sort('descricao', 'Descrição'); ?>
+					</th>	
 					<th>
-						<?php echo $this->Paginator->sort('created'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('modified'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('site'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('telefone'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('endereco'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('area_fumantes'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('faz_reserva'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('ar_condicionado'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('estacionamento'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('ar_livre'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('descricao'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('rate'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('categoria_id'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('usuarios_administrativo_id'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('desde'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('imagem'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('cidade'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('slug'); ?>
-					</th>
+						<?php echo $this->Paginator->sort('categoria_id', 'Categoria'); ?>
+					</th>									
 					<th></th>
 				</tr>
 			</thead>
@@ -109,83 +71,35 @@
 					<?php foreach ($estabelecimentos as $estabelecimento): ?>						
 						<tr>
 							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['id']); ?>
+								<?php
+									$img_url = 'Estabelecimentos/' .
+										$estabelecimento['Estabelecimento']['id'] . '/300x170_' .
+										$estabelecimento['Estabelecimento']['imagem'];
+									echo $this->Html->image($img_url, $options = array('width'=> '160')); ?>
 							</td>
 							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['name']); ?>
-							</td>
-							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['created']); ?>
-							</td>
-							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['modified']); ?>
-							</td>
-							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['site']); ?>
-							</td>
-							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['telefone']); ?>
-							</td>
-							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['endereco']); ?>
-							</td>
-							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['area_fumantes']); ?>
-							</td>
-							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['faz_reserva']); ?>
-							</td>
-							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['ar_condicionado']); ?>
-							</td>
-							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['estacionamento']); ?>
-							</td>
-							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['ar_livre']); ?>
+								<?php
+									echo $this->Html->link(
+										$estabelecimento['Estabelecimento']['name'],
+										array(
+											'admin'=> false,
+											'controller' => 'site',
+											'action' => 'perfil',
+											$estabelecimento['Estabelecimento']['slug']
+										));
+									
+								?>
+								<br>
+								<em>
+									<?php echo h($estabelecimento['Estabelecimento']['cidade']); ?>
+								</em>
 							</td>
 							<td>
 								<?php echo h($estabelecimento['Estabelecimento']['descricao']); ?>
-							</td>
+							</td>				
 							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['rate']); ?>
-							</td>
-							<td>
-								<?php
-									echo $this->Html->link(
-										$estabelecimento['Categoria']['name'],
-										array(
-											'controller' => 'categorias',
-											'action' => 'view',
-											$estabelecimento['Categoria']['id']
-										));
-									
-								?>
-							</td>
-							<td>
-								<?php
-									echo $this->Html->link(
-										$estabelecimento['UsuariosAdministrativo']['name'],
-										array(
-											'controller' => 'usuarios_administrativos',
-											'action' => 'view',
-											$estabelecimento['UsuariosAdministrativo']['id']
-										));
-									
-								?>
-							</td>
-							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['desde']); ?>
-							</td>
-							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['imagem']); ?>
-							</td>
-							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['cidade']); ?>
-							</td>
-							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['slug']); ?>
-							</td>						
+								<?php echo h($estabelecimento['Categoria']['name']); ?>
+							</td>				
 							<td class="text-center" style="width:90px;">
 								<?php
 									echo $this->Html->link(
@@ -218,7 +132,7 @@
 						<tr>					
 					<?php endforeach; ?>
 				<?php else: ?>
-					<td colspan="21">Nenhuma informação encontrada.</td>
+					<td colspan="27">Nenhuma informação encontrada.</td>
 				<?php endif; ?>
 			</tbody>
 		</table>

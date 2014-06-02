@@ -49,15 +49,20 @@
 							array('inputDefaults'=> array('label'=> false))
 						);
 					?>
-						<?php echo $this->Form->input('nome', array('placeholder'=> 'Nome')); ?>
-						<?php echo $this->Form->input('email', array('placeholder'=> 'Email')); ?>
+						<label>Nome</label>
+						<?php echo $this->Form->input('nome', array()); ?>
+						<label>Email</label>
+						<?php echo $this->Form->input('email', array()); ?>
 						<div style="float: left;width: 48%">
-							<?php echo $this->Form->input('telefone', array('placeholder'=> 'Telefone')); ?>	
+							<label>Telefone</label>
+							<?php echo $this->Form->input('telefone', array()); ?>	
 						</div>
 						<div style="float: right;width: 48%">
-							<?php echo $this->Form->input('cidade', array('placeholder'=> 'Cidade')); ?>
+							<label>Cidade</label>
+							<?php echo $this->Form->input('cidade', array()); ?>
 						</div>
-						<?php echo $this->Form->textArea('texto', array('placeholder'=> 'Digite aqui a sua mensagem...')); ?>
+						<label>Mensagem</label>
+						<?php echo $this->Form->textArea('texto', array()); ?>
 						<button type="submit">Enviar</button>
 					<?php echo $this->Form->end() ?>
 				</div><!-- wrap-form-contato -->

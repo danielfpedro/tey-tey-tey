@@ -8,7 +8,7 @@ comments ele perde o estilo pq o estilo estah no id -->
 			<h3 id="reply-title">Deixe seu Comentário</h3>
 			<?php
 				echo $this->Form->create('Comentario',
-					array('type'=> 'post', 'url'=> array('controller'=> 'comentarios','action'=> 'add'))
+					array('type'=> 'post')
 				);
 			?>
 			
@@ -57,7 +57,7 @@ comments ele perde o estilo pq o estilo estah no id -->
 	<br>
 
 	<!-- Lista comentarios -->
-	<?php if (!empty($comentarios)): ?>
+	<?php if (1 == 2): ?>
 		<input type="hidden" id="comentarios-page" value="1">
 
 		<?php foreach ($comentarios as $comentario): ?>

@@ -6,8 +6,8 @@
 		<?php echo $title_for_layout; ?>
 	</title>
 	<?php
-		echo $this->Html->css('Site/style');
 		echo $this->Html->css('Site/cake-style');
+		echo $this->Html->css('Site/style');
 		// Estilo dos plugin jquery, estou apenas seguinte como estava
 		echo $this->Html->css('Site/js');
 
@@ -16,6 +16,8 @@
 		echo $this->Html->script('Site/plugins');
 		echo $this->Html->script('Site/custom');
 		
+		echo $this->Html->script('../lib/raty-2.5.2/lib/jquery.raty.min');
+
 		// Não faço ideia oq faz, provavelmente instruçoes para alguns plugins
 		// echo $this->Html->script('Site/plugins');
 		// Não faço ideia oq faz
@@ -26,7 +28,16 @@
 		echo $this->fetch('script');
 	?>
 	<script type="text/javascript">
-		var webroot = <?php echo $this->webroot; ?>
+		var webroot = <?php echo $this->webroot; ?>;
+		$(function(){
+			$('div#estrelas-readonly').raty({
+				score: function() {
+					return $(this).attr('data-score');
+				},
+				path: webroot + 'lib/raty-2.5.2/lib/img',
+				readOnly: true,
+			});
+		});
 	</script>
 </head>
 
