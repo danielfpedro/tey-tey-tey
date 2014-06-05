@@ -14,7 +14,7 @@
 	<?php echo $this->Form->input('name', array('label'=> 'Nome', 'class'=> 'form-control')); ?>
 </div>
 <div class="form-group">
-	<?php echo $this->Form->input('descricao', array('label'=> 'Descrição', 'class'=> 'form-control')); ?>
+	<?php echo $this->Form->input('descricao', array('label'=> 'Descrição', 'class'=> 'form-control', 'maxlength'=> 300)); ?>
 </div>
 <div class="form-group">
 	<?php echo $this->Form->input('endereco', array('label'=> 'Endereço', 'class'=> 'form-control')); ?>
@@ -32,13 +32,26 @@
 	</div>
 </div>
 
+
+<?php echo $this->Form->Label('Estabelecimento.horario_funcionamento_inicial', 'Horário de funcionamento'); ?>
 <div class="row">
-	<div class="col-md-3">
+	<div class="col-md-2">
 		<div class="form-group">
-			<?php echo $this->Form->input('horario_funcionamento',
+			<?php echo $this->Form->input('horario_funcionamento_inicial',
 				array(
-					'label'=> 'Horário de funcionamento',
+					'label'=> false,
 					'type'=> 'text',
+					'placeholder'=> 'De',
+					'class'=> 'form-control hora')); ?>
+		</div>
+	</div>
+	<div class="col-md-2">
+		<div class="form-group">
+			<?php echo $this->Form->input('horario_funcionamento_final',
+				array(
+					'label'=> false,
+					'type'=> 'text',
+					'placeholder'=> 'Até',
 					'class'=> 'form-control hora')); ?>
 		</div>
 	</div>
@@ -57,7 +70,7 @@
 			array('label'=> 'Tipo de cadastro', 'options'=> array(1=> 'Simples', 2=> 'Completo'),'class'=> 'form-control')); ?>
 </div>
 
-<div id="cont-completo" style="display: none;">
+<div id="cont-completo" style="<?php echo (isset($this->request->data['Estabelecimento']['tipo_cadastro']) == true AND $this->request->data['Estabelecimento']['tipo_cadastro'] == 2)? '': 'display: none;';?>">
 	<hr>
 
 	<div class="form-group">
@@ -87,6 +100,11 @@
 			</div>	
 		</div>
 	</div>	
+</div>
+
+<hr>
+<div class="form-group">
+	<?php echo $this->Form->input('ativo', array('type'=> 'checkbox')); ?>
 </div>
 
 <div class="form-group" style="margin: 40px 0 60px 0;">

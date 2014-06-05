@@ -31,6 +31,12 @@
 					<th>
 						<?php echo $this->Paginator->sort('email', 'Nome/Email'); ?>
 					</th>
+					<th>
+						<?php echo $this->Paginator->sort('data_nascimento'); ?>
+					</th>
+					<th>
+						<?php echo $this->Paginator->sort('cidade'); ?>
+					</th>
 					<th style="width: 160px;">
 						<?php echo $this->Paginator->sort('created', 'Data de criação'); ?>
 					</th>
@@ -41,9 +47,15 @@
 					<?php foreach ($usuarios as $usuario): ?>						
 						<tr>
 							<td>
-								<?php echo h($usuario['Perfil']['name']); ?>
+								<?php echo h($usuario['Perfil']['name']); ?>, 
 								<br>
 								<?php echo h($usuario['Usuario']['email']); ?>
+							</td>
+							<td>
+								<?php echo $this->Time->format('d/m/y', $usuario['Perfil']['data_nascimento']); ?>
+							</td>
+							<td>
+								<?php echo h($usuario['Perfil']['cidade']); ?>
 							</td>
 							<td>
 								<?php echo $this->Time->format('d/m/y h:m',$usuario['Usuario']['created']); ?>

@@ -35,7 +35,7 @@ comments ele perde o estilo pq o estilo estah no id -->
 											'value'=> $estabelecimento['Estabelecimento']['id']
 										)
 									);
-									echo $this->Form->textarea('texto', array('label'=> false));
+									echo $this->Form->textarea('comentario', array('label'=> false, 'value'=> '', 'required'=> true));
 								?>
 								<!-- <textarea id="comment" name="comment" rows="8" cols="50"></textarea> -->
 							</div>
@@ -57,7 +57,7 @@ comments ele perde o estilo pq o estilo estah no id -->
 	<br>
 
 	<!-- Lista comentarios -->
-	<?php if (1 == 2): ?>
+	<?php if (!empty($comentarios)): ?>
 		<input type="hidden" id="comentarios-page" value="1">
 
 		<?php foreach ($comentarios as $comentario): ?>

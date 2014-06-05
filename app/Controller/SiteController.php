@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 /**
  * Site Controller
  *
@@ -8,7 +9,7 @@ class SiteController extends AppController {
 	
 	public $layout = 'Site/default';
 
-	public $components = array('Paginator');
+	public $components = array('Paginator', 'DataUtil');
 
 	public function home() {
 		$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
@@ -114,6 +115,7 @@ class SiteController extends AppController {
 
 		$comentarios = $this->Comentario->find('all', array(
 			'conditions'=> array(
+				'Comentario.ativo'=> 1,
 				'Comentario.estabelecimento_id'=> $estabelecimento),
 			'limit'=> $limit,
 			'offset'=> $offset,
@@ -130,15 +132,18 @@ class SiteController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Comentario->create();
 			$this->request->data['Comentario']['usuario_id'] = 1;
+			$this->request->data['Comentario']['texto'] = $this->request->data['Comentario']['comentario'];
+
 			if ($this->Comentario->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>comentario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
+				$this->Session->setFlash(__('O <strong>comentario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
 			} else {
 				$this->Session->setFlash(__('O <strong>comentario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
+			return $this->redirect($this->referer());
 		}
 		
 		$this->loadModel('Estabelecimento');
-		$this->Estabelecimento->recursive = 3;
+		$this->Estabelecimento->recursive = 2;
 
 		// $this->loadModel('Comentario');
 		// $this->Comentario->recursive = 3;
@@ -155,6 +160,7 @@ class SiteController extends AppController {
 		$this->Comentario->recursive = 3;
 		$comentarios = $this->Comentario->find('all', array(
 			'conditions'=> array(
+				'Comentario.ativo'=> 1,
 				'Comentario.estabelecimento_id'=> $estabelecimento['Estabelecimento']['id']),
 			'limit'=> $this->Comentario->perfil_limit,
 			'order'=> array('Comentario.created DESC'))
@@ -163,7 +169,9 @@ class SiteController extends AppController {
 		$comentarios_count = $this->Comentario->find('count',
 			array(
 				'conditions'=> array(
+					'Comentario.ativo'=> 1,
 					'Comentario.estabelecimento_id'=> $estabelecimento['Estabelecimento']['id'])));
+
 		$show_paginator = ($comentarios_count > $this->Comentario->perfil_limit)? true : false;
 
 		if (!empty($estabelecimento)) {
@@ -182,24 +190,46 @@ class SiteController extends AppController {
 	}
 
 	public function estabelecimentos($categoria = null){
-		$this->loadModel('Categoria');		
-		$categoria_row = $this->Categoria->find('first', array('conditions'=> array('Categoria.slug'=> $categoria)));
-
-		$title_for_layout = ucfirst($categoria) .' - ' . $this->site_name;
-
 		$this->loadModel('Estabelecimento');
-		$this->Estabelecimento->recursive = 3;
+		$this->Estabelecimento->recursive = -1;
+		$this->Estabelecimento->Categoria->recursive = -1;
+		$categoria_row = $this
+			->Estabelecimento
+			->Categoria
+			->find('first',
+				array(
+					'fields'=> array(
+						'Categoria.id'
+					),
+					'conditions'=> array(
+						'Categoria.slug'=> $categoria
+					)
+				)
+			);
+		if (!empty($categoria_row)) {
 
-		$this->Paginator->settings = $this->paginate;
-		$this->Paginator->settings = array(
-			'conditions'=> array(
-				'Estabelecimento.categoria_id'=> $categoria_row['Categoria']['id']));
-    	// similar to findAll(), but fetches paged results
-    	$estabelecimentos = $this->Paginator->paginate('Estabelecimento');
+			$title_for_layout = ucfirst($categoria) .' - ' . $this->site_name;
 
-		$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
-		//Debugger::dump($estabelecimentos);
-		$this->set(compact('estabelecimentos','widget_estabelecimentos','categoria', 'title_for_layout'));
+			$this->Paginator->settings = $this->paginate;
+
+			$this->Paginator->settings = array(
+				'fields'=> array(
+					'Estabelecimento.name', 'Estabelecimento.imagem', 'Estabelecimento.descricao', 
+					'Estabelecimento.slug',
+				),
+				'contain'=> array(
+					'Comentario'=> array('fields'=> array('Comentario.id'))
+				),
+				'conditions'=> array(
+					'Estabelecimento.categoria_id'=> $categoria_row['Categoria']['id']));
+
+	    	$estabelecimentos = $this->Paginator->paginate('Estabelecimento');
+			$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
+			//Debugger::dump($estabelecimentos);
+			$this->set(compact('estabelecimentos','widget_estabelecimentos','categoria', 'title_for_layout'));
+		} else {
+			throw new NotFoundException('Esta categoria não existe não existe.');
+		}
 	}
 
 	public function contato(){
@@ -235,20 +265,33 @@ class SiteController extends AppController {
 					'default',
 					array('class'=> 'alert alert-danger'));
 			} else {
-				$this->Usuario->create();
-				if ($this->Usuario->save($this->request->data)) {
-					if (!empty($this->request->data)) {
-						$this->request->data['Perfil']['usuario_id'] = $this->Usuario->id;
-						if ($this->Usuario->Perfil->save($this->request->data)) {
-							$this->Session->setFlash(__('A <strong>mensagem</strong> foi enviada com sucesso.'), 'default', array('class'=> 'alert alert-success'));
-						} else {
-							$this->Session->setFlash(__('A <strong>mensagem</strong> não pode ser salva. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
-						};
-					}
+				
+				$this->request->data['Perfil']['data_nascimento'] = $this->DataUtil->setPadrao($this->request->data['Perfil']['data_nascimento']);
+				if (!strtotime($this->request->data['Perfil']['data_nascimento'])) {
+					$this->Session->setFlash(__('A data de nascimento não foi informada corretamente.'), 'default', array('class'=> 'alert alert-danger'));
 				} else {
-					$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+					$this->request->data['Usuario']['token_ativacao'] = String::uuid();
+					$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
+						$this->request->data['Usuario']['senha'] = $passwordHasher->hash(
+						$this->request->data['Usuario']['senha']
+					);
+					$this->Usuario->create();
+					if ($this->Usuario->save($this->request->data)) {
+						if (!empty($this->request->data)) {
+							$this->request->data['Perfil']['usuario_id'] = $this->Usuario->id;
+							if ($this->Usuario->Perfil->save($this->request->data)) {
+								$this->Session->setFlash(__('Cadastro feito com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+							} else {
+								$this->Session->setFlash(__('O <strong>cadastro</strong> não pode ser salva. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+							};
+						}
+					} else {
+						$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+					}					
+
 				}
 			}
+			$this->redirect(array('controller'=> 'site', 'action'=> 'home'));
 		}
 
 	}

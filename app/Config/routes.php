@@ -44,7 +44,7 @@
 
 	Router::connect('/ajax/mais_comentarios', array('controller' => 'site', 'action' => 'mais_comentarios'));
 
-	//Router::connect('/*', array('controller' => 'site', 'action' => 'perfil'));
+	Router::connect('/p/*', array('controller' => 'site', 'action' => 'perfil'));
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

@@ -1,8 +1,8 @@
 <div class="form-group">
-	<?php echo $this->Form->input('name', array('class'=> 'form-control')); ?>
+	<?php echo $this->Form->input('imagem', array('type'=> 'file', 'class'=> 'form-control')); ?>
 </div>
 <div class="form-group">
-	<?php echo $this->Form->input('Estabelecimento', array('class'=> 'form-control')); ?>
+	<?php echo $this->Form->input('name', array('label'=> 'Nome', 'class'=> 'form-control')); ?>
 </div>
 <div class="form-group">
 	<button type="submit" class="btn btn-primary">

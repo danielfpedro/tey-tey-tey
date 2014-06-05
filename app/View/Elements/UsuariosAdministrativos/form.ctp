@@ -1,11 +1,8 @@
 <div class="form-group">
-	<?php echo $this->Form->input('name', array('label'=> 'Nome', 'class'=> 'form-control')); ?>
+	<?php echo $this->Form->input('name', array('label'=> 'Login', 'class'=> 'form-control')); ?>
 </div>
 <div class="form-group">
-	<?php echo $this->Form->input('email', array('class'=> 'form-control')); ?>
-</div>
-<div class="form-group">
-	<?php echo $this->Form->input('senha', array('type'=> 'password', 'class'=> 'form-control', 'value'=> '')); ?>
+	<?php echo $this->Form->input('fake_password', array('label'=> 'Senha', 'type'=> 'password', 'class'=> 'form-control', 'value'=> '')); ?>
 </div>
 <div class="form-group">
 	<button type="submit" class="btn btn-primary">

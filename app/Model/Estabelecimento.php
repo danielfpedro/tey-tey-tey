@@ -12,6 +12,8 @@ App::uses('AppModel', 'Model');
  */
 class Estabelecimento extends AppModel {
 
+
+	public $actsAs = array('Containable');
 /**
  * Validation rules
  *
@@ -31,6 +33,14 @@ class Estabelecimento extends AppModel {
 		'descricao' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+			'maxlength' => array(
+				'rule' => array('maxlength', 300),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -78,7 +88,17 @@ class Estabelecimento extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'horario_funcionamento' => array(
+		'horario_funcionamento_inicial' => array(
+			'time' => array(
+				'rule' => array('time'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'horario_funcionamento_final' => array(
 			'time' => array(
 				'rule' => array('time'),
 				//'message' => 'Your custom message here',

@@ -22,6 +22,7 @@
 		echo $this->fetch('script');
 	?>
 	<script type="text/javascript">
+		var webroot = '/';
 		$(function(){
 			$('.tt').tooltip();
 		});

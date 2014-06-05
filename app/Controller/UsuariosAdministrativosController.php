@@ -81,20 +81,22 @@ public $layout = 'BootstrapAdmin.default';
  * @param string $id
  * @return void
  */
-	public function admin_edit($id = null) {
-		if (!$this->UsuariosAdministrativo->exists($id)) {
-			throw new NotFoundException(__('Invalid usuarios administrativo'));
-		}
+	public function admin_edit() {
+		$id = 1;
+
 		if ($this->request->is(array('post', 'put'))) {
-			if (!empty($this->request->data['UsuariosAdministrativo']['senha'])) {
+			if (!empty($this->request->data['UsuariosAdministrativo']['fake_password'])) {
 				$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
 					$this->request->data['UsuariosAdministrativo']['senha'] = $passwordHasher->hash(
-					$this->request->data['UsuariosAdministrativo']['senha']
+					$this->request->data['UsuariosAdministrativo']['fake_password']
 				);
 			}
+			
+			$this->request->data['UsuariosAdministrativo']['id'] = $id;
+
 			if ($this->UsuariosAdministrativo->save($this->request->data)) {
 				$this->Session->setFlash(__('O <strong>usuarios administrativo</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(array('action' => 'edit'));
 			} else {
 				$this->Session->setFlash(__('O <strong>usuarios administrativo</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}

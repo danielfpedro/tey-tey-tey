@@ -68,9 +68,8 @@
 
 								<?php
 									$img_url = ''.
-										'Estabelecimentos/'.
-										$estabelecimento['Estabelecimento']['id'].
-										'/300x170_'.
+										'estabelecimentos'.
+										'/300X170_'.
 										$estabelecimento['Estabelecimento']['imagem'];
 
 									echo $this->Html->link(
@@ -80,7 +79,7 @@
 									);
 								?>
 							</div>        
-							Descrição aqiu iasd oashd iuash du
+							<?php echo $estabelecimento['Estabelecimento']['descricao']; ?>
 							<br class="clearer" />    	
 					  	</div>										  
 						<div class="right-panel">
@@ -104,7 +103,7 @@
 								<span class="metaName">Tipo de comida</span>: 
 								
 								<span class="metaContent">
-									<?php echo $estabelecimento['Estabelecimento']['telefone']; ?>
+									<?php echo $estabelecimento['Estabelecimento']['tipo_comida']; ?>
 								</span>
 								
 								<div class="separator">&nbsp;</div>
@@ -112,7 +111,12 @@
 								<span class="metaName">Horário de funcionamento</span>: 
 								
 								<span class="metaContent">
-									<?php echo $estabelecimento['Estabelecimento']['telefone']; ?>
+									<?php echo $this->Time->format('H:m', $estabelecimento['Estabelecimento']['horario_funcionamento_inicial']); ?>
+									<?php if (!empty($estabelecimento['Estabelecimento']['horario_funcionamento_final'])): ?>
+										&nbsp;às&nbsp;
+										<?php echo $this->Time->format('H:m', $estabelecimento['Estabelecimento']['horario_funcionamento_final']); ?>
+									<?php endif ?>
+									
 								</span>
 								
 								<div class="separator">&nbsp;</div>
@@ -128,91 +132,108 @@
 								</span>
 								
 								<div class="separator">&nbsp;</div>
-
-								<span class="metaName">Área para fumantes</span>: 
 								
 								<span class="metaContent">
-									<?php echo ($estabelecimento['Estabelecimento']['area_fumantes']) ? 'Sim' : 'Não'; ?>
+									<?php
+										$icon_size = 24;
+										if ($estabelecimento['Estabelecimento']['wifi']) {
+											echo $this->Html->image(
+												'icones_estabelecimentos/wifi.png',
+												array('width'=> $icon_size, 'title'=> 'Wifi')
+											);
+										}
+										if ($estabelecimento['Estabelecimento']['ar_condicionado']) {
+											echo '&nbsp';
+											echo $this->Html->image(
+												'icones_estabelecimentos/ar_condicionado.png',
+												array('width'=> $icon_size, 'title'=> 'Ar condicionado')
+											);
+										}
+										if ($estabelecimento['Estabelecimento']['area_fumantes']) {
+											echo '&nbsp';
+											echo $this->Html->image(
+												'icones_estabelecimentos/area_fumantes.png',
+												array('width'=> $icon_size, 'title'=> 'Area para fumantes')
+											);
+										}
+										if ($estabelecimento['Estabelecimento']['estacionamento']) {
+											echo '&nbsp';
+											echo $this->Html->image(
+												'icones_estabelecimentos/estacionamento.png',
+												array('width'=> $icon_size, 'title'=> 'Estacionamento')
+											);
+										}
+										if ($estabelecimento['Estabelecimento']['faz_entrega']) {
+											echo '&nbsp';
+											echo $this->Html->image(
+												'icones_estabelecimentos/faz_entrega.png',
+												array('width'=> $icon_size, 'title'=> 'Faz entrega')
+											);
+										}
+										if ($estabelecimento['Estabelecimento']['faz_reserva']) {
+											echo '&nbsp';
+											echo $this->Html->image(
+												'icones_estabelecimentos/faz_reserva.png',
+												array('width'=> $icon_size, 'title'=> 'Faz reserva')
+											);
+										}
+										if ($estabelecimento['Estabelecimento']['ar_livre']) {
+											echo '&nbsp';
+											echo $this->Html->image(
+												'icones_estabelecimentos/ar_livre.png',
+												array('width'=> $icon_size, 'title'=> 'Ar livre')
+											);
+										}
+										if ($estabelecimento['Estabelecimento']['acesso_deficiente']) {
+											echo '&nbsp';
+											echo $this->Html->image(
+												'icones_estabelecimentos/acesso_deficiente.png',
+												array('width'=> $icon_size, 'title'=> 'Acesso deficiente')
+											);
+										}
+									?>
 								</span>
 								
 								<div class="separator">&nbsp;</div>
 
-								<span class="metaName">Ar livre</span>: 
+								<?php if (!empty($estabelecimento['Estabelecimento']['inaugurado']) OR !is_null($estabelecimento['Estabelecimento']['inaugurado'])): ?>
+									<span class="metaName">Inaugurado</span>: 
 								
-								<span class="metaContent">
-									<?php echo ($estabelecimento['Estabelecimento']['ar_livre']) ? 'Sim' : 'Não'; ?>
-								</span>
+									<span class="metaContent">
+										<?php echo $estabelecimento['Estabelecimento']['inaugurado']; ?>
+									</span>
+									<div class="separator">&nbsp;</div>
+								<?php endif ?>
+
+								<?php if (!empty($estabelecimento['Subcategoria'])): ?>
+									<span class="metaName">Categoria(s)</span>:
+									<?php
+										$subcategorias = array();
+										foreach ($estabelecimento['Subcategoria'] as $key => $value) {
+											$subcategorias[] = $value['name'];
+										}
+
+									?>
+									<span class="metaContent">
+										<?php echo $this->Text->toList($subcategorias, 'e'); ?>
+									</span>
+								<?php endif ?>
 								
 								<div class="separator">&nbsp;</div>
 
-								<span class="metaName">Ar condicionado</span>: 
+								<?php if (!empty($estabelecimento['Cartao'])): ?>
+									<span class="metaName">Cartões</span>: 
 								
-								<span class="metaContent">
-									<?php echo ($estabelecimento['Estabelecimento']['ar_condicionado']) ? 'Sim' : 'Não'; ?>
-								</span>
-								
-								<div class="separator">&nbsp;</div>
-
-								<span class="metaName">Faz reservas</span>: 
-								
-								<span class="metaContent">
-									<?php echo ($estabelecimento['Estabelecimento']['faz_reserva']) ? 'Sim' : 'Não'; ?>
-								</span>
-								
-								<div class="separator">&nbsp;</div>
-
-								<span class="metaName">Estacionamento</span>: 
-								
-								<span class="metaContent">
-									<?php echo ($estabelecimento['Estabelecimento']['estacionamento']) ? 'Sim' : 'Não'; ?>
-								</span>
-								
-								<div class="separator">&nbsp;</div>
-
-								<span class="metaName">Faz entrega</span>: 
-								
-								<span class="metaContent">
-									<?php echo ($estabelecimento['Estabelecimento']['estacionamento']) ? 'Sim' : 'Não'; ?>
-								</span>
-								
-								<div class="separator">&nbsp;</div>
-
-								<span class="metaName">Wifi</span>: 
-								
-								<span class="metaContent">
-									<?php echo ($estabelecimento['Estabelecimento']['estacionamento']) ? 'Sim' : 'Não'; ?>
-								</span>
-								
-								<div class="separator">&nbsp;</div>
-
-								<span class="metaName">Acesso a deficiente</span>: 
-								
-								<span class="metaContent">
-									<?php echo ($estabelecimento['Estabelecimento']['estacionamento']) ? 'Sim' : 'Não'; ?>
-								</span>
-								
-								<div class="separator">&nbsp;</div>
-
-								<span class="metaName">Inaugurado</span>: 
-								
-								<span class="metaContent">
-									<?php echo $estabelecimento['Estabelecimento']['inaugurado']; ?>
-								</span>
-								<div class="separator">&nbsp;</div>
-
-								<span class="metaName">Categoria</span>: 
-								
-								<span class="metaContent">
-									<?php echo ($estabelecimento['Estabelecimento']['estacionamento']) ? 'Sim' : 'Não'; ?>
-								</span>
-								
-								<div class="separator">&nbsp;</div>
-
-								<span class="metaName">Cartões</span>: 
-								
-								<span class="metaContent">
-									<?php echo ($estabelecimento['Estabelecimento']['estacionamento']) ? 'Sim' : 'Não'; ?>
-								</span>
+									<span class="metaContent">
+										<?php foreach ($estabelecimento['Cartao'] as $key => $cartao): ?>
+											<?php
+												echo '&nbsp';
+												echo $this->Html->image(
+													'Cartoes/' . $cartao['imagem'], array('width'=> 30));
+											?>
+										<?php endforeach ?>
+									</span>
+								<?php endif ?>
 								
 								<div class="separator">&nbsp;</div>
 

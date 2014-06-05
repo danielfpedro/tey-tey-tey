@@ -46,7 +46,6 @@
 					<th style="width: 60px;">
 						<?php echo $this->Paginator->sort('created', 'Data'); ?>
 					</th>
-					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -73,23 +72,6 @@
 									<?php echo $this->Time->format('d/m/y', $contato['Contato']['created']); ?>
 								</em>
 							</td>					
-							<td class="text-center">
-								<?php
-									echo $this->Form->postLink(
-										"<span class='glyphicon glyphicon-remove'></span>",
-										array(
-											'action' => 'delete',
-											$contato['Contato']['id']),
-										array(
-											'class'=> 'btn btn-sm btn-danger tt',
-											'title'=> 'Remover',
-											'escape'=> false
-										),
-										__('Você tem certeza que deseja deletar # %s?'
-										, $contato['Contato']['id'])
-									);
-								?>
-							</td>
 						<tr>					
 					<?php endforeach; ?>
 				<?php else: ?>

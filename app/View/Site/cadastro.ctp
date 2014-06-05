@@ -1,4 +1,6 @@
 <?php echo $this->Html->script('Site/widget_estabelecimentos', array('inline'=> false)); ?>
+<?php echo $this->Html->script('Site/cadastro', array('inline'=> false)); ?>
+<?php echo $this->Html->script('../lib/maskedinput-1.3.1/jquery.maskedinput.min', array('inline'=> false)); ?>
 
 <div id="page-wrapper"> <!-- everything below the top menu should be inside the page wrapper div -->
 	<div id="logo-bar"> <!--begin the main header logo area-->
@@ -54,10 +56,14 @@
 						<?php echo $this->Form->input('Perfil.name'); ?>
 						<label>Email</label>
 						<?php echo $this->Form->input('email'); ?>
+						<label>Data de nascimento</label>
+						<?php echo $this->Form->input('Perfil.data_nascimento', array('type'=> 'text', 'class'=> 'data')); ?>
+						<label>Cidade</label>
+						<?php echo $this->Form->input('Perfil.cidade'); ?>
 						<label>Senha</label>
-						<?php echo $this->Form->input('senha'); ?>
+						<?php echo $this->Form->input('senha', array('type'=> 'password')); ?>
 						<label>Repetir senha</label>
-						<?php echo $this->Form->input('repetir_senha'); ?>
+						<?php echo $this->Form->input('repetir_senha', array('type'=> 'password')); ?>
 						<button type="submit">Criar conta</button>
 					<?php echo $this->Form->end() ?>
 				</div><!-- wrap-form-contato -->

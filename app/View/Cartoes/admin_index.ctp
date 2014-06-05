@@ -1,6 +1,6 @@
 <div class="breadcrumb breadcrumb-admin">
 	<li class="active">
-		Cartoes
+		Cartões
 	</li>
 </div>
 
@@ -9,7 +9,7 @@
 		<div class="col-md-12">
 			<?php
 			echo $this->Html->link(
-				"Novo cartao",
+				"Novo cartão",
 				array('action'=> 'add'),
 				array('class'=> 'btn btn-success btn-novo',
 					'escape'=> false
@@ -41,6 +41,7 @@
 		<table class="table table-condensed table-hover table-striped table-admin">
 			<thead>
 				<tr>
+					<th style="width: 90px;"></th>
 					<th>
 						<?php echo $this->Paginator->sort('name', 'Cartão'); ?>
 					</th>
@@ -51,6 +52,9 @@
 				<?php if (!empty($cartoes)): ?>
 					<?php foreach ($cartoes as $cartao): ?>						
 						<tr>
+							<td>
+								<?php echo $this->Html->image('Cartoes/' . $cartao['Cartao']['imagem']); ?>
+							</td>
 							<td>
 								<?php echo h($cartao['Cartao']['name']); ?>
 							</td>
@@ -67,20 +71,20 @@
 											'escape'=> false
 										)
 									);
-									echo "&nbsp;";
-									echo $this->Form->postLink(
-										"<span class='glyphicon glyphicon-remove'></span>",
-										array(
-											'action' => 'delete',
-											$cartao['Cartao']['id']),
-										array(
-											'class'=> 'btn btn-sm btn-danger tt',
-											'title'=> 'Remover',
-											'escape'=> false
-										),
-										__('Você tem certeza que deseja deletar # %s?'
-										, $cartao['Cartao']['id'])
-									);
+									// echo "&nbsp;";
+									// echo $this->Form->postLink(
+									// 	"<span class='glyphicon glyphicon-remove'></span>",
+									// 	array(
+									// 		'action' => 'delete',
+									// 		$cartao['Cartao']['id']),
+									// 	array(
+									// 		'class'=> 'btn btn-sm btn-danger tt',
+									// 		'title'=> 'Remover',
+									// 		'escape'=> false
+									// 	),
+									// 	__('Você tem certeza que deseja deletar # %s?'
+									// 	, $cartao['Cartao']['id'])
+									// );
 								?>
 							</td>
 						<tr>					

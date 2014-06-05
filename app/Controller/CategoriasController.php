@@ -1,5 +1,8 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('Folder', 'Utility');
+
+App::uses('WideImage', 'Lib/WideImage/lib');
 /**
  * Categorias Controller
  *
@@ -153,12 +156,31 @@ public $layout = 'BootstrapAdmin.default';
  */
 	public function admin_add() {
 		if ($this->request->is('post')) {
-			$this->Categoria->create();
-			if ($this->Categoria->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>categoria</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
-				return $this->redirect(array('action' => 'index'));
+
+			$image_array = $this->request->data['Categoria']['imagem'];
+			$this->request->data['Categoria']['imagem'] = $this->request->data['Categoria']['imagem']['name'];
+
+			if ($image_array['type'] == 'image/jpeg' OR $image_array['type'] == 'image/png') {
+				$this->Categoria->create();
+				if ($this->Categoria->save($this->request->data)) {
+
+					$image = WideImage::load($image_array['tmp_name']);
+					$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'icones_categorias', true, 0755);
+					
+					$image
+						->resize(25, 25, 'outside')
+						->crop('center', 'center', 25, 25)
+						->saveToFile($pasta_salvar->path . DS . $image_array['name'], 100);
+
+					$this->Session->setFlash(__('O <strong>categoria</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
+					return $this->redirect(array('action' => 'index'));
+				} else {
+					$this->Session->setFlash(__('O <strong>categoria</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+				}
 			} else {
-				$this->Session->setFlash(__('O <strong>categoria</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+				$this->Session->setFlash(__('A <strong>imagem</strong> deve estar no formato JPG ou PNG.'),
+					'default',
+					array('class'=> 'alert alert-danger'));
 			}
 		}
 	}
@@ -175,8 +197,23 @@ public $layout = 'BootstrapAdmin.default';
 			throw new NotFoundException(__('Invalid categoria'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
+			if ($this->request->data['Categoria']['imagem']['error'] > 0) {
+				unset($this->request->data['Categoria']['imagem']);
+			} else {
+				$image_array = $this->request->data['Categoria']['imagem'];
+				$this->request->data['Categoria']['imagem'] = $this->request->data['Categoria']['imagem']['name'];
+			}
 			if ($this->Categoria->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>categoria</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
+				if (isset($this->request->data['Categoria']['imagem'])) {
+					$image = WideImage::load($image_array['tmp_name']);
+					$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'icones_categorias', true, 0755);
+					
+					$image
+						->resize(25, 25, 'outside')
+						->crop('center', 'center', 25, 25)
+						->saveToFile($pasta_salvar->path . DS . $image_array['name'], 100);
+				}
+				$this->Session->setFlash(__('O <strong>categoria</strong> foi salva com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('O <strong>categoria</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));

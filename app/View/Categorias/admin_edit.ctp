@@ -10,27 +10,10 @@
 <div class="wrap-internal-page">
 	<div class="row">
 		<div class="col-md-12">
-			<?php echo $this->Form->create('Categoria'); ?>
-				
-		<div class="form-group">
-			<?php echo $this->Form->input('id', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
+			<?php echo $this->Form->create('Categoria', array('type'=> 'file')); ?>
+				<?php echo $this->Form->input('id'); ?>
+				<?php echo $this->element('Categorias/form'); ?>
+			<?php echo $this->Form->end(); ?>			
 		</div>
-		<div class="form-group">
-			<?php echo $this->Form->input('name', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
-		</div>
-		<div class="form-group">
-			<?php echo $this->Form->input('imagem', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
-		</div>
-		<div class="form-group">
-			<?php echo $this->Form->input('slug', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
-		</div>
-		<div class="form-group">
-			<button type="submit" class="btn btn-primary">
-				<span class="glyphicon glyphicon-ok"></span> Salvar
-			</button>
-		</div>		</div>
-		
-
-	<?php echo $this->Form->end(); ?>
 	</div>
 </div>

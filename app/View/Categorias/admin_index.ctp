@@ -41,6 +41,7 @@
 		<table class="table table-condensed table-hover table-striped table-admin">
 			<thead>
 				<tr>
+					<th style="width: 60px;"></th>
 					<th>
 						<?php echo $this->Paginator->sort('name', 'Categoria'); ?>
 					</th>
@@ -51,6 +52,11 @@
 				<?php if (!empty($categorias)): ?>
 					<?php foreach ($categorias as $categoria): ?>						
 						<tr>
+							<td>
+								<?php echo $this->Html->image(
+									'icones_categorias/' . $categoria['Categoria']['imagem'],
+									array('style'=> 'background-color: #CF6925; padding: 3px; border-radius: 2px;')); ?>
+							</td>
 							<td>
 								<?php echo h($categoria['Categoria']['name']); ?>
 							</td>
@@ -67,20 +73,20 @@
 											'escape'=> false
 										)
 									);
-									echo "&nbsp;";
-									echo $this->Form->postLink(
-										"<span class='glyphicon glyphicon-remove'></span>",
-										array(
-											'action' => 'delete',
-											$categoria['Categoria']['id']),
-										array(
-											'class'=> 'btn btn-sm btn-danger tt',
-											'title'=> 'Remover',
-											'escape'=> false
-										),
-										__('Você tem certeza que deseja deletar # %s?'
-										, $categoria['Categoria']['id'])
-									);
+									// echo "&nbsp;";
+									// echo $this->Form->postLink(
+									// 	"<span class='glyphicon glyphicon-remove'></span>",
+									// 	array(
+									// 		'action' => 'delete',
+									// 		$categoria['Categoria']['id']),
+									// 	array(
+									// 		'class'=> 'btn btn-sm btn-danger tt',
+									// 		'title'=> 'Remover',
+									// 		'escape'=> false
+									// 	),
+									// 	__('Você tem certeza que deseja deletar # %s?'
+									// 	, $categoria['Categoria']['id'])
+									// );
 								?>
 							</td>
 						<tr>					

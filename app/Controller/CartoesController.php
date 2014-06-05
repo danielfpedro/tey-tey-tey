@@ -1,5 +1,8 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('Folder', 'Utility');
+
+App::uses('WideImage', 'Lib/WideImage/lib');
 /**
  * Cartoes Controller
  *
@@ -58,11 +61,30 @@ public $layout = 'BootstrapAdmin.default';
 	public function admin_add() {
 		if ($this->request->is('post')) {
 			$this->Cartao->create();
-			if ($this->Cartao->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>cartao</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
-				return $this->redirect(array('action' => 'index'));
+						
+			$image_array = $this->request->data['Cartao']['imagem'];
+			$this->request->data['Cartao']['imagem'] = $this->request->data['Cartao']['imagem']['name'];
+			
+			if ($image_array['type'] == 'image/jpeg' OR $image_array['type'] == 'image/png') {
+				if ($this->Cartao->save($this->request->data)) {
+
+					$image = WideImage::load($image_array['tmp_name']);
+					$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'Cartoes', true, 0755);
+					
+					$image
+						->resize(51, 32, 'outside')
+						->crop('center', 'center', 51, 32)
+						->saveToFile($pasta_salvar->path . DS . $image_array['name'], 90);
+
+					$this->Session->setFlash(__('O <strong>cartao</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
+					return $this->redirect(array('action' => 'index'));
+				} else {
+					$this->Session->setFlash(__('O <strong>cartao</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+				}
 			} else {
-				$this->Session->setFlash(__('O <strong>cartao</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+				$this->Session->setFlash(__('A <strong>imagem</strong> deve estar no formato JPG ou PNG.'),
+					'default',
+					array('class'=> 'alert alert-danger'));
 			}
 		}
 		$estabelecimentos = $this->Cartao->Estabelecimento->find('list');
@@ -81,7 +103,24 @@ public $layout = 'BootstrapAdmin.default';
 			throw new NotFoundException(__('Invalid cartao'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
+
+			if ($this->request->data['Cartao']['imagem']['error'] > 0) {
+				unset($this->request->data['Cartao']['imagem']);
+			} else {
+				$image_array = $this->request->data['Cartao']['imagem'];
+				$this->request->data['Cartao']['imagem'] = $this->request->data['Cartao']['imagem']['name'];
+			}
+
 			if ($this->Cartao->save($this->request->data)) {
+				if (isset($this->request->data['Cartao']['imagem'])) {
+					$image = WideImage::load($image_array['tmp_name']);
+					$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'Cartoes', true, 0755);
+					
+					$image
+						->resize(51, 32, 'outside')
+						->crop('center', 'center', 51, 32)
+						->saveToFile($pasta_salvar->path . DS . $image_array['name'], 100);
+				}
 				$this->Session->setFlash(__('O <strong>cartao</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {

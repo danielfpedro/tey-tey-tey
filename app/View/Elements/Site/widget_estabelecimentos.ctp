@@ -37,9 +37,8 @@
 											$item['Estabelecimento']['slug']
 										);
 										$perfil_img = ''.
-											'Estabelecimentos/' .
-											$item['Estabelecimento']['id'] .
-											'/70x70_' .
+											'estabelecimentos/' .
+											'/70X70_' .
 											$item['Estabelecimento']['imagem'];
 
 										$categoria_img = 'icones_categorias/' . $item['Categoria']['imagem'];

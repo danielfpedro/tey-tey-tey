@@ -23,18 +23,6 @@ class AdminMainMenu extends AppModel {
 					'action'=> 'index'),
 				'icon'=> 'stats'),
 			array(
-				'label'=> 'Cartões',
-				'url'=> array(
-					'controller'=> 'cartoes',
-					'action'=> 'index'),
-				'icon'=> 'shopping-cart'),
-			array(
-				'label'=> 'Categorias',
-				'url'=> array(
-					'controller'=> 'categorias',
-					'action'=> 'index'),
-				'icon'=> 'th-list'),
-			array(
 				'label'=> 'Comentários',
 				'url'=> array(
 					'controller'=> 'comentarios',
@@ -47,6 +35,25 @@ class AdminMainMenu extends AppModel {
 					'action'=> 'index'),
 				'icon'=> 'envelope'),
 			array(
+				'label'=> 'Usuários',
+				'url'=> array(
+					'controller'=> 'usuarios',
+					'action'=> 'index'),
+				'icon'=> 'user'),			
+			array(
+				'label'=> 'Cartões',
+				'url'=> array(
+					'controller'=> 'cartoes',
+					'action'=> 'index'),
+				'icon'=> 'shopping-cart'),
+			array(
+				'label'=> 'Categorias',
+				'url'=> array(
+					'controller'=> 'categorias',
+					'action'=> 'index'),
+				'icon'=> 'th-list'),
+
+			array(
 				'label'=> 'Subcategorias',
 				'url'=> array(
 					'controller'=> 'subcategorias',
@@ -58,12 +65,6 @@ class AdminMainMenu extends AppModel {
 					'controller'=> 'banners',
 					'action'=> 'index'),
 				'icon'=> 'picture'),
-			array(
-				'label'=> 'Usuários',
-				'url'=> array(
-					'controller'=> 'usuarios',
-					'action'=> 'index'),
-				'icon'=> 'user'),
 			);
 	}
 

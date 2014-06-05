@@ -1,5 +1,8 @@
 <?php echo $this->Html->script('Site/widget_estabelecimentos', array('inline'=> false)); ?>
 
+<?php echo $this->Html->script('../lib/maskedinput-1.3.1/jquery.maskedinput.min', array('inline'=> false)); ?>
+<?php echo $this->Html->script('Site/contato', array('inline'=> false)); ?>
+
 <div id="page-wrapper"> <!-- everything below the top menu should be inside the page wrapper div -->
 	<div id="logo-bar"> <!--begin the main header logo area-->
 		<div id="logo-wrapper">

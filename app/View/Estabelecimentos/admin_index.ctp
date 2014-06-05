@@ -54,15 +54,18 @@
 			<thead>
 				<tr>
 					<th style="width: 180px; text-align: center;"></th>
-					<th>
+					<th style="width: 200px;">
 						<?php echo $this->Paginator->sort('name', 'Nome'); ?>
 					</th>
 					<th>
 						<?php echo $this->Paginator->sort('descricao', 'Descrição'); ?>
 					</th>	
-					<th>
+					<th style="width: 120px;">
 						<?php echo $this->Paginator->sort('categoria_id', 'Categoria'); ?>
-					</th>									
+					</th>
+					<th style="width: 80px;">
+						<?php echo $this->Paginator->sort('ativo', 'Status'); ?>
+					</th>		
 					<th></th>
 				</tr>
 			</thead>
@@ -72,8 +75,8 @@
 						<tr>
 							<td>
 								<?php
-									$img_url = 'Estabelecimentos/' .
-										$estabelecimento['Estabelecimento']['id'] . '/300x170_' .
+									$img_url = 'estabelecimentos/' .
+										'300X170_' .
 										$estabelecimento['Estabelecimento']['imagem'];
 									echo $this->Html->image($img_url, $options = array('width'=> '160')); ?>
 							</td>
@@ -95,11 +98,17 @@
 								</em>
 							</td>
 							<td>
-								<?php echo h($estabelecimento['Estabelecimento']['descricao']); ?>
+								<?php echo $this->Text->truncate($estabelecimento['Estabelecimento']['descricao'], 100); ?>
 							</td>				
 							<td>
 								<?php echo h($estabelecimento['Categoria']['name']); ?>
-							</td>				
+							</td>
+							<td>
+								<?php echo ($estabelecimento['Estabelecimento']['ativo']) ?
+									'<span class="label label-success">Ativo</span>':
+									'<span class="label label-danger">Inativo</span>';
+								?>
+							</td>
 							<td class="text-center" style="width:90px;">
 								<?php
 									echo $this->Html->link(

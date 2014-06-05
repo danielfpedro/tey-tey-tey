@@ -53,9 +53,8 @@
 	                        <div class="left-panel">
 	                        	<?php
 	                        		$img_url = ''.
-	                        			'Estabelecimentos/'.
-	                        			$estabelecimento['Estabelecimento']['id'].
-	                        			'/300x170_' . $estabelecimento['Estabelecimento']['imagem'];
+	                        			'estabelecimentos/'.
+	                        			'/300X170_' . $estabelecimento['Estabelecimento']['imagem'];
 	                        		$img = $this->Html->image(
 	                        			$img_url,
 	                        			array(
@@ -92,7 +91,7 @@
 	                        	<br style="clear: both;">
 
 	                    		<div class="excerpt">
-	                    			<?php echo $estabelecimento['Estabelecimento']['descricao']; ?>
+	                    			<?php echo $this->Text->truncate($estabelecimento['Estabelecimento']['descricao'], 140); ?>
 	                    		</div>
 	                        	<div class="clearer"></div>
 

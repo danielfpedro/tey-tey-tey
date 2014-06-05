@@ -121,7 +121,12 @@ public $layout = 'BootstrapAdmin.default';
 		$options = array();
 		if (!empty($this->request->query['q'])) {
 			$q = str_replace(' ', '%', $this->request->query['q']);
-			$options['conditions'][] = array('Contato.name LIKE'=> '%'.$q.'%');
+			$options['conditions'][] = array(
+				'or'=> array(
+					array('Contato.nome LIKE'=> '%'.$q.'%'),
+					array('Contato.email LIKE'=> '%'.$q.'%')
+				)
+			);
 		} else {
 			$this->request->query['q'] = '';
 		}

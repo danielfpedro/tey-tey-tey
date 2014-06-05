@@ -28,7 +28,7 @@
 		echo $this->fetch('script');
 	?>
 	<script type="text/javascript">
-		var webroot = <?php echo $this->webroot; ?>;
+		var webroot = '/';
 		$(function(){
 			$('div#estrelas-readonly').raty({
 				score: function() {

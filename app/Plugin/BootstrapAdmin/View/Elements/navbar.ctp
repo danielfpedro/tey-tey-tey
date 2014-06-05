@@ -36,7 +36,7 @@
             <span class="glyphicon glyphicon-user"></span> Studio Seis <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li>
-              <?php echo $this->Html->link("<span class='glyphicon glyphicon-cog'></span> Configurações do meu usuário", array('controller'=> 'usuarios','action'=> 'edit'), array('escape'=> false)) ?>
+              <?php echo $this->Html->link("<span class='glyphicon glyphicon-cog'></span> Configurações do meu usuário", array('controller'=> 'usuariosAdministrativos','action'=> 'edit'), array('escape'=> false)) ?>
             </li>
             <li class="divider"></li>
             <li>

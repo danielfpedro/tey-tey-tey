@@ -17,7 +17,7 @@ public $layout = 'BootstrapAdmin.default';
  *
  * @var array
  */
-	public $components = array('Paginator');
+	public $components = array('Paginator', 'DataUtil');
 
 /**
  * admin_index method
@@ -42,6 +42,7 @@ public $layout = 'BootstrapAdmin.default';
 
 		$this->Estabelecimento->recursive = 0;
 
+		$options['order'] = array('Estabelecimento.created DESC');
 		$this->Paginator->settings = $options;
 		$this->set('estabelecimentos', $this->Paginator->paginate());
 
@@ -78,18 +79,33 @@ public $layout = 'BootstrapAdmin.default';
 			$image_array = $this->request->data['Estabelecimento']['imagem'];
 			$this->request->data['Estabelecimento']['imagem'] = $this->request->data['Estabelecimento']['imagem']['name'];
 			$this->request->data['Estabelecimento']['usuarios_administrativo_id'] = 1;
+			$this->request->data['Estabelecimento']['slug'] = Inflector::slug($this->request->data['Estabelecimento']['name'], '-');
+
+			if ($this->request->data['Estabelecimento']['horario_funcionamento'] > '23:59') {
+				$this->Session->setFlash(__('O horário de funcionamento do <strong>estabelecimento</strong> não foi informado corretamente.'), 'default', array('class'=> 'alert alert-danger'));
+				return $this->redirect(array('action' => 'admin_add'));
+			}
 
 			if ($image_array['type'] == 'image/jpeg' OR $image_array['type'] == 'image/png') {
+				
+				if ($this->request->data['Estabelecimento']['tipo_cadastro'] == 2) {
+					$this->request->data['Estabelecimento']['inaugurado'] = $this->DataUtil->setPadrao($this->request->data['Estabelecimento']['inaugurado']);
+					if (!strtotime($this->request->data['Estabelecimento']['inaugurado'])) {
+						$this->Session->setFlash(__('A data de inauguração do <strong>estabelecimento</strong> não foi informado corretamente.'), 'default', array('class'=> 'alert alert-danger'));
+						return $this->redirect(array('action' => 'admin_add'));	
+					}
+				}
+
 				$this->Estabelecimento->create();
 				if ($this->Estabelecimento->save($this->request->data)) {
 					//Salvando imagem
 					$image = WideImage::load($image_array['tmp_name']);
-					$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'Estabelecimentos' . DS . $this->Estabelecimento->id, true, 0755);
+					$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'estabelecimentos', true, 0755);
 					
 					$image
 						->resize(70, 70, 'outside')
 						->crop('center', 'center', 70, 70)
-						->saveToFile($pasta_salvar->path . DS . '70x70_' . $image_array['name'], 85);
+						->saveToFile($pasta_salvar->path . DS . '70X70_' . $image_array['name'], 85);
 
 					$image
 						->resize(300, 170, 'outside')
@@ -135,6 +151,7 @@ public $layout = 'BootstrapAdmin.default';
 			
 			
 			$this->request->data['Estabelecimento']['usuarios_administrativo_id'] = 1;
+			$this->request->data['Estabelecimento']['slug'] = Inflector::slug($this->request->data['Estabelecimento']['name'], '-');
 
 
 				if ($this->request->data['Estabelecimento']['imagem']['error'] > 0) {
@@ -145,15 +162,29 @@ public $layout = 'BootstrapAdmin.default';
 				}
 				// Debugger::dump($this->request->data);
 				// exit();
+
+				if ($this->request->data['Estabelecimento']['horario_funcionamento'] > '23:59') {
+					$this->Session->setFlash(__('O horário de funcionamento do <strong>estabelecimento</strong> não foi informado corretamente.'), 'default', array('class'=> 'alert alert-danger'));
+					return $this->redirect(array('action'=> 'admin_edit', $this->request->data['Estabelecimento']['id']));
+				}
+
+				if ($this->request->data['Estabelecimento']['tipo_cadastro'] == 2) {
+					if (!strtotime($this->request->data['Estabelecimento']['inaugurado'])) {
+						$this->Session->setFlash(__('A data de inauguração do <strong>estabelecimento</strong> não foi informado corretamente.'), 'default', array('class'=> 'alert alert-danger'));
+						return $this->redirect(array('action'=> 'admin_edit', $this->request->data['Estabelecimento']['id']));
+					}
+				}
+
+				$this->request->data['Estabelecimento']['inaugurado'] = $this->DataUtil->setPadrao($this->request->data['Estabelecimento']['inaugurado']);
 				if ($this->Estabelecimento->save($this->request->data)) {
 					if (isset($this->request->data['Estabelecimento']['imagem'])) {
 						$image = WideImage::load($image_array['tmp_name']);
-						$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'Estabelecimentos' . DS . $this->Estabelecimento->id, true, 0755);
+						$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'estabelecimentos', true, 0755);
 						
 						$image
 							->resize(70, 70, 'outside')
 							->crop('center', 'center', 70, 70)
-							->saveToFile($pasta_salvar->path . DS . '70x70_' . $image_array['name'], 85);
+							->saveToFile($pasta_salvar->path . DS . '70X70_' . $image_array['name'], 85);
 
 						$image
 							->resize(300, 170, 'outside')
@@ -174,14 +205,20 @@ public $layout = 'BootstrapAdmin.default';
 		} else {
 			$options = array('conditions' => array('Estabelecimento.' . $this->Estabelecimento->primaryKey => $id));
 			$this->request->data = $this->Estabelecimento->find('first', $options);
+
+			if (!empty($this->request->data['Estabelecimento']['inaugurado'])) {
+				$this->request->data['Estabelecimento']['inaugurado'] = $this->DataUtil->reverse($this->request->data['Estabelecimento']['inaugurado']);
+			}
+			
 		}
 
 		$categorias = $this->Estabelecimento->Categoria->find('list');
 		$subcategorias = $this->Estabelecimento->Subcategoria->find('list');
 		$clientes = $this->Estabelecimento->Cliente->find('list');
+		$cartoes = $this->Estabelecimento->Cartao->find('list');
 
 		$usuariosAdministrativos = $this->Estabelecimento->UsuariosAdministrativo->find('list');
-		$this->set(compact('categorias', 'usuariosAdministrativos', 'clientes', 'subcategorias'));
+		$this->set(compact('categorias', 'usuariosAdministrativos', 'clientes', 'subcategorias', 'cartoes'));
 	}
 
 /**
@@ -197,10 +234,19 @@ public $layout = 'BootstrapAdmin.default';
 			throw new NotFoundException(__('Invalid estabelecimento'));
 		}
 		$this->request->onlyAllow('post', 'delete');
-		if ($this->Estabelecimento->delete()) {
-			$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
+		$count = $this->Estabelecimento->Comentario->find('count',
+			array(
+				'conditions'=> array('Comentario.estabelecimento_id'=> $id)
+			)
+		);
+		if ($count == 0) {
+			if ($this->Estabelecimento->delete()) {
+				$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
+			} else {
+				$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+			}
 		} else {
-			$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+			$this->Session->setFlash(__('O <strong>estabelecimento</strong> não pode ser deletado pois ele já possui comentários.'), 'default', array('class'=> 'alert alert-danger'));
 		}
 		return $this->redirect(array('action' => 'index'));
 	}}

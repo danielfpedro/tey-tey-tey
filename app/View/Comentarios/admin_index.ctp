@@ -1,3 +1,5 @@
+<?php echo $this->Html->script('Site/admin_comentarios', array('inline'=> false)); ?>
+
 <div class="breadcrumb breadcrumb-admin">
 	<li class="active">
 		Comentários
@@ -45,17 +47,6 @@
 
 	<div class="table-responsive clearfix">
 		<table class="table table-condensed table-hover table-striped table-admin">
-			<thead>
-				<tr>
-					<th>
-						<?php echo $this->Paginator->sort('texto'); ?>
-					</th>
-					<th class="text-center">
-						<?php echo $this->Paginator->sort('ativo', 'Status'); ?>
-					</th>
-					<th style="width:90px;"></th>
-				</tr>
-			</thead>
 			<tbody>
 				<?php if (!empty($comentarios)): ?>
 					<?php foreach ($comentarios as $comentario): ?>						
@@ -76,7 +67,7 @@
 											'action' => 'view',
 											$comentario['Estabelecimento']['id']
 										));
-									$data = $this->Time->format('d/m/y', $comentario['Comentario']['created']);
+									$data = $this->Time->format('d/m/y h:m', $comentario['Comentario']['created']);
 								?>
 								<em class="text-muted">
 									Comentário de "<?php echo $usuario; ?>" feito no perfil de "<?php echo $estabelecimento ?>" dia <?php echo $data; ?>:
@@ -91,6 +82,8 @@
 										echo $this->Form->input('ativo', array(
 										'label'=> false,
 										'type'=> 'checkbox',
+										'data-status'=> $comentario['Comentario']['ativo'],
+										'data-id'=> $comentario['Comentario']['id'],
 										'checked'=> $comentario['Comentario']['ativo']));
 									echo $this->Form->end();
 								?>

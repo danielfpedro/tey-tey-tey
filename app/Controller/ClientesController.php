@@ -25,12 +25,13 @@ public $layout = 'BootstrapAdmin.default';
 		$options = array();
 		if (!empty($this->request->query['q'])) {
 			$q = str_replace(' ', '%', $this->request->query['q']);
-			$options['conditions'][] = array('Cliente.name LIKE'=> '%'.$q.'%');
+			$options['conditions'][] = array('or'=> array(array('Cliente.email LIKE'=> '%'.$q.'%'), array('Cliente.name LIKE'=> '%'.$q.'%')));
 		} else {
 			$this->request->query['q'] = '';
 		}
 		$this->Cliente->recursive = 0;
 
+		$options['order'] = array('Cliente.created DESC');
 		$this->Paginator->settings = $options;
 		$this->set('clientes', $this->Paginator->paginate());
 	}
@@ -121,10 +122,22 @@ public $layout = 'BootstrapAdmin.default';
 			throw new NotFoundException(__('Invalid cliente'));
 		}
 		$this->request->onlyAllow('post', 'delete');
-		if ($this->Cliente->delete()) {
+
+		$count = $this->Cliente->Estabelecimento->find('count',
+			array(
+				'conditions'=> array(
+					'Estabelecimento.cliente_id'=> $id
+				)
+			)
+		);
+		if ($count == 0){
+			if ($this->Cliente->delete()) {
 			$this->Session->setFlash(__('O <strong>cliente</strong> foi deletado com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 		} else {
 			$this->Session->setFlash(__('O <strong>cliente</strong> não pode ser deletado, por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+		}
+		} else {
+			$this->Session->setFlash(__('O <strong>cliente</strong> não pode ser deletado pois ele pertece a uma estabelecimento.'), 'default', array('class'=> 'alert alert-danger'));
 		}
 		return $this->redirect(array('action' => 'index'));
 	}}

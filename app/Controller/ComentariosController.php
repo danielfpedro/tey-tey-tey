@@ -124,6 +124,21 @@ public $layout = 'BootstrapAdmin.default';
  *
  * @return void
  */
+
+	public function admin_status_ajax($id = null, $status = null) {
+		$this->autoRender = false;
+		if (!is_null($id) AND !is_null($status)) {
+			$status = ($status == 0) ? 1 : 0;
+			if ($this->Comentario->save(array('id'=> $id, 'ativo'=> $status))) {
+				return true;
+
+			} else {
+				return false;	
+			}
+		} else {
+			return false;
+		}
+	}
 	public function admin_index() {
 		$options = array();
 		if (!empty($this->request->query['q'])) {
@@ -184,7 +199,7 @@ public $layout = 'BootstrapAdmin.default';
 		if ($this->request->is('post')) {
 			$this->Comentario->create();
 			if ($this->Comentario->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>comentario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
+				$this->Session->setFlash(__('O <strong>comentario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('O <strong>comentario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));

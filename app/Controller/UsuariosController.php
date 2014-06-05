@@ -25,7 +25,7 @@ public $layout = 'BootstrapAdmin.default';
 		$options = array();
 		if (!empty($this->request->query['q'])) {
 			$q = str_replace(' ', '%', $this->request->query['q']);
-			$options['conditions'][] = array('Usuario.name LIKE'=> '%'.$q.'%');
+			$options['conditions'][] = array('Perfil.name LIKE'=> '%'.$q.'%');
 		} else {
 			$this->request->query['q'] = '';
 		}
@@ -121,7 +121,7 @@ public $layout = 'BootstrapAdmin.default';
 		$options = array();
 		if (!empty($this->request->query['q'])) {
 			$q = str_replace(' ', '%', $this->request->query['q']);
-			$options['conditions'][] = array('Usuario.name LIKE'=> '%'.$q.'%');
+			$options['conditions'][] = array('Perfil.name LIKE'=> '%'.$q.'%');
 		} else {
 			$this->request->query['q'] = '';
 		}

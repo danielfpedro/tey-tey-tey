@@ -67,20 +67,6 @@
 											'escape'=> false
 										)
 									);
-									echo "&nbsp;";
-									echo $this->Form->postLink(
-										"<span class='glyphicon glyphicon-remove'></span>",
-										array(
-											'action' => 'delete',
-											$subcategoria['Subcategoria']['id']),
-										array(
-											'class'=> 'btn btn-sm btn-danger tt',
-											'title'=> 'Remover',
-											'escape'=> false
-										),
-										__('Você tem certeza que deseja deletar # %s?'
-										, $subcategoria['Subcategoria']['id'])
-									);
 								?>
 							</td>
 						<tr>					
