@@ -22,19 +22,20 @@
 		echo $this->fetch('script');
 	?>
 	<script type="text/javascript">
-		var webroot = '/';
+		var webroot = "<?php echo $this->webroot; ?>";
+
 		$(function(){
 			$('.tt').tooltip();
 		});
 	</script>
 </head>
 <body>
+	
+	<?php echo $this->element('BootstrapAdmin.navbar'); ?>
 
 	<div id="container-flash" class="container-flash">
 		<?php echo $this->Session->flash(); ?>
 	</div>
-	
-	<?php echo $this->element('BootstrapAdmin.navbar'); ?>
 
 	<div class="page-wrap">
 		<div class="container-fluid" style="margin-top: 50px;">

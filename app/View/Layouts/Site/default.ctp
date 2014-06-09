@@ -11,6 +11,7 @@
 		// Estilo dos plugin jquery, estou apenas seguinte como estava
 		echo $this->Html->css('Site/js');
 
+		//echo $this->Html->script('../lib/jquery/dist/jquery.min');
 		echo $this->Html->script('jquery-1.3.min');
 		
 		echo $this->Html->script('Site/plugins');
@@ -28,12 +29,24 @@
 		echo $this->fetch('script');
 	?>
 	<script type="text/javascript">
-		var webroot = '/';
+		var webroot = "<?php echo $this->webroot; ?>";
+		
 		$(function(){
+			var hints = ['Ruim', 'Fraco', 'Regular', 'Bom', 'Excelente'];
+
+			$('#set-estrelas').raty({
+				hints: hints,
+				scoreName: 'data[Comentario][rate]',
+				score: 1,
+				path: webroot + 'lib/raty-2.5.2/lib/img',
+			});
+
 			$('div#estrelas-readonly').raty({
+				noRatedMsg: 'Ainda não recebeu avaliações!',
+				hints: hints,
 				score: function() {
 					return $(this).attr('data-score');
-				},
+				},		
 				path: webroot + 'lib/raty-2.5.2/lib/img',
 				readOnly: true,
 			});
@@ -42,8 +55,6 @@
 </head>
 
 <body style="background-repeat: no-repeat;"> 	
-
-	<?php echo $this->Session->flash(); ?>
 
 	<?php echo $this->element('Site/navbar'); ?>
 

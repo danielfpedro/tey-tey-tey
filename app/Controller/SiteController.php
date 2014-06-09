@@ -29,6 +29,9 @@ class SiteController extends AppController {
 		$options['conditions'] = array('Estabelecimento.categoria_id'=> 3);
 		$bar = $this->Estabelecimento->find('first', $options);
 
+		for ($i=0; $i < 3; $i++) { 
+			# code...
+		}
 		$destaques[0] = $boate;
 		$destaques[1] = $restaurante;
 		$destaques[2] = $bar;
@@ -129,6 +132,17 @@ class SiteController extends AppController {
 	public function perfil($slug = null) {
 		$this->loadModel('Comentario');
 
+		$this->loadModel('Estabelecimento');
+		$this->Estabelecimento->recursive = 2;
+
+		$estabelecimento = $this->Estabelecimento->find(
+			'first',
+			array('conditions'=> array('ativo'=> 1,'Estabelecimento.slug'=> $slug))
+		);
+		if (empty($estabelecimento)) {
+			throw new NotFoundException('Este estabelecimento não existe.');
+		}
+
 		if ($this->request->is('post')) {
 			$this->Comentario->create();
 			$this->request->data['Comentario']['usuario_id'] = 1;
@@ -142,19 +156,6 @@ class SiteController extends AppController {
 			return $this->redirect($this->referer());
 		}
 		
-		$this->loadModel('Estabelecimento');
-		$this->Estabelecimento->recursive = 2;
-
-		// $this->loadModel('Comentario');
-		// $this->Comentario->recursive = 3;
-
-		//Conta comentarios por que ele só exibe 10 mas precisa exibir também quantos tem ao todo
-		// $comentarios_count = $this->Comentario->find('count', array('conditions'=> array('Comentario.ativo'=> 1)));
-
-		$estabelecimento = $this->Estabelecimento->find(
-			'first',
-			array('conditions'=> array('Estabelecimento.slug'=> $slug))
-		);
 
 		$this->loadModel('Comentario');
 		$this->Comentario->recursive = 3;
@@ -215,7 +216,7 @@ class SiteController extends AppController {
 			$this->Paginator->settings = array(
 				'fields'=> array(
 					'Estabelecimento.name', 'Estabelecimento.imagem', 'Estabelecimento.descricao', 
-					'Estabelecimento.slug',
+					'Estabelecimento.slug','Estabelecimento.rate'
 				),
 				'contain'=> array(
 					'Comentario'=> array('fields'=> array('Comentario.id'))
@@ -265,12 +266,14 @@ class SiteController extends AppController {
 					'default',
 					array('class'=> 'alert alert-danger'));
 			} else {
-				
-				$this->request->data['Perfil']['data_nascimento'] = $this->DataUtil->setPadrao($this->request->data['Perfil']['data_nascimento']);
-				if (!strtotime($this->request->data['Perfil']['data_nascimento'])) {
+				$data_fake = $this->DataUtil->setPadrao($this->request->data['Perfil']['data_nascimento']);
+				if (!strtotime($data_fake)) {
 					$this->Session->setFlash(__('A data de nascimento não foi informada corretamente.'), 'default', array('class'=> 'alert alert-danger'));
 				} else {
+					$this->request->data['Perfil']['data_nascimento'] = $data_fake;
+
 					$this->request->data['Usuario']['token_ativacao'] = String::uuid();
+
 					$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
 						$this->request->data['Usuario']['senha'] = $passwordHasher->hash(
 						$this->request->data['Usuario']['senha']
@@ -281,6 +284,7 @@ class SiteController extends AppController {
 							$this->request->data['Perfil']['usuario_id'] = $this->Usuario->id;
 							if ($this->Usuario->Perfil->save($this->request->data)) {
 								$this->Session->setFlash(__('Cadastro feito com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+								$this->redirect(array('controller'=> 'site', 'action'=> 'cadastro'));
 							} else {
 								$this->Session->setFlash(__('O <strong>cadastro</strong> não pode ser salva. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 							};
@@ -291,8 +295,10 @@ class SiteController extends AppController {
 
 				}
 			}
-			$this->redirect(array('controller'=> 'site', 'action'=> 'home'));
 		}
+	}
 
+	public function login(){
+		
 	}
 }

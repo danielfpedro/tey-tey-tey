@@ -59,64 +59,69 @@
 				
 				<?php $i = 1; ?>
 				<?php foreach ($destaques as $key => $value): ?>
-					<?php
-						$url_mais = array(
-							'controller' => 'site',
-							'action' => 'estabelecimentos',
-							$value['Categoria']['name']);
-					?>
-					<div class="categorypanel <?php echo ($i % 2 == 0)? 'right' : ''; ?>"><!-- Box Do estabelecimento -->
-						<div class="section-wrapper">
-							<!-- categorypanels section -->
-							<?php
-								echo $this->Html->link('&nbsp;',
-									$url_mais,
-									array('escape'=> false, 'class'=> 'more')
-									);
-							?>
-							<div class="section">
-								<?php echo $value['Categoria']['name']; ?>
-							</div>
-						</div><!-- section-wrapper -->
-
-						<div class="vertical">
-							<?php
-								$perfil_url = array(
-									'controller'=> 'site',
-									'action'=> 'perfil',
-									$value['Estabelecimento']['slug']);
-								$image = $this->Html->image(
-									'estabelecimentos/' .
-									'300x170_'.
-									$value['Estabelecimento']['imagem']);
-
-								echo $this->Html->link($image, $perfil_url, array('escape'=> false));
-							?><!-- Imagem do estabelecimento -->
-							<h2>
-								<?php
-									$label_link = 
-									$value['Estabelecimento']['name'];
-									echo $this->Html->link(
-										$label_link,
-										$perfil_url); 
-								?>
-							</h2><!-- Titulo -->
-							<div class="excerpt">
-								<?php echo $value['Estabelecimento']['descricao']; ?>
-							</div><!-- Descrição -->
-							<br class="clearer" />
-							<div class="more-button">
+					<?php if (!empty($value)): ?>
+						<?php
+							$url_mais = array(
+								'controller' => 'site',
+								'action' => 'estabelecimentos',
+								$value['Categoria']['name']);
+						?>
+						<div class="categorypanel <?php echo ($i % 2 == 0)? 'right' : ''; ?>"><!-- Box Do estabelecimento -->
+							<div class="section-wrapper">
+								<!-- categorypanels section -->
 								<?php
 									echo $this->Html->link('&nbsp;',
-										$perfil_url,
-										array('escape'=> false)
+										$url_mais,
+										array('escape'=> false, 'class'=> 'more')
 										);
 								?>
-							</div><!-- Botao mais -->
-							<br class="clearer" />
-						</div><!-- Vertical -->
-					</div><!-- Categorypanel -->
-					<?php $i++; ?>
+								<div class="section">
+									<?php echo $value['Categoria']['name']; ?>
+								</div>
+							</div><!-- section-wrapper -->
+
+							<div class="vertical">
+								<?php
+									$perfil_url = array(
+										'controller'=> 'site',
+										'action'=> 'perfil',
+										$value['Estabelecimento']['slug']);
+									$image = $this->Html->image(
+										'estabelecimentos/' .
+										'300x170_'.
+										$value['Estabelecimento']['imagem']);
+
+									echo $this->Html->link($image, $perfil_url, array('escape'=> false));
+								?><!-- Imagem do estabelecimento -->
+								<h2>
+									<?php
+										$label_link = 
+										$value['Estabelecimento']['name'];
+										echo $this->Html->link(
+											$label_link,
+											$perfil_url); 
+									?>
+								</h2><!-- Titulo -->
+								<div
+									style="margin-bottom: 10px;"
+									id="estrelas-readonly" data-score="<?php echo $value['Estabelecimento']['rate']; ?>"></div>
+								<div class="excerpt">
+									<?php echo $this->Text->truncate($value['Estabelecimento']['descricao'], 140); ?>
+								</div><!-- Descrição -->
+								<br class="clearer" />
+								<div class="more-button">
+									<?php
+										echo $this->Html->link('&nbsp;',
+											$perfil_url,
+											array('escape'=> false)
+											);
+									?>
+								</div><!-- Botao mais -->
+								<br class="clearer" />
+							</div><!-- Vertical -->
+						</div><!-- Categorypanel -->
+						<?php $i++; ?>
+					<?php endif ?>
 				<?php endforeach ?>
 
 					<div class="categorypanel right"><!-- Box Do estabelecimento -->

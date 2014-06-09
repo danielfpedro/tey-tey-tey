@@ -1,4 +1,4 @@
-<?php echo $this->Html->script('Site/widget_estabelecimentos', array('inline'=> false)); ?>
+</div><?php echo $this->Html->script('Site/widget_estabelecimentos', array('inline'=> false)); ?>
 
 <?php echo $this->Html->script('Site/estabelecimentos', array('inline'=> false)); ?>
 

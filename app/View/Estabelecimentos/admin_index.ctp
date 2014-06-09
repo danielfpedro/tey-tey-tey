@@ -63,6 +63,9 @@
 					<th style="width: 120px;">
 						<?php echo $this->Paginator->sort('categoria_id', 'Categoria'); ?>
 					</th>
+					<th style="width: 120px;">
+						<?php echo $this->Paginator->sort('tipo_cadastro', 'Tipo'); ?>
+					</th>
 					<th style="width: 80px;">
 						<?php echo $this->Paginator->sort('ativo', 'Status'); ?>
 					</th>		
@@ -89,7 +92,9 @@
 											'controller' => 'site',
 											'action' => 'perfil',
 											$estabelecimento['Estabelecimento']['slug']
-										));
+										),
+										array('target'=> '_blank')
+									);
 									
 								?>
 								<br>
@@ -102,6 +107,12 @@
 							</td>				
 							<td>
 								<?php echo h($estabelecimento['Categoria']['name']); ?>
+							</td>
+							<td>
+								<?php echo ($estabelecimento['Estabelecimento']['tipo_cadastro'] == 1) ?
+									'<span class="label label-info">Simples</span>' :
+									'<span class="label label-primary">Completo</span>';
+								?>
 							</td>
 							<td>
 								<?php echo ($estabelecimento['Estabelecimento']['ativo']) ?

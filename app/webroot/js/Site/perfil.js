@@ -1,8 +1,4 @@
 $(function(){
-	$('#set-estrelas').raty({
-		score: 1,
-		path: webroot + 'lib/raty-2.5.2/lib/img',
-	});
 
 	$('#btn-mais-comentarios').click(function(){
 		var defaul_text = $(this).text();

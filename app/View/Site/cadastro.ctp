@@ -45,6 +45,11 @@
 				</div><!-- section-wraper -->
 
 				<div class="wrap-form-contato">
+
+					<div style="margin-bottom: 30px;">
+						<?php echo $this->Session->flash(); ?>
+					</div>
+					
 					<?php
 						echo $this->Form->create(
 							'Usuario',

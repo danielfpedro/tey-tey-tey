@@ -12,8 +12,12 @@ App::uses('AppModel', 'Model');
  */
 class Estabelecimento extends AppModel {
 
-
 	public $actsAs = array('Containable');
+
+	public $virtualFields = array(
+		'rate' => 'SELECT ROUND(AVG(rate), 0) FROM comentarios WHERE estabelecimento_id = Estabelecimento.id AND ativo = 1'
+	);
+
 /**
  * Validation rules
  *
@@ -69,16 +73,6 @@ class Estabelecimento extends AppModel {
 			),
 		),
 		'telefone' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'tipo_comida' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
 				//'message' => 'Your custom message here',

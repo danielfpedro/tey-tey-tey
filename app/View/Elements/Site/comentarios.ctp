@@ -6,11 +6,11 @@ comments ele perde o estilo pq o estilo estah no id -->
 		<div id="respond">
 		
 			<h3 id="reply-title">Deixe seu Comentário</h3>
-			<?php
-				echo $this->Form->create('Comentario',
-					array('type'=> 'post')
-				);
-			?>
+				<?php
+					echo $this->Form->create('Comentario',
+						array('type'=> 'post')
+					);
+				?>
 			
 				<p class="logged-in-as">
 					Logado como <a href="#">Jason Miller</a>.
@@ -35,7 +35,14 @@ comments ele perde o estilo pq o estilo estah no id -->
 											'value'=> $estabelecimento['Estabelecimento']['id']
 										)
 									);
-									echo $this->Form->textarea('comentario', array('label'=> false, 'value'=> '', 'required'=> true));
+									echo $this->Form->textarea('comentario',
+										array(
+											'label'=> false,
+											'value'=> '',
+											'maxlength'=> 400,
+											'required'=> true
+										)
+									);
 								?>
 								<!-- <textarea id="comment" name="comment" rows="8" cols="50"></textarea> -->
 							</div>
@@ -73,10 +80,14 @@ comments ele perde o estilo pq o estilo estah no id -->
 						echo $this->Html->image($img_url, $options = array());
 					?>
 				</div>
-				<div class="media-body">
+				<div class="media-body" style="width: 560px;">
 					<h4>
 						<?php echo $comentario['Usuario']['Perfil']['name']; ?>
 					</h4>
+					<div
+						id="estrelas-readonly"
+						data-score="<?php echo $comentario['Comentario']['rate']; ?>">
+					</div>
 					<p>
 						<?php echo $comentario['Comentario']['texto']; ?>
 					</p>

@@ -100,110 +100,71 @@
 								
 								<div class="separator">&nbsp;</div>
 
-								<span class="metaName">Tipo de comida</span>: 
-								
-								<span class="metaContent">
-									<?php echo $estabelecimento['Estabelecimento']['tipo_comida']; ?>
-								</span>
-								
-								<div class="separator">&nbsp;</div>
+								<?php if (!empty($estabelecimento['Estabelecimento']['tipo_comida'])): ?>
+									<span class="metaName">Tipo de comida</span>: 
+									
+									<span class="metaContent">
+										<?php echo $estabelecimento['Estabelecimento']['tipo_comida']; ?>
+									</span>
+									<div class="separator">&nbsp;</div>
+								<?php endif ?>
 
 								<span class="metaName">Horário de funcionamento</span>: 
 								
 								<span class="metaContent">
-									<?php echo $this->Time->format('H:m', $estabelecimento['Estabelecimento']['horario_funcionamento_inicial']); ?>
+									<?php echo $this->Time->format('H:i', $estabelecimento['Estabelecimento']['horario_funcionamento_inicial']); ?>
 									<?php if (!empty($estabelecimento['Estabelecimento']['horario_funcionamento_final'])): ?>
 										&nbsp;às&nbsp;
-										<?php echo $this->Time->format('H:m', $estabelecimento['Estabelecimento']['horario_funcionamento_final']); ?>
+										<?php echo $this->Time->format('H:i', $estabelecimento['Estabelecimento']['horario_funcionamento_final']); ?>
 									<?php endif ?>
-									
 								</span>
 								
 								<div class="separator">&nbsp;</div>
 
-								<span class="taxName">Site</span>: 
-								
-								<span class="metaContent">
-									<a
-										href="http://<?php echo $estabelecimento['Estabelecimento']['site']; ?>"
-										target="_blank">
-										<?php echo $estabelecimento['Estabelecimento']['site']; ?>
-									</a>
-								</span>
-								
-								<div class="separator">&nbsp;</div>
-								
-								<span class="metaContent">
-									<?php
-										$icon_size = 24;
-										if ($estabelecimento['Estabelecimento']['wifi']) {
-											echo $this->Html->image(
-												'icones_estabelecimentos/wifi.png',
-												array('width'=> $icon_size, 'title'=> 'Wifi')
-											);
-										}
-										if ($estabelecimento['Estabelecimento']['ar_condicionado']) {
-											echo '&nbsp';
-											echo $this->Html->image(
-												'icones_estabelecimentos/ar_condicionado.png',
-												array('width'=> $icon_size, 'title'=> 'Ar condicionado')
-											);
-										}
-										if ($estabelecimento['Estabelecimento']['area_fumantes']) {
-											echo '&nbsp';
-											echo $this->Html->image(
-												'icones_estabelecimentos/area_fumantes.png',
-												array('width'=> $icon_size, 'title'=> 'Area para fumantes')
-											);
-										}
-										if ($estabelecimento['Estabelecimento']['estacionamento']) {
-											echo '&nbsp';
-											echo $this->Html->image(
-												'icones_estabelecimentos/estacionamento.png',
-												array('width'=> $icon_size, 'title'=> 'Estacionamento')
-											);
-										}
-										if ($estabelecimento['Estabelecimento']['faz_entrega']) {
-											echo '&nbsp';
-											echo $this->Html->image(
-												'icones_estabelecimentos/faz_entrega.png',
-												array('width'=> $icon_size, 'title'=> 'Faz entrega')
-											);
-										}
-										if ($estabelecimento['Estabelecimento']['faz_reserva']) {
-											echo '&nbsp';
-											echo $this->Html->image(
-												'icones_estabelecimentos/faz_reserva.png',
-												array('width'=> $icon_size, 'title'=> 'Faz reserva')
-											);
-										}
-										if ($estabelecimento['Estabelecimento']['ar_livre']) {
-											echo '&nbsp';
-											echo $this->Html->image(
-												'icones_estabelecimentos/ar_livre.png',
-												array('width'=> $icon_size, 'title'=> 'Ar livre')
-											);
-										}
-										if ($estabelecimento['Estabelecimento']['acesso_deficiente']) {
-											echo '&nbsp';
-											echo $this->Html->image(
-												'icones_estabelecimentos/acesso_deficiente.png',
-												array('width'=> $icon_size, 'title'=> 'Acesso deficiente')
-											);
-										}
-									?>
-								</span>
-								
-								<div class="separator">&nbsp;</div>
+								<?php if ($estabelecimento['Estabelecimento']['tipo_cadastro'] == 2): ?>
+									<?php if (!empty($estabelecimento['Estabelecimento']['site'])): ?>
+										<span class="taxName">Site</span>: 
+										
+										<span class="metaContent">
+											<a
+												href="http://<?php echo $estabelecimento['Estabelecimento']['site']; ?>"
+												target="_blank">
+												<?php echo $estabelecimento['Estabelecimento']['site']; ?>
+											</a>
+										</span>
 
-								<?php if (!empty($estabelecimento['Estabelecimento']['inaugurado']) OR !is_null($estabelecimento['Estabelecimento']['inaugurado'])): ?>
-									<span class="metaName">Inaugurado</span>: 
-								
-									<span class="metaContent">
-										<?php echo $estabelecimento['Estabelecimento']['inaugurado']; ?>
-									</span>
-									<div class="separator">&nbsp;</div>
+										<div class="separator">&nbsp;</div>
+									<?php endif ?>
 								<?php endif ?>
+
+								<?php if ($estabelecimento['Estabelecimento']['tipo_cadastro'] == 2): ?>
+									<?php if (!empty($estabelecimento['Cartao'])): ?>
+										<span class="metaName">Cartões</span>: 
+									
+										<span class="metaContent">
+											<?php foreach ($estabelecimento['Cartao'] as $key => $cartao): ?>
+												<?php
+													echo '&nbsp';
+													echo $this->Html->image(
+														'Cartoes/' . $cartao['imagem'], array('width'=> 30));
+												?>
+											<?php endforeach ?>
+										</span>
+
+										<div class="separator">&nbsp;</div>
+									<?php endif ?>
+								<?php endif ?>
+
+								<?php if ($estabelecimento['Estabelecimento']['tipo_cadastro'] == 2): ?>
+									<?php if (!empty($estabelecimento['Estabelecimento']['inaugurado']) OR !is_null($estabelecimento['Estabelecimento']['inaugurado'])): ?>
+										<span class="metaName">Inaugurado</span>: 
+									
+										<span class="metaContent">
+											<?php echo $this->Time->format('Y', $estabelecimento['Estabelecimento']['inaugurado']); ?>
+										</span>
+										<div class="separator">&nbsp;</div>
+									<?php endif ?>
+								<?php endif; ?>
 
 								<?php if (!empty($estabelecimento['Subcategoria'])): ?>
 									<span class="metaName">Categoria(s)</span>:
@@ -220,22 +181,70 @@
 								<?php endif ?>
 								
 								<div class="separator">&nbsp;</div>
-
-								<?php if (!empty($estabelecimento['Cartao'])): ?>
-									<span class="metaName">Cartões</span>: 
 								
+								<?php if ($estabelecimento['Estabelecimento']['tipo_cadastro'] == 2): ?>
 									<span class="metaContent">
-										<?php foreach ($estabelecimento['Cartao'] as $key => $cartao): ?>
-											<?php
+										<?php
+											$icon_size = 24;
+											if ($estabelecimento['Estabelecimento']['wifi']) {
+												echo $this->Html->image(
+													'icones_estabelecimentos/wifi.png',
+													array('class'=> 'icon-perfil','width'=> $icon_size, 'title'=> 'Wifi')
+												);
+											}
+											if ($estabelecimento['Estabelecimento']['ar_condicionado']) {
 												echo '&nbsp';
 												echo $this->Html->image(
-													'Cartoes/' . $cartao['imagem'], array('width'=> 30));
-											?>
-										<?php endforeach ?>
+													'icones_estabelecimentos/ar_condicionado.png',
+													array('class'=> 'icon-perfil', 'width'=> $icon_size, 'title'=> 'Ar condicionado')
+												);
+											}
+											if ($estabelecimento['Estabelecimento']['area_fumantes']) {
+												echo '&nbsp';
+												echo $this->Html->image(
+													'icones_estabelecimentos/area_fumantes.png',
+													array('class'=> 'icon-perfil','width'=> $icon_size, 'title'=> 'Area para fumantes')
+												);
+											}
+											if ($estabelecimento['Estabelecimento']['estacionamento']) {
+												echo '&nbsp';
+												echo $this->Html->image(
+													'icones_estabelecimentos/estacionamento.png',
+													array('class'=> 'icon-perfil','width'=> $icon_size, 'title'=> 'Estacionamento')
+												);
+											}
+											if ($estabelecimento['Estabelecimento']['faz_entrega']) {
+												echo '&nbsp';
+												echo $this->Html->image(
+													'icones_estabelecimentos/faz_entrega.png',
+													array('class'=> 'icon-perfil','width'=> $icon_size, 'title'=> 'Faz entrega')
+												);
+											}
+											if ($estabelecimento['Estabelecimento']['faz_reserva']) {
+												echo '&nbsp';
+												echo $this->Html->image(
+													'icones_estabelecimentos/faz_reserva.png',
+													array('class'=> 'icon-perfil','width'=> $icon_size, 'title'=> 'Faz reserva')
+												);
+											}
+											if ($estabelecimento['Estabelecimento']['ar_livre']) {
+												echo '&nbsp';
+												echo $this->Html->image(
+													'icones_estabelecimentos/ar_livre.png',
+													array('class'=> 'icon-perfil','width'=> $icon_size, 'title'=> 'Ar livre')
+												);
+											}
+											if ($estabelecimento['Estabelecimento']['acesso_deficiente']) {
+												echo '&nbsp';
+												echo $this->Html->image(
+													'icones_estabelecimentos/acesso_deficiente.png',
+													array('class'=> 'icon-perfil','width'=> $icon_size, 'title'=> 'Acesso deficiente')
+												);
+											}
+										?>
 									</span>
+									<div class="separator">&nbsp;</div>
 								<?php endif ?>
-								
-								<div class="separator">&nbsp;</div>
 
 							</div><!-- inner -->
 						</div><!-- right panel -->
