@@ -88,7 +88,7 @@
 										$value['Estabelecimento']['slug']);
 									$image = $this->Html->image(
 										'estabelecimentos/' .
-										'300x170_'.
+										'300X170_'.
 										$value['Estabelecimento']['imagem']);
 
 									echo $this->Html->link($image, $perfil_url, array('escape'=> false));

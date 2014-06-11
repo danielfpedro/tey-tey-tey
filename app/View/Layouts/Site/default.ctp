@@ -58,6 +58,8 @@
 
 	<?php echo $this->element('Site/navbar'); ?>
 
+	<?php echo $this->Session->Flash(); ?>
+
 	<?php echo $this->fetch('content'); ?>	
 
 	<?php //echo $this->element('sql_dump'); ?>

@@ -93,8 +93,7 @@ public $layout = 'BootstrapAdmin.default';
 				$erro = 1;
 			}
 
-			if ($image_array['type'] == 'image/jpeg' OR $image_array['type'] == 'image/png' AND $erro == 0) {
-				
+			if ($image_array['type'] == 'image/jpeg' OR $image_array['type'] == 'image/png') {
 				if ($this->request->data['Estabelecimento']['tipo_cadastro'] == 2 AND $erro == 0) {
 					$data_inaugurado_fake = $this->DataUtil->setPadrao($this->request->data['Estabelecimento']['inaugurado']);
 					if (!strtotime($data_inaugurado_fake)) {
@@ -120,6 +119,8 @@ public $layout = 'BootstrapAdmin.default';
 							->resize(300, 170, 'outside')
 							->crop('center', 'center', 300, 170)
 							->saveToFile($pasta_salvar->path . DS . '300X170_' . $image_array['name'], 85);
+						$image
+							->saveToFile($pasta_salvar->path . DS . 'original_' . $image_array['name'], 85);
 
 						$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 						return $this->redirect(array('action' => 'index'));
@@ -169,7 +170,7 @@ public $layout = 'BootstrapAdmin.default';
 			} else {
 				$image_array = $this->request->data['Estabelecimento']['imagem'];
 				$this->request->data['Estabelecimento']['imagem'] = $this->request->data['Estabelecimento']['imagem']['name'];
-				if ($image_array['type'] == 'image/jpeg' OR $image_array['type'] == 'image/png') {
+				if ($image_array['type'] != 'image/jpeg' AND $image_array['type'] != 'image/png') {
 					$this->Session->setFlash(__('A <strong>imagem</strong> deve estar no formato JPG ou PNG.'),
 						'default',
 						array('class'=> 'alert alert-danger'));
@@ -211,6 +212,8 @@ public $layout = 'BootstrapAdmin.default';
 							->resize(300, 170, 'outside')
 							->crop('center', 'center', 300, 170)
 							->saveToFile($pasta_salvar->path . DS . '300X170_' . $image_array['name'], 85);
+						$image
+							->saveToFile($pasta_salvar->path . DS . 'original_' . $image_array['name'], 85);
 					}
 					$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 					return $this->redirect(array('action' => 'index'));

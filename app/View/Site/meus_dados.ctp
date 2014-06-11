@@ -40,29 +40,59 @@
 			<div id="categorypanels" class="post-loop">
 				<div class="section-wrapper">
 					<div class="section">
-						Entrar
+						Meus dados
 					</div><!-- section -->
 				</div><!-- section-wraper -->
 
 				<div class="wrap-form-contato">
+
+					<div style="margin-bottom: 30px;">
+						<?php echo $this->Session->flash(); ?>
+					</div>
+					
 					<?php
 						echo $this->Form->create(
 							'Usuario',
 							array(
+								'type'=> 'file',
 								'inputDefaults'=> array('label'=> false))
 						);
 					?>
+						<div style="margin-bottom: 5px;">
+							<?php
+								if (!empty($auth_imagem)) {
+									$img_url = ''.
+										'Usuarios/' . 
+										$auth_user_id .
+										'/' . 
+										$auth_imagem;
+								} else {
+									$img_url = 'Usuarios/default_avatar.png';
+								}
+								echo $this->Html->image($img_url, $options = array('width'=> 60, 'height'=> 60)); ?>
+						</div>
+						<?php echo $this->Form->input('Perfil.imagem', array('type'=> 'file')); ?>
+
+						<label>Nome</label>
+						<?php echo $this->Form->input('Perfil.name'); ?>
 						<label>Email</label>
 						<?php echo $this->Form->input('email'); ?>
-						<label>Senha</label>
-						<?php echo $this->Form->input('senha', array('type'=> 'password')); ?>
+						<label>Data de nascimento</label>
+						<?php echo $this->Form->input('Perfil.data_nascimento', array('type'=> 'text', 'class'=> 'data')); ?>
+						<label>Cidade</label>
+						<?php echo $this->Form->input('Perfil.cidade'); ?>
+						
+						<hr>
+						<br>
 
-						<div style="margin-bottom: 20px;">
-							<?php echo $this->Session->flash(); ?>
-						</div>
+						<label>Nova senha</label>
+						<?php echo $this->Form->input('nova_senha', array('type'=> 'password', 'required'=> false)); ?>
+						<label>Repetir senha</label>
+						<?php echo $this->Form->input('repetir_senha', array('type'=> 'password', 'required'=> false)); ?>
+						<label>Senha atual</label>
+						<?php echo $this->Form->input('senha_fake', array('type'=> 'password', 'required'=> false)); ?>
 
-						<button type="submit">Entrar</button>
-
+						<button type="submit">Salvar alterações</button>
 					<?php echo $this->Form->end() ?>
 				</div><!-- wrap-form-contato -->
 

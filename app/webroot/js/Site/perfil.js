@@ -1,5 +1,12 @@
 $(function(){
 
+	$('a#comentarios').click(function(){
+		$('html, body').animate({
+			scrollTop: $("#cont-comentarios").offset().top
+		}, 2000);
+		return false;
+	});
+
 	$('#btn-mais-comentarios').click(function(){
 		var defaul_text = $(this).text();
 		var loading_text = 'Carregando comentários';

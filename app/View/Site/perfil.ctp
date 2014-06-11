@@ -53,8 +53,8 @@
 									class="section-wrapper review"
 									style="margin-bottom: 5px; border:0;">
 									<div class="comment-bubble" style="margin-right: -7x;">
-										<a href="#comentarios">
-										<?php echo $comentarios_count; ?>
+										<a href="#" id="comentarios">
+											<?php echo $comentarios_count; ?>
 										</a>  
 									</div>
 									<div class="section" style="background-color: #FFF;">
@@ -71,13 +71,12 @@
 										'estabelecimentos'.
 										'/300X170_'.
 										$estabelecimento['Estabelecimento']['imagem'];
-
-									echo $this->Html->link(
-										$this->Html->image($img_url, array('width'=> '260px', 'style'=> 'margin-bottom: -5px;')),
-										'#',
-										array('escape'=> false, 'class'=> 'darken')
-									);
 								?>
+								<a href="<?php echo $this->webroot . 'img/estabelecimentos/original_' . $estabelecimento['Estabelecimento']['imagem']; ?>" class="darken">
+									<?php
+										echo $this->Html->image($img_url, array('width'=> '260px', 'style'=> 'margin-bottom: -5px;'));
+									?>
+								</a>
 							</div>        
 							<?php echo $estabelecimento['Estabelecimento']['descricao']; ?>
 							<br class="clearer" />    	
