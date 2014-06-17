@@ -7,4 +7,9 @@ $(function(){
 	$('#EstabelecimentoTipoCadastro').change(function(){
 		$('#cont-completo').fadeToggle();
 	});
+
+	$('input#chk-carrossel').click(function(){
+		var url = webroot + '/estabelecimentos/setCarrossel';
+		alert(url);
+	});
 });

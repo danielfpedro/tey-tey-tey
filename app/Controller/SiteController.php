@@ -11,7 +11,7 @@ App::uses('WideImage', 'Lib/WideImage/lib');
 class SiteController extends AppController {
 	public $layout = 'Site/default';
 
-	public $components = array('Paginator', 'DataUtil');
+	public $components = array('Paginator', 'DataUtil', 'Cookie');
 
 	/**
 	 * beforeFilter callback
@@ -22,6 +22,27 @@ class SiteController extends AppController {
 			parent::beforeFilter();
 			$this->_checkLogin();
 		}
+
+	public function _checkLogin(){
+		if ($this->Cookie->read('Auth.user_id') > 0) {
+			$auth_flag = true;
+			$auth_user_id = $this->Cookie->read('Auth.user_id');
+			$auth_nome = $this->Cookie->read('Auth.nome');
+			$auth_email = $this->Cookie->read('Auth.email');
+			$auth_perfil_id = $this->Cookie->read('Auth.perfil_id');
+			$auth_imagem = $this->Cookie->read('Auth.imagem');
+
+			$this->auth_user_id = $auth_user_id;
+			$this->auth_nome = $auth_nome;
+			$this->auth_email = $auth_email;
+			$this->auth_perfil_id = $auth_perfil_id;
+			$this->auth_imagem = $auth_imagem;
+
+			$this->set(compact('auth_flag','auth_user_id', 'auth_email', 'auth_nome', 'auth_imagem'));
+		} else {
+			$this->set('auth_flag', false);
+		}
+	}
 	
 
 	public function home() {
@@ -29,9 +50,16 @@ class SiteController extends AppController {
 		$this->set(compact('widget_estabelecimentos'));
 
 		$this->loadModel('Estabelecimento');
-		$this->Estabelecimento->recursive = 3;
-
+		$this->Estabelecimento->recursive = -1;
 		$options = array();
+
+		$options['fields'] = array(
+			'Estabelecimento.id',
+			'Estabelecimento.name', 'Estabelecimento.imagem_300x170',
+			'Estabelecimento.slug', 'Estabelecimento.rate', 'Estabelecimento.descricao',
+			'Categoria.name',
+		);
+		$options['contain'] = array('Categoria');
 
 		$options['conditions'] = array('Estabelecimento.categoria_id'=> 1);
 		$boate = $this->Estabelecimento->find('first', $options);
@@ -42,16 +70,24 @@ class SiteController extends AppController {
 		$options['conditions'] = array('Estabelecimento.categoria_id'=> 3);
 		$bar = $this->Estabelecimento->find('first', $options);
 
-		for ($i=0; $i < 3; $i++) { 
-			# code...
-		}
+
+		$options['fields'] = array(
+			'Estabelecimento.id',
+			'Estabelecimento.name', 'Estabelecimento.imagem_540x390',
+			'Estabelecimento.slug',
+		);
+		$options['conditions'] = array('Estabelecimento.ativo'=> 1, 'Estabelecimento.carrossel'=> 1);
+		$options['limit'] = 5;
+		$options['contain'] = array();
+		$carrossel = $this->Estabelecimento->find('all', $options);
+
 		$destaques[0] = $boate;
 		$destaques[1] = $restaurante;
 		$destaques[2] = $bar;
 
 		$title_for_layout = $this->site_name;
 
-		$this->set(compact('destaques', 'title_for_layout'));
+		$this->set(compact('carrossel','destaques', 'title_for_layout'));
 
 
 	}
@@ -82,7 +118,7 @@ class SiteController extends AppController {
 
 	public function _getWidgetEstabelecimentos(){
 		$this->loadModel('Estabelecimento');
-		$this->Estabelecimento->recursive = 3;
+		$this->Estabelecimento->recursive = -1;
 		// 1 Boate, 2 - Restaurante, 3 - Bar
 		$options = array();
 
@@ -96,16 +132,16 @@ class SiteController extends AppController {
 		$options['contain'] = array('Categoria');
 		$options['limit'] = 5;
 
-		$options['conditions'] = array('Estabelecimento.categoria_id'=> 2);
+		$options['conditions'] = array('Estabelecimento.ativo'=> 1 ,'Estabelecimento.categoria_id'=> 2);
 		$restaurantes = $this->Estabelecimento->find('all', $options);
 
-		$options['conditions'] = array('Estabelecimento.categoria_id'=> 1);
+		$options['conditions'] = array('Estabelecimento.ativo'=> 1, 'Estabelecimento.categoria_id'=> 1);
 		$baladas = $this->Estabelecimento->find('all', $options);
 
-		$options['conditions'] = array('Estabelecimento.categoria_id'=> 3);
+		$options['conditions'] = array('Estabelecimento.ativo'=> 1, 'Estabelecimento.categoria_id'=> 3);
 		$bares = $this->Estabelecimento->find('all', $options);
 
-		$options['conditions'] = array();
+		$options['conditions'] = array('Estabelecimento.ativo'=> 1);
 		$options['order'] = array('Estabelecimento.created DESC');
 		$recentes = $this->Estabelecimento->find('all', $options);
 
@@ -157,7 +193,7 @@ class SiteController extends AppController {
 		}
 
 		if ($this->request->is('post')) {
-			if ($this->Session->read('Auth.flag')) {
+			if ($this->auth_user_id) {
 				$this->request->data['Comentario']['usuario_id'] = $this->auth_user_id;
 				$this->request->data['Comentario']['texto'] = $this->request->data['Comentario']['comentario'];
 				
@@ -232,13 +268,16 @@ class SiteController extends AppController {
 
 			$this->Paginator->settings = array(
 				'fields'=> array(
-					'Estabelecimento.name', 'Estabelecimento.imagem', 'Estabelecimento.descricao', 
+					'Estabelecimento.name', 'Estabelecimento.imagem_300x170', 'Estabelecimento.descricao', 
 					'Estabelecimento.slug','Estabelecimento.rate'
 				),
 				'contain'=> array(
-					'Comentario'=> array('fields'=> array('Comentario.id'))
+					'Comentario'=> array(
+						'conditions'=> array('Comentario.ativo'=> 1),
+						'fields'=> array('Comentario.id'))
 				),
 				'conditions'=> array(
+					'Estabelecimento.ativo'=> 1,
 					'Estabelecimento.categoria_id'=> $categoria_row['Categoria']['id']));
 
 	    	$estabelecimentos = $this->Paginator->paginate('Estabelecimento');
@@ -275,51 +314,68 @@ class SiteController extends AppController {
 		
 		$this->set(compact('widget_estabelecimentos','title_for_layout'));
 
-		$this->loadModel('Usuario');
 		if ($this->request->is('post')) {
+			$erro = 0;
+			$erro_desc = array();
+
+			$this->loadModel('Usuario');
+			$this->Usuario->recursive = -1;
+
+			//Valida se email já existe;
+			$options = array();
+			$options['fields'] = array('Usuario.email');
+			$usuario = $this->Usuario->find('first', $options);
+			if ($usuario['Usuario']['email'] == $this->request->data['Usuario']['email']) {
+				$erro = 1;
+				$erro_desc[] = 'O email que você informou já está cadastrado';
+			}
+
+			// Valida data de nascimento
+			$data_fake = $this->DataUtil->setPadrao($this->request->data['Perfil']['data_nascimento']);
+			if (!strtotime($data_fake)) {
+				$erro = 1;
+				$erro_desc[] = 'A data de nascimento não foi informada corretamente';
+			}
+			//Valida repetição de senha
 			if ($this->request->data['Usuario']['repetir_senha'] != $this->request->data['Usuario']['senha']) {
-				$this->Session->setFlash(
-					'Você não repetiu a senha corretamente',
-					'default',
-					array('class'=> 'alert alert-danger'));
-			} else {
-				$data_fake = $this->DataUtil->setPadrao($this->request->data['Perfil']['data_nascimento']);
-				if (!strtotime($data_fake)) {
-					$this->Session->setFlash(__('A data de nascimento não foi informada corretamente.'), 'default', array('class'=> 'alert alert-danger'));
-				} else {
-					$this->request->data['Perfil']['data_nascimento'] = $data_fake;
+				$erro = 1;
+				$erro_desc[] = 'Você não repetiu a senha corretamente';
+			}
 
-					$this->request->data['Usuario']['token_ativacao'] = String::uuid();
-					
-					$email = $this->request->data['Usuario']['email'];
-					$senha = $this->request->data['Usuario']['senha'];
+			if ($erro == 0) {
+				$this->request->data['Perfil']['data_nascimento'] = $data_fake;
 
-					$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
-					$this->request->data['Usuario']['senha'] = $passwordHasher->hash(
-						$this->request->data['Usuario']['senha']
-						);
-					$this->Usuario->create();
-					if ($this->Usuario->save($this->request->data)) {
-						if (!empty($this->request->data)) {
-							$this->request->data['Perfil']['usuario_id'] = $this->Usuario->id;
-							if ($this->Usuario->Perfil->save($this->request->data)) {
-								//Debugger::dump($senha);
-								if($this->_logar($email, $senha)){
-									$this->Session->setFlash(__('Cadastro feito com sucesso.'), 'default', array('class'=> 'alert alert-success'));
-									$this->redirect(array('controller'=> 'site', 'action'=> 'home'));
-								} else {
-									$this->Session->setFlash(__('Ocorreu um erro ao logar.'), 'default', array('class'=> 'alert alert-danger'));
-									$this->redirect(array('controller'=> 'site', 'action'=> 'home'));
-								}
+				$this->request->data['Usuario']['token_ativacao'] = String::uuid();
+				
+				$email = $this->request->data['Usuario']['email'];
+				$senha = $this->request->data['Usuario']['senha'];
+
+				$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
+				$this->request->data['Usuario']['senha'] = $passwordHasher->hash(
+					$this->request->data['Usuario']['senha']
+				);
+				$this->Usuario->create();
+				if ($this->Usuario->save($this->request->data)) {
+					if (!empty($this->request->data)) {
+						$this->request->data['Perfil']['usuario_id'] = $this->Usuario->id;
+						if ($this->Usuario->Perfil->save($this->request->data)) {
+							//Debugger::dump($senha);
+							if($this->_logar($email, $senha)){
+								$this->Session->setFlash(__('Cadastro feito com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+								$this->redirect(array('controller'=> 'site', 'action'=> 'home'));
 							} else {
-								$this->Session->setFlash(__('O <strong>cadastro</strong> não pode ser salva. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
-							};
-						}
-					} else {
-						$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
-					}					
-
+								$this->Session->setFlash(__('Ocorreu um erro ao logar.'), 'default', array('class'=> 'alert alert-danger'));
+								$this->redirect(array('controller'=> 'site', 'action'=> 'home'));
+							}
+						} else {
+							$this->Session->setFlash(__('O <strong>cadastro</strong> não pode ser salva. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+						};
+					}
+				} else {
+					$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 				}
+			} else {
+				$this->Session->setFlash(join('<br>', $erro_desc), 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
 	}
@@ -328,12 +384,28 @@ class SiteController extends AppController {
 		$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
 		$this->set(compact('widget_estabelecimentos'));
 
-		if ($this->Session->read('Auth.flag')) {
-			$erro = 0;
-			$erro_desc = array();
-			$this->loadModel('Usuario');
-			
+		$this->loadModel('Usuario');
+		if ($this->Cookie->read('Auth.flag')) {
 			if ($this->request->is(array('post', 'put'))) {
+				$options = array();
+				$erro = 0;
+				$erro_desc = array();			
+				
+				$this->Usuario->recursive = -1;
+
+				$options['fields'] = array('Usuario.email');
+				$options['conditions'] = array(
+					'Usuario.email'=> $this->request->data['Usuario']['email'],
+					'Usuario.email !='=> $this->auth_email
+				);
+				$usuario = $this->Usuario->find('all', $options);
+				//Debugger::dump($options);
+
+				if (!empty($usuario)) {
+					$erro = 1;
+					$erro_desc[] = 'O email que você informou já está me uso por outro usuário';
+				}
+
 				if ($this->request->data['Perfil']['imagem']['error'] == 4) {
 					unset($this->request->data['Perfil']['imagem']);
 				} else {
@@ -366,8 +438,10 @@ class SiteController extends AppController {
 					} else {
 						if (!empty($this->request->data['Usuario']['senha_fake'])) {
 							$senha = $this->Usuario->find('first',
-								array('conditions'=> array(
-									'Usuario.id'=> $this->auth_user_id
+								array(
+									'fields'=> array('Usuario.senha'),
+									'conditions'=> array(
+										'Usuario.id'=> $this->auth_user_id
 								)));
 
 							$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
@@ -407,9 +481,9 @@ class SiteController extends AppController {
 						//Debugger::dump($this->request->data['Perfil']);
 						if ($this->Usuario->Perfil->save($this->request->data['Perfil'])) {
 							
-							$this->Session->write('Auth.nome', $this->request->data['Perfil']['name']);
+							$this->Cookie->write('Auth.nome', $this->request->data['Perfil']['name']);
 							if (isset($this->request->data['Perfil']['imagem'])) {
-								$this->Session->write('Auth.imagem', $this->request->data['Perfil']['imagem']);
+								$this->Cookie->write('Auth.imagem', $this->request->data['Perfil']['imagem']);
 								
 								$image = WideImage::load($image_array['tmp_name']);
 								$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'Usuarios/' . $this->auth_user_id, true, 0755);
@@ -447,27 +521,8 @@ class SiteController extends AppController {
 			return $this->redirect(array('controller'=> 'site','action'=> 'home'));
 		}
 
-		$title_for_layout = 'Meus dados' . $this->site_name;
+		$title_for_layout = 'Meus dados - ' . $this->site_name;
 		$this->set(compact('title_for_layout'));
-	}
-
-	public function _checkLogin(){
-		if ($this->Session->read('Auth.flag')) {
-			$auth_flag = true;
-			$auth_user_id = $this->Session->read('Auth.user_id');
-			$auth_nome = $this->Session->read('Auth.nome');
-			$auth_perfil_id = $this->Session->read('Auth.perfil_id');
-			$auth_imagem = $this->Session->read('Auth.imagem');
-
-			$this->auth_user_id = $auth_user_id;
-			$this->auth_nome = $auth_nome;
-			$this->auth_perfil_id = $auth_perfil_id;
-			$this->auth_imagem = $auth_imagem;
-
-			$this->set(compact('auth_flag','auth_user_id', 'auth_nome', 'auth_imagem'));
-		} else {
-			$this->set('auth_flag', false);
-		}
 	}
 
 	public function _logar($login = null, $senha = null) {
@@ -501,14 +556,18 @@ class SiteController extends AppController {
 	}
 
 	public function _loginSession($usuario){
-		$this->Session->write('Auth.flag', true);
-		$this->Session->write('Auth.user_id', $usuario['Usuario']['id']);
-		$this->Session->write('Auth.nome', $usuario['Perfil']['name']);
-		$this->Session->write('Auth.perfil_id', $usuario['Perfil']['id']);
-		$this->Session->write('Auth.imagem', $usuario['Perfil']['imagem']);
+		$this->Cookie->write('Auth.flag', true);
+		$this->Cookie->write('Auth.user_id', $usuario['Usuario']['id']);
+		$this->Cookie->write('Auth.nome', $usuario['Perfil']['name']);
+		$this->Cookie->write('Auth.email', $usuario['Usuario']['email']);
+		$this->Cookie->write('Auth.perfil_id', $usuario['Perfil']['id']);
+		$this->Cookie->write('Auth.imagem', $usuario['Perfil']['imagem']);
 	}
 
 	public function login(){
+		$title_for_layout = 'Entrar - ' . $this->site_name;
+		$this->set(compact('title_for_layout'));
+
 		if ($this->request->is(array('post'))) {
 			if($this->_logar($this->request->data['Usuario']['email'], $this->request->data['Usuario']['senha'])) {
 				return $this->redirect(array('controller'=> 'site', 'action'=> 'home'));
@@ -522,7 +581,7 @@ class SiteController extends AppController {
 		}
 	}
 	public function logout(){
-		$this->Session->destroy();
+		$this->Cookie->destroy();
 		return $this->redirect(array('controller'=> 'site', 'action'=> 'home'));
 	}
 }

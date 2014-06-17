@@ -17,11 +17,34 @@ public $layout = 'BootstrapAdmin.default';
  */
 	public $components = array('Paginator');
 
+	public function beforeSave($options = array()) {
+		if (!empty($this->request->data['UsuariosAdministrativo']['senha'])) {
+			$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
+				$this->request->data['UsuariosAdministrativo']['senha'] = $passwordHasher->hash(
+				$this->request->data['UsuariosAdministrativo']['senha']
+			);
+		}
+		return true;
+	}
+
 /**
  * admin_index method
  *
  * @return void
  */
+
+	public function admin_login() {
+		$this->layout = 'BootstrapAdmin.login';
+
+		if ($this->request->is('post')) {
+			if ($this->Auth()) {
+				return $this->Auth->redirectUrl();
+			} else {
+				$this->Session->setFlash('A combinação email/senha não foi informada corretamente.');
+			}
+		}
+	}	
+
 	public function admin_index() {
 		$options = array();
 		if (!empty($this->request->query['q'])) {
@@ -85,14 +108,14 @@ public $layout = 'BootstrapAdmin.default';
 		$id = 1;
 
 		if ($this->request->is(array('post', 'put'))) {
-			if (!empty($this->request->data['UsuariosAdministrativo']['fake_password'])) {
+			$this->request->data['UsuariosAdministrativo']['id'] = $id;
+
+			if (!empty($this->request->data['UsuariosAdministrativo']['senha'])) {
 				$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
 					$this->request->data['UsuariosAdministrativo']['senha'] = $passwordHasher->hash(
-					$this->request->data['UsuariosAdministrativo']['fake_password']
+					$this->request->data['UsuariosAdministrativo']['senha']
 				);
 			}
-			
-			$this->request->data['UsuariosAdministrativo']['id'] = $id;
 
 			if ($this->UsuariosAdministrativo->save($this->request->data)) {
 				$this->Session->setFlash(__('O <strong>usuarios administrativo</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));

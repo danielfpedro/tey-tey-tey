@@ -10,12 +10,19 @@
 		echo $this->Html->css('Site/style');
 		// Estilo dos plugin jquery, estou apenas seguinte como estava
 		echo $this->Html->css('Site/js');
-
+	?>
+		<!--[if IE 7]>
+			<?php echo $this->Html->css('Site/ie7'); ?>
+		<![endif]-->
+		<!--[if IE 8]>
+			<?php echo $this->Html->css('Site/ie8'); ?>
+		<![endif]-->
+		<!--[if gt IE 8]>
+			<?php echo $this->Html->css('Site/ie9'); ?>
+		<![endif]-->
+	<?php
 		//echo $this->Html->script('../lib/jquery/dist/jquery.min');
 		echo $this->Html->script('jquery-1.3.min');
-		
-		echo $this->Html->script('Site/plugins');
-		echo $this->Html->script('Site/custom');
 		
 		echo $this->Html->script('../lib/raty-2.5.2/lib/jquery.raty.min');
 
@@ -58,11 +65,15 @@
 
 	<?php echo $this->element('Site/navbar'); ?>
 
-	<?php echo $this->Session->Flash(); ?>
-
 	<?php echo $this->fetch('content'); ?>	
 
 	<?php //echo $this->element('sql_dump'); ?>
+
+	<?php
+		echo $this->Html->script('Site/plugins');
+		echo $this->Html->script('Site/custom');
+	?>
+
 </body>
 
 </html>

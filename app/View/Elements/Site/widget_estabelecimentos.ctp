@@ -37,9 +37,9 @@
 											$item['Estabelecimento']['slug']
 										);
 										$perfil_img = ''.
-											'estabelecimentos/' .
-											'/70X70_' .
-											$item['Estabelecimento']['imagem'];
+											'Estabelecimentos/' .
+											$item['Estabelecimento']['id'] . '/' .
+											$item['Estabelecimento']['imagem_70x70'];
 
 										$categoria_img = 'icones_categorias/' . $item['Categoria']['imagem'];
 									?>
@@ -57,7 +57,7 @@
 												echo $this->Html->link(
 													$this->Html->image($perfil_img, array('class'=> 'thumb-img')),
 													$perfil_url,
-													array('escape'=> false, 'class'=> 'thumbnail darken small')
+													array('escape'=> false, 'class'=> 'thumbnail small')
 												);
 											?>	 
 										</div>

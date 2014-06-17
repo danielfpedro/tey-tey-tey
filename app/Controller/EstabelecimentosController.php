@@ -24,6 +24,18 @@ public $layout = 'BootstrapAdmin.default';
  *
  * @return void
  */
+
+	public function setCarrossel($id = null, $value = null) {
+		if (is_null($id) OR is_null($value)) {
+			return false;
+		}
+		if (!$this->Estabelecimento->save(array('id'=> $id, 'carrossel'=> $value))) {
+			return false;
+		}
+		$this->autoRender = false;
+		return true;
+	}
+
 	public function admin_index() {
 		$options = array();
 		if (!empty($this->request->query['q'])) {
@@ -38,6 +50,13 @@ public $layout = 'BootstrapAdmin.default';
 			$options['conditions'][] = array('Estabelecimento.categoria_id'=> $categoria);
 		} else {
 			$this->request->query['categoria'] = '';	
+		}
+
+		if (!empty($this->request->query['carrossel'])) {
+			$carrossel = $this->request->query['carrossel'];
+			$options['conditions'][] = array('Estabelecimento.carrossel'=> $carrossel);
+		} else {
+			$this->request->query['carrossel'] = '';	
 		}
 
 		$this->Estabelecimento->recursive = 0;
@@ -104,23 +123,13 @@ public $layout = 'BootstrapAdmin.default';
 					}
 				}
 				if ($erro == 0) {
+					$this->_setImageNames($image_array);
+
 					$this->Estabelecimento->create();
 					if ($this->Estabelecimento->save($this->request->data)) {
 						//Salvando imagem
-						$image = WideImage::load($image_array['tmp_name']);
-						$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'estabelecimentos', true, 0755);
-						
-						$image
-							->resize(70, 70, 'outside')
-							->crop('center', 'center', 70, 70)
-							->saveToFile($pasta_salvar->path . DS . '70X70_' . $image_array['name'], 85);
-
-						$image
-							->resize(300, 170, 'outside')
-							->crop('center', 'center', 300, 170)
-							->saveToFile($pasta_salvar->path . DS . '300X170_' . $image_array['name'], 85);
-						$image
-							->saveToFile($pasta_salvar->path . DS . 'original_' . $image_array['name'], 85);
+						$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'Estabelecimentos' . DS . $this->Estabelecimento->id, true, 0755);
+						$this->_saveImages($image_array, $pasta_salvar);
 
 						$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 						return $this->redirect(array('action' => 'index'));
@@ -144,6 +153,41 @@ public $layout = 'BootstrapAdmin.default';
 
 		$usuariosAdministrativos = $this->Estabelecimento->UsuariosAdministrativo->find('list');
 		$this->set(compact('categorias', 'usuariosAdministrativos', 'cartoes', 'subcategorias', 'clientes'));
+	}
+
+	public function _setImageNames ($image_array) {
+		$image_exploded = explode('.', $image_array['name']);
+		$ext = array_pop($image_exploded);
+		$image_name = $image_exploded[0];
+
+		$this->request->data['Estabelecimento']['imagem_70x70'] = $image_name . '-70x70.' . $ext;
+		$this->request->data['Estabelecimento']['imagem_300x170'] = $image_name . '-300x170.' . $ext;
+		$this->request->data['Estabelecimento']['imagem_540x390'] = $image_name . '-540x390.' . $ext;
+	}
+
+	public function _saveImages($image_array, $pasta_salvar) {
+		$image = WideImage::load($image_array['tmp_name']);
+
+		$image_exploded = explode('.', $image_array['name']);
+		$ext = array_pop($image_exploded);
+		$image_name = $image_exploded[0];
+
+		$this->_setImageNames($image_array);
+
+		$image
+			->resize(70, 67, 'outside')
+			->crop('center', 'center', 70, 67)
+			->saveToFile($pasta_salvar->path . DS . $image_name . '-70x70.' . $ext, 85);
+		$image
+			->resize(300, 170, 'outside')
+			->crop('center', 'center', 300, 170)
+			->saveToFile($pasta_salvar->path . DS . $image_name . '-300x170.' . $ext, 85);
+		$image
+			->resize(540, 390, 'outside')
+			->crop('center', 'center', 540, 390)
+			->saveToFile($pasta_salvar->path . DS . $image_name . '-540x390.' . $ext, 85);
+		$image
+			->saveToFile($pasta_salvar->path . DS . 'original_' . $image_array['name'], 85);
 	}
 
 /**
@@ -198,23 +242,15 @@ public $layout = 'BootstrapAdmin.default';
 				}
 			}
 			if ($erro == 0) {
+				if (isset($this->request->data['Estabelecimento']['imagem'])) {
+					$pasta_salvar = new Folder(
+						WWW_ROOT . 'img' . DS . 'Estabelecimentos' . DS . $this->request->data['Estabelecimento']['id'],
+						true,
+						0755
+					);
+					$this->_saveImages($image_array, $pasta_salvar);
+				}
 				if ($this->Estabelecimento->save($this->request->data)) {
-					if (isset($this->request->data['Estabelecimento']['imagem'])) {
-						$image = WideImage::load($image_array['tmp_name']);
-						$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'estabelecimentos', true, 0755);
-						
-						$image
-							->resize(70, 70, 'outside')
-							->crop('center', 'center', 70, 70)
-							->saveToFile($pasta_salvar->path . DS . '70X70_' . $image_array['name'], 85);
-
-						$image
-							->resize(300, 170, 'outside')
-							->crop('center', 'center', 300, 170)
-							->saveToFile($pasta_salvar->path . DS . '300X170_' . $image_array['name'], 85);
-						$image
-							->saveToFile($pasta_salvar->path . DS . 'original_' . $image_array['name'], 85);
-					}
 					$this->Session->setFlash(__('O <strong>estabelecimento</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 					return $this->redirect(array('action' => 'index'));
 				} else {

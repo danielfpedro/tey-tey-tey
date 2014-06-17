@@ -14,7 +14,7 @@
 	<?php echo $this->Form->input('name', array('label'=> 'Nome', 'class'=> 'form-control')); ?>
 </div>
 <div class="form-group">
-	<?php echo $this->Form->input('descricao', array('label'=> 'Descrição', 'class'=> 'form-control', 'maxlength'=> 300)); ?>
+	<?php echo $this->Form->input('descricao', array('type'=> 'textarea', 'label'=> 'Descrição', 'class'=> 'form-control', 'maxlength'=> 300)); ?>
 </div>
 <div class="form-group">
 	<?php echo $this->Form->input('endereco', array('label'=> 'Endereço', 'class'=> 'form-control')); ?>

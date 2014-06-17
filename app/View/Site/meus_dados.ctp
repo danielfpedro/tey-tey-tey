@@ -46,7 +46,7 @@
 
 				<div class="wrap-form-contato">
 
-					<div style="margin-bottom: 30px;">
+					<div style="margin-bottom: 35px;">
 						<?php echo $this->Session->flash(); ?>
 					</div>
 					

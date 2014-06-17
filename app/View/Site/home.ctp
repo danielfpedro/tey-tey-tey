@@ -1,6 +1,11 @@
 <?php echo $this->Html->script('Site/widget_estabelecimentos', array('inline'=> false)); ?>
 
 <div id="page-wrapper"> <!-- everything below the top menu should be inside the page wrapper div -->
+
+	<div style="margin-top: 10px;">
+		<?php echo $this->Session->Flash(); ?>	
+	</div>
+
 	<div id="logo-bar"> <!--begin the main header logo area-->
 		<div id="logo-wrapper">
 			<div id="logo"><!--logo and section header area-->
@@ -37,19 +42,41 @@
 		<div class="main-content-left">
 			<div id="featured-wrapper">
 				<div id="featured">
-					<?php foreach (array(1,2,3,4,5) as $item): ?>
+					<?php $i = 1; ?>
+					<?php foreach ($carrossel as $item): ?>
 						<?php
-							echo $this->Html->image('Carrosel/banner1-540x390.jpg', 
-								array('url'=> '#', 'title'=>'#div' . $item, 'alt'=> 'Image Alt'));
+							echo $this->Html->image(
+								'Estabelecimentos/'. $item['Estabelecimento']['id'] . '/' .
+								$item['Estabelecimento']['imagem_540x390'], 
+								array(
+									'url'=> array(
+										'controller' => 'site',
+										'action' => 'perfil',
+										$item['Estabelecimento']['slug']
+									),
+									'title'=>'#div' . $i, 'alt'=> 'Image Alt'));
 						?>	
+						<?php $i++; ?>
 					<?php endforeach ?>
 				</div><!-- Featured -->
-				<?php foreach (array(1,2,3,4,5) as $item): ?>
-					<div id="div<?php echo $item; ?>" class="nivo-html-caption">
+				<?php $i = 1; ?>
+				<?php foreach ($carrossel as $item): ?>
+					<div id="div<?php echo $i; ?>" class="nivo-html-caption">
 						<h1>
-							<a href="#" class="bebas">Pullse</a>
+							<?php
+								echo $this->Html->link(
+									$item['Estabelecimento']['name'],
+									array(
+										'controller' => 'site',
+										'action' => 'perfil',
+										$item['Estabelecimento']['slug']
+									),
+									array('class'=> 'bebas')
+								);
+							?>
 						</h1>
 					</div><!-- Div1 -->
+					<?php $i++; ?>
 				<?php endforeach; ?>
 			</div><!-- Featured-wrapper -->	   
 
@@ -87,9 +114,9 @@
 										'action'=> 'perfil',
 										$value['Estabelecimento']['slug']);
 									$image = $this->Html->image(
-										'estabelecimentos/' .
-										'300X170_'.
-										$value['Estabelecimento']['imagem']);
+										'Estabelecimentos/' .
+										$value['Estabelecimento']['id'] . '/' .
+										$value['Estabelecimento']['imagem_300x170']);
 
 									echo $this->Html->link($image, $perfil_url, array('escape'=> false));
 								?><!-- Imagem do estabelecimento -->

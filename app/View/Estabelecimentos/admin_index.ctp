@@ -1,3 +1,4 @@
+<?php echo $this->Html->script('Site/admin_estabelecimentos_index', array('inline'=> false)); ?>
 <div class="breadcrumb breadcrumb-admin">
 	<li class="active">
 		Estabelecimentos
@@ -29,6 +30,18 @@
 						placeholder="Pesquisar"
 						name="q"
 						value="<?php echo $this->request->query['q']; ?>">
+					<?php
+						echo '&nbsp;';
+						echo $this->Form->input('carrossel', array(
+							'value'=> $this->request->query['carrossel'],
+							'options'=> array('Todos', 'Somente carrossel'),
+							'name'=> 'carrossel',
+							'label'=> false,
+							'class'=>
+							'form-control',
+							'div'=> false));
+						echo '&nbsp;';
+					?>
 					<?php
 						echo '&nbsp;';
 						echo $this->Form->input('categoria', array(
@@ -63,10 +76,13 @@
 					<th style="width: 120px;">
 						<?php echo $this->Paginator->sort('categoria_id', 'Categoria'); ?>
 					</th>
-					<th style="width: 120px;">
+					<th style="width: 80px;">
+						<?php echo $this->Paginator->sort('carrossel'); ?>
+					</th>	
+					<th style="width: 120px;" class="text-center">
 						<?php echo $this->Paginator->sort('tipo_cadastro', 'Tipo'); ?>
 					</th>
-					<th style="width: 80px;">
+					<th style="width: 80px;" class="text-center">
 						<?php echo $this->Paginator->sort('ativo', 'Status'); ?>
 					</th>		
 					<th></th>
@@ -79,8 +95,8 @@
 							<td>
 								<?php
 									$img_url = 'estabelecimentos/' .
-										'300X170_' .
-										$estabelecimento['Estabelecimento']['imagem'];
+										$estabelecimento['Estabelecimento']['id'] . '/' .
+										$estabelecimento['Estabelecimento']['imagem_300x170'];
 									echo $this->Html->image($img_url, $options = array('width'=> '160')); ?>
 							</td>
 							<td>
@@ -108,13 +124,20 @@
 							<td>
 								<?php echo h($estabelecimento['Categoria']['name']); ?>
 							</td>
-							<td>
+							<td class="text-center">
+								<input
+									id="chk-carrossel"
+									type="checkbox"
+									data-id="<?php echo $estabelecimento['Estabelecimento']['id'] ?>"
+									<?php echo ($estabelecimento['Estabelecimento']['carrossel'])? 'checked': ''; ?> >
+							</td>
+							<td class="text-center">
 								<?php echo ($estabelecimento['Estabelecimento']['tipo_cadastro'] == 1) ?
 									'<span class="label label-info">Simples</span>' :
 									'<span class="label label-primary">Completo</span>';
 								?>
 							</td>
-							<td>
+							<td class="text-center">
 								<?php echo ($estabelecimento['Estabelecimento']['ativo']) ?
 									'<span class="label label-success">Ativo</span>':
 									'<span class="label label-danger">Inativo</span>';

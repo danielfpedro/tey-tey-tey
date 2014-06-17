@@ -53,8 +53,9 @@
 	                        <div class="left-panel">
 	                        	<?php
 	                        		$img_url = ''.
-	                        			'estabelecimentos/'.
-	                        			'/300X170_' . $estabelecimento['Estabelecimento']['imagem'];
+	                        			'Estabelecimentos/'.
+	                        			$estabelecimento['Estabelecimento']['id'] . '/' .
+	                        			$estabelecimento['Estabelecimento']['imagem_300x170'];
 	                        		$img = $this->Html->image(
 	                        			$img_url,
 	                        			array(
@@ -106,7 +107,7 @@
 		                                	<?php
 		                                		echo $this->Html->link(
 		                                			count($estabelecimento['Comentario']) . 
-		                                			' Comentários',
+		                                			' Comentário(s)',
 		                                			array(
 		                                				'controller' => 'site',
 		                                				'action' => 'perfil',

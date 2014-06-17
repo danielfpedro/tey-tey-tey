@@ -66,17 +66,20 @@
 									</div>        
 								</div>
 
+								<div id="nivo-wrap">
 								<?php
 									$img_url = ''.
-										'estabelecimentos'.
-										'/300X170_'.
-										$estabelecimento['Estabelecimento']['imagem'];
+										'Estabelecimentos/'.
+										$estabelecimento['Estabelecimento']['id'] . '/' .
+										$estabelecimento['Estabelecimento']['imagem_300x170'];
 								?>
-								<a href="<?php echo $this->webroot . 'img/estabelecimentos/original_' . $estabelecimento['Estabelecimento']['imagem']; ?>" class="darken">
+								<a
+									href="<?php echo $this->webroot . 'img/Estabelecimentos/' . $estabelecimento['Estabelecimento']['id'] .'/original_'. $estabelecimento['Estabelecimento']['imagem']; ?>" class="darken">
 									<?php
 										echo $this->Html->image($img_url, array('width'=> '260px', 'style'=> 'margin-bottom: -5px;'));
 									?>
 								</a>
+								</div>
 							</div>        
 							<?php echo $estabelecimento['Estabelecimento']['descricao']; ?>
 							<br class="clearer" />    	

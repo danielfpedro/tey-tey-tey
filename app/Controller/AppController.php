@@ -35,20 +35,10 @@ class AppController extends Controller {
 	public $site_name = 'Agito Rio Sul';
 
 	function beforeFilter(){
-		$this->loadModel('AdminMainMenu');;
+		$this->loadModel('AdminMainMenu');
 		$items_menu = $this->AdminMainMenu->get();
 
 		$site_name = $this->site_name;
 		$this->set(compact('items_menu', 'site_name'));
-	}
-
-	public function beforeSave($options = array()) {
-		if (!empty($this->request->data['UsuariosAdministrativo']['senha'])) {
-			$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
-				$this->request->data['UsuariosAdministrativo']['senha'] = $passwordHasher->hash(
-				$this->request->data['UsuariosAdministrativo']['senha']
-			);
-		}
-		return true;
 	}
 }
