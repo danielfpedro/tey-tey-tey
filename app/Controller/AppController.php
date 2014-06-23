@@ -32,6 +32,8 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
 
+	public $components = array('Cookie');
+
 	public $site_name = 'Agito Rio Sul';
 
 	function beforeFilter(){
@@ -40,5 +42,24 @@ class AppController extends Controller {
 
 		$site_name = $this->site_name;
 		$this->set(compact('items_menu', 'site_name'));
+
+		if (!empty($this->request->params['prefix']) AND $this->request->params['prefix'] === 'admin') {
+			if ($this->request->params['controller'] == 'usuariosAdministrativos' AND ($this->request->params['action'] == 'admin_login' OR $this->request->params['action'] == 'admin_logout')) {
+			} else {
+				$this->_checkLoginAdmin();
+			}
+		}
+	}
+	public function _checkLoginAdmin() {
+		$flag = $this->Cookie->read('Auth_admin');
+		if (!empty($flag)) {
+			$this->Auth_vars = $this->Cookie->read('Auth_admin');
+			$this->isLoged = true;
+
+			$this->set('Auth_vars', $this->Auth_vars);
+		} else {
+			$this->redirect(array('controller'=> 'usuariosAdministrativos', 'action'=> 'logout'));
+			$this->isLoged = false;
+		}
 	}
 }

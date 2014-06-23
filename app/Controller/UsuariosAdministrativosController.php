@@ -15,17 +15,7 @@ public $layout = 'BootstrapAdmin.default';
  *
  * @var array
  */
-	public $components = array('Paginator');
-
-	public function beforeSave($options = array()) {
-		if (!empty($this->request->data['UsuariosAdministrativo']['senha'])) {
-			$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
-				$this->request->data['UsuariosAdministrativo']['senha'] = $passwordHasher->hash(
-				$this->request->data['UsuariosAdministrativo']['senha']
-			);
-		}
-		return true;
-	}
+	public $components = array('Paginator','Session');
 
 /**
  * admin_index method
@@ -37,13 +27,43 @@ public $layout = 'BootstrapAdmin.default';
 		$this->layout = 'BootstrapAdmin.login';
 
 		if ($this->request->is('post')) {
-			if ($this->Auth()) {
-				return $this->Auth->redirectUrl();
+			if ($this->_admin_logar($this->request->data['UsuariosAdministrativo']['name'], $this->request->data['UsuariosAdministrativo']['senha'])) {
+				return $this->redirect(array('controller'=> 'estabelecimentos', 'action'=> 'admin_index'));
 			} else {
-				$this->Session->setFlash('A combinação email/senha não foi informada corretamente.');
+				$this->Session->setFlash('A combinação email/senha não foi informada corretamente.', 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
 	}	
+
+	public function _admin_logar($login, $senha) {
+		$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
+		$senha = $passwordHasher->hash($senha);
+		$options = array();
+		$options['fields'] = array('UsuariosAdministrativo.id', 'UsuariosAdministrativo.name');
+		$options['conditions'] = array(
+			'UsuariosAdministrativo.name'=> $login,
+			'UsuariosAdministrativo.senha'=> $senha
+		);
+		$this->UsuariosAdministrativo->recursive = -1;
+		$query = $this->UsuariosAdministrativo->find('first', $options);
+
+		if (!empty($query)) {
+			$this->_loginVars($query);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function _loginVars ($usuario) {
+		$this->Cookie->write('Auth_admin.id', $usuario['UsuariosAdministrativo']['id']);
+		$this->Cookie->write('Auth_admin.login', $usuario['UsuariosAdministrativo']['name']);
+	}
+
+	public function admin_logout() {
+		$this->Cookie->destroy();
+		return $this->redirect(array('controller'=> 'usuariosAdministrativos', 'action'=> 'login'));
+	}
 
 	public function admin_index() {
 		$options = array();
@@ -89,10 +109,10 @@ public $layout = 'BootstrapAdmin.default';
 			}
 			$this->UsuariosAdministrativo->create();
 			if ($this->UsuariosAdministrativo->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>usuarios administrativo</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
+				$this->Session->setFlash(__('O seu usuário foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('O <strong>usuarios administrativo</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+				$this->Session->setFlash(__('O usuário não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
 	}
@@ -105,23 +125,24 @@ public $layout = 'BootstrapAdmin.default';
  * @return void
  */
 	public function admin_edit() {
-		$id = 1;
+		$id = $this->Auth_vars['id'];
 
 		if ($this->request->is(array('post', 'put'))) {
 			$this->request->data['UsuariosAdministrativo']['id'] = $id;
 
-			if (!empty($this->request->data['UsuariosAdministrativo']['senha'])) {
+			if (!empty($this->request->data['UsuariosAdministrativo']['fake_senha'])) {
 				$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
 					$this->request->data['UsuariosAdministrativo']['senha'] = $passwordHasher->hash(
-					$this->request->data['UsuariosAdministrativo']['senha']
+					$this->request->data['UsuariosAdministrativo']['fake_senha']
 				);
 			}
 
 			if ($this->UsuariosAdministrativo->save($this->request->data)) {
-				$this->Session->setFlash(__('O <strong>usuarios administrativo</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
+				$this->Session->setFlash(__('O usuário foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-custom'));
+				$this->_loginVars($this->request->data);
 				return $this->redirect(array('action' => 'edit'));
 			} else {
-				$this->Session->setFlash(__('O <strong>usuarios administrativo</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+				$this->Session->setFlash(__('O usuário não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			}
 		} else {
 			$options = array('conditions' => array('UsuariosAdministrativo.' . $this->UsuariosAdministrativo->primaryKey => $id));

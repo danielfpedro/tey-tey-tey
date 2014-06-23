@@ -94,7 +94,7 @@
 						<tr>
 							<td>
 								<?php
-									$img_url = 'estabelecimentos/' .
+									$img_url = 'Estabelecimentos/' .
 										$estabelecimento['Estabelecimento']['id'] . '/' .
 										$estabelecimento['Estabelecimento']['imagem_300x170'];
 									echo $this->Html->image($img_url, $options = array('width'=> '160')); ?>

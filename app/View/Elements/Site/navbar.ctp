@@ -3,7 +3,7 @@
 			<div class="container mid">
 				<div class="menu">
 					<ul>
-						<?php if (!$auth_flag): ?>
+						<?php if (empty($auth_custom)): ?>
 							<li>
 								<?php echo $this->Html->link('Cadastre-se', array('controller' => 'site', 'action' => 'cadastro')); ?>
 							</li>

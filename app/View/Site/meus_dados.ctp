@@ -54,18 +54,19 @@
 						echo $this->Form->create(
 							'Usuario',
 							array(
+								'novalidate'=> true,
 								'type'=> 'file',
 								'inputDefaults'=> array('label'=> false))
 						);
 					?>
 						<div style="margin-bottom: 5px;">
 							<?php
-								if (!empty($auth_imagem)) {
+								if (!empty($auth_custom['imagem'])) {
 									$img_url = ''.
 										'Usuarios/' . 
-										$auth_user_id .
+										$auth_custom['id'] .
 										'/' . 
-										$auth_imagem;
+										$auth_custom['imagem'];
 								} else {
 									$img_url = 'Usuarios/default_avatar.png';
 								}
@@ -74,23 +75,35 @@
 						<?php echo $this->Form->input('Perfil.imagem', array('type'=> 'file')); ?>
 
 						<label>Nome</label>
-						<?php echo $this->Form->input('Perfil.name'); ?>
-						<label>Email</label>
-						<?php echo $this->Form->input('email'); ?>
-						<label>Data de nascimento</label>
-						<?php echo $this->Form->input('Perfil.data_nascimento', array('type'=> 'text', 'class'=> 'data')); ?>
-						<label>Cidade</label>
-						<?php echo $this->Form->input('Perfil.cidade'); ?>
+						<?php echo $this->Form->input('Perfil.name', array('error'=> false)); ?>
 						
+						<div style="width: 45%;float: left">
+							<label>Email</label>
+							<?php echo $this->Form->input('email', array('error'=> false)); ?>
+						</div>
+						<div style="width: 50%;float: right">
+							<label>Apelido</label>
+							<?php echo $this->Form->input('Perfil.apelido', array('error'=> false)); ?>
+						</div>
+						<div style="width: 45%;float: left">
+							<label>Data de nascimento</label>
+							<?php echo $this->Form->input('Perfil.data_nascimento', array('type'=> 'text', 'class'=> 'data', 'error'=> false)); ?>
+						</div>
+						<div style="width: 50%;float: right">
+							<label>Cidade</label>
+							<?php echo $this->Form->input('Perfil.cidade', array('error'=> false)); ?>
+						</div>
+
+						<br style="clear: both;">
 						<hr>
 						<br>
 
 						<label>Nova senha</label>
-						<?php echo $this->Form->input('nova_senha', array('type'=> 'password', 'required'=> false)); ?>
+						<?php echo $this->Form->input('nova_senha', array('type'=> 'password', 'error'=> false)); ?>
 						<label>Repetir senha</label>
-						<?php echo $this->Form->input('repetir_senha', array('type'=> 'password', 'required'=> false)); ?>
+						<?php echo $this->Form->input('repetir_senha', array('type'=> 'password', 'errror'=> false)); ?>
 						<label>Senha atual</label>
-						<?php echo $this->Form->input('senha_fake', array('type'=> 'password', 'required'=> false)); ?>
+						<?php echo $this->Form->input('senha', array('type'=> 'password', 'error'=> false)); ?>
 
 						<button type="submit">Salvar alterações</button>
 					<?php echo $this->Form->end() ?>

@@ -31,11 +31,7 @@
 </head>
 <body>
 	
-	<?php //echo $this->element('BootstrapAdmin.navbar'); ?>
-
-	<div id="container-flash" class="container-flash">
-		<?php echo $this->Session->flash(); ?>
-	</div>
+	<?php echo $this->element('BootstrapAdmin.navbar_login'); ?>
 
 	<div class="page-wrap">
 		<div class="container-fluid" style="margin-top: 50px;">

@@ -54,21 +54,40 @@
 						echo $this->Form->create(
 							'Usuario',
 							array(
+								'novalidate'=> true,
 								'inputDefaults'=> array('label'=> false))
 						);
 					?>
 						<label>Nome</label>
-						<?php echo $this->Form->input('Perfil.name'); ?>
-						<label>Email</label>
-						<?php echo $this->Form->input('email'); ?>
-						<label>Data de nascimento</label>
-						<?php echo $this->Form->input('Perfil.data_nascimento', array('type'=> 'text', 'class'=> 'data')); ?>
-						<label>Cidade</label>
-						<?php echo $this->Form->input('Perfil.cidade'); ?>
-						<label>Senha</label>
-						<?php echo $this->Form->input('senha', array('type'=> 'password')); ?>
-						<label>Repetir senha</label>
-						<?php echo $this->Form->input('repetir_senha', array('type'=> 'password')); ?>
+						<?php echo $this->Form->input('Perfil.name', array('error'=> false)); ?>
+						
+						<div style="width: 45%;float: left">
+							<label>Email</label>
+							<?php echo $this->Form->input('email', array('error'=> false)); ?>
+						</div>
+						<div style="width: 50%;float: right">
+							<label>Apelido</label>
+							<?php echo $this->Form->input('Perfil.apelido', array('error'=> false)); ?>
+						</div>
+						<div style="width: 45%;float: left">
+							<label>Data de nascimento</label>
+							<?php echo $this->Form->input('Perfil.data_nascimento', array('type'=> 'text', 'class'=> 'data', 'error'=> false)); ?>
+						</div>
+						<div style="width: 50%;float: right">
+							<label>Cidade</label>
+							<?php echo $this->Form->input('Perfil.cidade', array('error'=> false)); ?>
+						</div>
+						<div style="width: 45%;float: left">
+							<label>Senha</label>
+							<?php echo $this->Form->input('senha', array('type'=> 'password', 'error'=> false)); ?>
+						</div>
+						<div style="width: 50%;float: right">
+							<label>Repetir senha</label>
+							<?php echo $this->Form->input('repetir_senha', array('type'=> 'password', array('error'=> false))); ?>
+						</div>
+						<div style="width: 100%; clear: both; font-size: 13px; color: #666; margin-bottom: 10px;">
+							Ao clicar em criar conta você estará concordando com os <a href="#">termos de uso</a>.
+						</div>
 						<button type="submit">Criar conta</button>
 					<?php echo $this->Form->end() ?>
 				</div><!-- wrap-form-contato -->

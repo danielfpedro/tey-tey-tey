@@ -176,7 +176,7 @@ public $layout = 'BootstrapAdmin.default';
 
 		$image
 			->resize(70, 67, 'outside')
-			->crop('center', 'center', 70, 67)
+			->crop('center', 'center', 70, 66)
 			->saveToFile($pasta_salvar->path . DS . $image_name . '-70x70.' . $ext, 85);
 		$image
 			->resize(300, 170, 'outside')

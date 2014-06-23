@@ -2,8 +2,9 @@
 App::uses('AppController', 'Controller');
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 
-App::uses('Folder', 'Utility');
 App::uses('WideImage', 'Lib/WideImage/lib');
+
+App::uses('Folder', 'Utility');
 /**
  * Site Controller
  *
@@ -11,36 +12,34 @@ App::uses('WideImage', 'Lib/WideImage/lib');
 class SiteController extends AppController {
 	public $layout = 'Site/default';
 
-	public $components = array('Paginator', 'DataUtil', 'Cookie');
+	public $components = array('Paginator', 'DataUtil', 'Cookie', 'Session');
 
 	/**
 	 * beforeFilter callback
 	 *
 	 * @return void
 	 */
-		public function beforeFilter() {
-			parent::beforeFilter();
-			$this->_checkLogin();
-		}
+	public function beforeFilter() {
+		parent::beforeFilter();
+		$this->_checkLogin();
+	}
 
 	public function _checkLogin(){
-		if ($this->Cookie->read('Auth.user_id') > 0) {
-			$auth_flag = true;
-			$auth_user_id = $this->Cookie->read('Auth.user_id');
-			$auth_nome = $this->Cookie->read('Auth.nome');
-			$auth_email = $this->Cookie->read('Auth.email');
-			$auth_perfil_id = $this->Cookie->read('Auth.perfil_id');
-			$auth_imagem = $this->Cookie->read('Auth.imagem');
+		$flag = $this->Cookie->read('Auth');
+		if (!empty($flag)) {
+			$auth_custom = array(
+				'id'=> $this->Cookie->read('Auth.user_id'),
+				'nome'=> $this->Cookie->read('Auth.nome'),
+				'email'=> $this->Cookie->read('Auth.email'),
+				'apelido'=> $this->Cookie->read('Auth.apelido'),
+				'perfil_id'=> $this->Cookie->read('Auth.perfil_id'),
+				'imagem'=> $this->Cookie->read('Auth.imagem')
+			);
 
-			$this->auth_user_id = $auth_user_id;
-			$this->auth_nome = $auth_nome;
-			$this->auth_email = $auth_email;
-			$this->auth_perfil_id = $auth_perfil_id;
-			$this->auth_imagem = $auth_imagem;
+			$this->auth_custom = $auth_custom;
+			//Debugger::dump($auth_custom);
 
-			$this->set(compact('auth_flag','auth_user_id', 'auth_email', 'auth_nome', 'auth_imagem'));
-		} else {
-			$this->set('auth_flag', false);
+			$this->set(compact('auth_custom'));
 		}
 	}
 	
@@ -308,6 +307,17 @@ class SiteController extends AppController {
 		$this->set(compact('title_for_layout'));
 	}
 
+	public function _validationUsuarioErrorsToList($errors) {
+		$retorno = '';
+		$retorno .= (!empty($errors['Perfil']['name'])) ? join('<br>', $errors['Perfil']['name']) . '<br>': '';
+		$retorno .= (!empty($errors['email'])) ? join('<br>', $errors['email']) . '<br>': '';
+		$retorno .= (!empty($errors['Perfil']['apelido'])) ? join('<br>', $errors['Perfil']['apelido']) . '<br>': '';
+		$retorno .= (!empty($errors['Perfil']['data_nascimento'])) ? join('<br>', $errors['Perfil']['data_nascimento']) . '<br>': '';
+		$retorno .= (!empty($errors['Perfil']['cidade'])) ? join('<br>', $errors['Perfil']['cidade']) . '<br>': '';
+		$retorno .= (!empty($errors['senha'])) ? join('<br>', $errors['senha']) . '<br>': '';
+		return $retorno;
+	}
+
 	public function cadastro(){
 		$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
 		$title_for_layout = 'Cadastro de usuário - ' . $this->site_name;
@@ -315,208 +325,282 @@ class SiteController extends AppController {
 		$this->set(compact('widget_estabelecimentos','title_for_layout'));
 
 		if ($this->request->is('post')) {
-			$erro = 0;
-			$erro_desc = array();
-
 			$this->loadModel('Usuario');
 			$this->Usuario->recursive = -1;
 
-			//Valida se email já existe;
-			$options = array();
-			$options['fields'] = array('Usuario.email');
-			$usuario = $this->Usuario->find('first', $options);
-			if ($usuario['Usuario']['email'] == $this->request->data['Usuario']['email']) {
-				$erro = 1;
-				$erro_desc[] = 'O email que você informou já está cadastrado';
-			}
-
-			// Valida data de nascimento
-			$data_fake = $this->DataUtil->setPadrao($this->request->data['Perfil']['data_nascimento']);
-			if (!strtotime($data_fake)) {
-				$erro = 1;
-				$erro_desc[] = 'A data de nascimento não foi informada corretamente';
-			}
-			//Valida repetição de senha
-			if ($this->request->data['Usuario']['repetir_senha'] != $this->request->data['Usuario']['senha']) {
-				$erro = 1;
-				$erro_desc[] = 'Você não repetiu a senha corretamente';
-			}
-
-			if ($erro == 0) {
-				$this->request->data['Perfil']['data_nascimento'] = $data_fake;
-
-				$this->request->data['Usuario']['token_ativacao'] = String::uuid();
-				
-				$email = $this->request->data['Usuario']['email'];
-				$senha = $this->request->data['Usuario']['senha'];
-
-				$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
-				$this->request->data['Usuario']['senha'] = $passwordHasher->hash(
-					$this->request->data['Usuario']['senha']
-				);
-				$this->Usuario->create();
-				if ($this->Usuario->save($this->request->data)) {
-					if (!empty($this->request->data)) {
-						$this->request->data['Perfil']['usuario_id'] = $this->Usuario->id;
-						if ($this->Usuario->Perfil->save($this->request->data)) {
-							//Debugger::dump($senha);
-							if($this->_logar($email, $senha)){
-								$this->Session->setFlash(__('Cadastro feito com sucesso.'), 'default', array('class'=> 'alert alert-success'));
-								$this->redirect(array('controller'=> 'site', 'action'=> 'home'));
-							} else {
-								$this->Session->setFlash(__('Ocorreu um erro ao logar.'), 'default', array('class'=> 'alert alert-danger'));
-								$this->redirect(array('controller'=> 'site', 'action'=> 'home'));
-							}
-						} else {
-							$this->Session->setFlash(__('O <strong>cadastro</strong> não pode ser salva. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
-						};
+			// $this->Usuario->create();
+			$senha = $this->request->data['Usuario']['senha'];
+			if ($this->Usuario->saveAll($this->request->data, array('validate'=> 'only'))) {
+				if ($this->Usuario->saveAll($this->request->data, array('validate'=> false))) {
+					if ($this->_logar($this->request->data['Usuario']['email'], $senha)) {
+						$this->Session->setFlash('Usuário salvo com sucesso!', 'default', array('class'=> 'alert alert-success'));
+						return $this->redirect(array('controller'=> 'site', 'action'=> 'home'));
+					} else {
+						$this->Session->setFlash('Ocorreu um erro ao logar!', 'default', array('class'=> 'alert alert-danger'));
 					}
-				} else {
-					$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 				}
 			} else {
-				$this->Session->setFlash(join('<br>', $erro_desc), 'default', array('class'=> 'alert alert-danger'));
+				$errors = $this->_validationUsuarioErrorsToList($this->Usuario->validationErrors);
+				$this->Session->setFlash($errors, 'default', array('class'=> 'alert alert-danger'));
 			}
+
+
+			//Valida se email já existe;
+			// $options = array();
+			// $options['fields'] = array('Usuario.email');
+			// $options['conditions'] = array('Usuario.email'=> $this->request->data['Usuario']['email']);
+			// $usuario = $this->Usuario->find('first', $options);
+			// if (!empty($usuario)) {
+			// 	if ($usuario['Usuario']['email'] == $this->request->data['Usuario']['email']) {
+			// 		$erro = 1;
+			// 		$erro_desc[] = 'O email que você informou já está cadastrado';
+			// 	}
+			// }
+
+			// Valida data de nascimento
+			// $data_fake = $this->DataUtil->setPadrao($this->request->data['Perfil']['data_nascimento']);
+			// if (!strtotime($data_fake)) {
+			// 	$erro = 1;
+			// 	$erro_desc[] = 'A data de nascimento não foi informada corretamente';
+			// }
+			//Valida repetição de senha
+			// if ($this->request->data['Usuario']['repetir_senha'] != $this->request->data['Usuario']['senha']) {
+			// 	$erro = 1;
+			// 	$erro_desc[] = 'Você não repetiu a senha corretamente';
+			// }
+
+			// if ($erro == 0) {
+			// 	$this->request->data['Perfil']['data_nascimento'] = $data_fake;
+
+			// 	$this->request->data['Usuario']['token_ativacao'] = String::uuid();
+				
+			// 	$email = $this->request->data['Usuario']['email'];
+			// 	$senha = $this->request->data['Usuario']['senha'];
+
+			// 	$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
+			// 	$this->request->data['Usuario']['senha'] = $passwordHasher->hash(
+			// 		$this->request->data['Usuario']['senha']
+			// 	);
+			// 	$this->Usuario->create();
+			// 	if ($this->Usuario->save($this->request->data)) {
+			// 		if (!empty($this->request->data)) {
+			// 			$this->request->data['Perfil']['usuario_id'] = $this->Usuario->id;
+			// 			if ($this->Usuario->Perfil->save($this->request->data)) {
+			// 				//Debugger::dump($senha);
+			// 				if($this->_logar($email, $senha)){
+			// 					$this->Session->setFlash(__('Cadastro feito com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+			// 					$this->redirect(array('controller'=> 'site', 'action'=> 'home'));
+			// 				} else {
+			// 					$this->Session->setFlash(__('Ocorreu um erro ao logar.'), 'default', array('class'=> 'alert alert-danger'));
+			// 					$this->redirect(array('controller'=> 'site', 'action'=> 'home'));
+			// 				}
+			// 			} else {
+			// 				$this->Session->setFlash(__('O <strong>cadastro</strong> não pode ser salva. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+			// 			};
+			// 		}
+			// 	} else {
+			// 		$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+			// 	}
+			// } else {
+
+			// 	$this->Session->setFlash(join('<br>', $erro_desc), 'default', array('class'=> 'alert alert-danger'));
+			// }
+		}
+	}
+
+	public function _uploadUserImage($image_array) {
+		if ($this->request->data['Perfil']['imagem']['error'] == 0) {
+			$image = WideImage::load($image_array['tmp_name']);
+			$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'Usuarios/' . $this->auth_custom['id'], true, 0755);
+	
+			$image
+				->resize(60, 60, 'outside')
+				->crop('center', 'center', 60, 60)
+				->saveToFile($pasta_salvar->path . DS . $image_array['name'], 85);
 		}
 	}
 
 	public function meusDados() {
 		$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
 		$this->set(compact('widget_estabelecimentos'));
-
+		
 		$this->loadModel('Usuario');
-		if ($this->Cookie->read('Auth.flag')) {
+		$this->Usuario->recursive = -1;
+
+		if (!empty($this->auth_custom)) {
 			if ($this->request->is(array('post', 'put'))) {
-				$options = array();
-				$erro = 0;
-				$erro_desc = array();			
-				
-				$this->Usuario->recursive = -1;
+				$this->request->data['Usuario']['id'] = $this->auth_custom['id'];
+				$this->request->data['Perfil']['id'] = $this->auth_custom['perfil_id'];
 
-				$options['fields'] = array('Usuario.email');
-				$options['conditions'] = array(
-					'Usuario.email'=> $this->request->data['Usuario']['email'],
-					'Usuario.email !='=> $this->auth_email
-				);
-				$usuario = $this->Usuario->find('all', $options);
-				//Debugger::dump($options);
+				$this->request->data['Usuario']['email_antigo'] = $this->auth_custom['email'];
+				$this->request->data['Perfil']['apelido_antigo'] = $this->auth_custom['apelido'];
 
-				if (!empty($usuario)) {
-					$erro = 1;
-					$erro_desc[] = 'O email que você informou já está me uso por outro usuário';
-				}
-
-				if ($this->request->data['Perfil']['imagem']['error'] == 4) {
-					unset($this->request->data['Perfil']['imagem']);
-				} else {
-					$image_array = $this->request->data['Perfil']['imagem'];
-					if ($image_array['error'] == 0) {
-						if ($image_array['type'] != 'image/jpeg' AND $image_array['type'] != 'image/png') {
-							$erro_desc[] = 'A imagem deve estar no formato JPG ou PNG.';
-							$erro = 1;
-						}
-						if ($image_array['size'] > 1000000) {
-							$erro_desc[] = 'A imagem não pode ser maior que 1MB.';
-							$erro = 1;
-						}
-					} elseif ($image_array['error'] == 2) {
-						$erro_desc[] = 'O arquivo ultrapassou o limite do servidor';
-						$erro = 1;
-					} else {
-						$erro_desc[] = 'Ocorreu um erro no upload da sua imagem';
-						$erro = 1;
-					}
-
-					if ($erro == 0) {
-						$this->request->data['Perfil']['imagem'] = $this->request->data['Perfil']['imagem']['name'];
-					}
-				}
-				if (!empty($this->request->data['Usuario']['nova_senha'])) {
-					if ($this->request->data['Usuario']['nova_senha'] != $this->request->data['Usuario']['repetir_senha']) {
-						$erro_desc[] = 'Você não repetiu a nova senha corretamente.';
-						$erro = 1;
-					} else {
-						if (!empty($this->request->data['Usuario']['senha_fake'])) {
-							$senha = $this->Usuario->find('first',
-								array(
-									'fields'=> array('Usuario.senha'),
-									'conditions'=> array(
-										'Usuario.id'=> $this->auth_user_id
-								)));
-
-							$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
-							$senha_fake = $passwordHasher->hash(
-								$this->request->data['Usuario']['senha_fake']);
-
-							if ($senha['Usuario']['senha'] != $senha_fake) {
-								$erro_desc[] = 'Você não informou a sua senha atual corretamente.';
-								$erro = 1;
-							} else {
-								$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
-								$nova_senha = $passwordHasher->hash(
-									$this->request->data['Usuario']['nova_senha']);
-
-								$this->request->data['Usuario']['senha'] = $nova_senha;
-							}
-						} else {
-							$erro_desc[] = 'Para fazer a alteração da senha você deve informar a sua senha atual.';
-							$erro = 1;
-						}
-					}
-
-				}
-				$data_fake = $this->DataUtil->setPadrao($this->request->data['Perfil']['data_nascimento']);
-				if (!strtotime($data_fake)) {
-					$erro_desc[] = 'A data de nascimento não foi informada corretamente.';
-					$erro = 1;
-				}
-				if ($erro == 0) {
-					$this->request->data['Perfil']['data_nascimento'] = $data_fake;
-					$this->request->data['Usuario']['id'] = $this->auth_user_id;
-					// Debugger::dump($this->request->data);
-					// exit();
-					if ($this->Usuario->save($this->request->data)) {
-						$this->request->data['Perfil']['id'] = $this->auth_perfil_id;
-						$this->request->data['Perfil']['usuario_id'] = $this->auth_user_id;
-						//Debugger::dump($this->request->data['Perfil']);
-						if ($this->Usuario->Perfil->save($this->request->data['Perfil'])) {
-							
-							$this->Cookie->write('Auth.nome', $this->request->data['Perfil']['name']);
-							if (isset($this->request->data['Perfil']['imagem'])) {
-								$this->Cookie->write('Auth.imagem', $this->request->data['Perfil']['imagem']);
-								
-								$image = WideImage::load($image_array['tmp_name']);
-								$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'Usuarios/' . $this->auth_user_id, true, 0755);
+				$image_array = $this->request->data['Perfil']['imagem'];
+				if ($this->Usuario->saveAll($this->request->data, array('validate'=> 'only'))) {
+					if ($this->Usuario->saveAll($this->request->data, array('validate'=> false))) {
 						
-								$image
-									->resize(60, 60, 'outside')
-									->crop('center', 'center', 60, 60)
-									->saveToFile($pasta_salvar->path . DS . $image_array['name'], 85);
-							}
-
-							$this->Session->setFlash(__('Os seus dados foram salvos corretamente.'), 'default', array('class'=> 'alert alert-success'));
-							return $this->redirect($this->referer());
+						$this->_uploadUserImage($image_array);
+						if ($this->request->data['Perfil']['imagem']['error'] == 0) {
+							$this->request->data['Perfil']['imagem'] = $this->request->data['Perfil']['imagem']['name'];
+						} else {
+							unset($this->request->data['Perfil']['imagem']);
 						}
-					} else {
-						$this->request->data['Usuario']['senha'] = '';
-						$this->request->data['Usuario']['nova_senha'] = '';
-						$this->request->data['Usuario']['repetir_senha'] = '';
-						$this->Session->setFlash(__('Ocorreu um erro ao salvar os seus dados.'), 'default', array('class'=> 'alert alert-danger'));
+						$this->_loginSession($this->request->data);
+						$this->Session->setFlash('As suas alterações foram efetuadas com sucesso!', 'default', array('class'=> 'alert alert-success'));
+						return $this->redirect($this->referer());
 					}
 				} else {
-					$this->Session->setFlash(join('<br>', $erro_desc), 'default', array('class'=> 'alert alert-danger'));
+					$errors = $this->_validationUsuarioErrorsToList($this->Usuario->validationErrors);
+					$this->Session->setFlash($errors, 'default', array('class'=> 'alert alert-danger'));
 				}
 			} else {
-				$usuario = $this->Usuario->find('first', array('conditions'=> array('Usuario.id'=> $this->auth_user_id)));
-			
-				$this->request->data = $usuario;
+				$options['contain'] = array('Perfil');
+				$options['fields'] = array(
+					'Usuario.email',
+					'Perfil.name',
+					'Perfil.data_nascimento',
+					'Perfil.apelido',
+					'Perfil.cidade'
+				);
+				$options['conditions'] = array('Usuario.id'=> $this->auth_custom['id']);
 
-				$this->request->data['Perfil']['data_nascimento'] = $this->DataUtil->reverse($this->request->data['Perfil']['data_nascimento']);
+				$usuario = $this->Usuario->find('first', $options);
+				$this->request->data = $usuario;
+				$this->request->data['Perfil']['data_nascimento'] = $this->DataUtil->reverse($usuario['Perfil']['data_nascimento']);
 
 				$this->request->data['Usuario']['senha'] = '';
-
 				$this->set(compact('usuario'));
 			}
+			// 	$options = array();
+			// 	$erro = 0;
+			// 	$erro_desc = array();			
+				
+			// 	$this->Usuario->recursive = -1;
+
+			// 	$options['fields'] = array('Usuario.email');
+			// 	$options['conditions'] = array(
+			// 		'Usuario.email'=> $this->request->data['Usuario']['email'],
+			// 		'Usuario.email !='=> $this->auth_email
+			// 	);
+			// 	$usuario = $this->Usuario->find('all', $options);
+			// 	//Debugger::dump($options);
+
+			// 	if (!empty($usuario)) {
+			// 		$erro = 1;
+			// 		$erro_desc[] = 'O email que você informou já está me uso por outro usuário';
+			// 	}
+
+			// 	if ($this->request->data['Perfil']['imagem']['error'] == 4) {
+			// 		unset($this->request->data['Perfil']['imagem']);
+			// 	} else {
+			// 		$image_array = $this->request->data['Perfil']['imagem'];
+			// 		if ($image_array['error'] == 0) {
+			// 			if ($image_array['type'] != 'image/jpeg' AND $image_array['type'] != 'image/png') {
+			// 				$erro_desc[] = 'A imagem deve estar no formato JPG ou PNG.';
+			// 				$erro = 1;
+			// 			}
+			// 			if ($image_array['size'] > 1000000) {
+			// 				$erro_desc[] = 'A imagem não pode ser maior que 1MB.';
+			// 				$erro = 1;
+			// 			}
+			// 		} elseif ($image_array['error'] == 2) {
+			// 			$erro_desc[] = 'O arquivo ultrapassou o limite do servidor';
+			// 			$erro = 1;
+			// 		} else {
+			// 			$erro_desc[] = 'Ocorreu um erro no upload da sua imagem';
+			// 			$erro = 1;
+			// 		}
+
+			// 		if ($erro == 0) {
+			// 			$this->request->data['Perfil']['imagem'] = $this->request->data['Perfil']['imagem']['name'];
+			// 		}
+			// 	}
+			// 	if (!empty($this->request->data['Usuario']['nova_senha'])) {
+			// 		if ($this->request->data['Usuario']['nova_senha'] != $this->request->data['Usuario']['repetir_senha']) {
+			// 			$erro_desc[] = 'Você não repetiu a nova senha corretamente.';
+			// 			$erro = 1;
+			// 		} else {
+			// 			if (!empty($this->request->data['Usuario']['senha_fake'])) {
+			// 				$senha = $this->Usuario->find('first',
+			// 					array(
+			// 						'fields'=> array('Usuario.senha'),
+			// 						'conditions'=> array(
+			// 							'Usuario.id'=> $this->auth_user_id
+			// 					)));
+
+			// 				$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
+			// 				$senha_fake = $passwordHasher->hash(
+			// 					$this->request->data['Usuario']['senha_fake']);
+
+			// 				if ($senha['Usuario']['senha'] != $senha_fake) {
+			// 					$erro_desc[] = 'Você não informou a sua senha atual corretamente.';
+			// 					$erro = 1;
+			// 				} else {
+			// 					$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
+			// 					$nova_senha = $passwordHasher->hash(
+			// 						$this->request->data['Usuario']['nova_senha']);
+
+			// 					$this->request->data['Usuario']['senha'] = $nova_senha;
+			// 				}
+			// 			} else {
+			// 				$erro_desc[] = 'Para fazer a alteração da senha você deve informar a sua senha atual.';
+			// 				$erro = 1;
+			// 			}
+			// 		}
+
+			// 	}
+			// 	$data_fake = $this->DataUtil->setPadrao($this->request->data['Perfil']['data_nascimento']);
+			// 	if (!strtotime($data_fake)) {
+			// 		$erro_desc[] = 'A data de nascimento não foi informada corretamente.';
+			// 		$erro = 1;
+			// 	}
+			// 	if ($erro == 0) {
+			// 		$this->request->data['Perfil']['data_nascimento'] = $data_fake;
+			// 		$this->request->data['Usuario']['id'] = $this->auth_user_id;
+			// 		// Debugger::dump($this->request->data);
+			// 		// exit();
+			// 		if ($this->Usuario->save($this->request->data)) {
+			// 			$this->request->data['Perfil']['id'] = $this->auth_perfil_id;
+			// 			$this->request->data['Perfil']['usuario_id'] = $this->auth_user_id;
+			// 			//Debugger::dump($this->request->data['Perfil']);
+			// 			if ($this->Usuario->Perfil->save($this->request->data['Perfil'])) {
+							
+			// 				$this->Cookie->write('Auth.nome', $this->request->data['Perfil']['name']);
+			// 				if (isset($this->request->data['Perfil']['imagem'])) {
+			// 					$this->Cookie->write('Auth.imagem', $this->request->data['Perfil']['imagem']);
+								
+			// 					$image = WideImage::load($image_array['tmp_name']);
+			// 					$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'Usuarios/' . $this->auth_user_id, true, 0755);
+						
+			// 					$image
+			// 						->resize(60, 60, 'outside')
+			// 						->crop('center', 'center', 60, 60)
+			// 						->saveToFile($pasta_salvar->path . DS . $image_array['name'], 85);
+			// 				}
+
+			// 				$this->Session->setFlash(__('Os seus dados foram salvos corretamente.'), 'default', array('class'=> 'alert alert-success'));
+			// 				return $this->redirect($this->referer());
+			// 			}
+			// 		} else {
+			// 			$this->request->data['Usuario']['senha'] = '';
+			// 			$this->request->data['Usuario']['nova_senha'] = '';
+			// 			$this->request->data['Usuario']['repetir_senha'] = '';
+			// 			$this->Session->setFlash(__('Ocorreu um erro ao salvar os seus dados.'), 'default', array('class'=> 'alert alert-danger'));
+			// 		}
+			// 	} else {
+			// 		$this->Session->setFlash(join('<br>', $erro_desc), 'default', array('class'=> 'alert alert-danger'));
+			// 	}
+			// } else {
+			// 	$usuario = $this->Usuario->find('first', array('conditions'=> array('Usuario.id'=> $this->auth_user_id)));
+			
+			// 	$this->request->data = $usuario;
+
+			// 	$this->request->data['Perfil']['data_nascimento'] = $this->DataUtil->reverse($this->request->data['Perfil']['data_nascimento']);
+
+			// 	$this->request->data['Usuario']['senha'] = '';
+
+			// 	$this->set(compact('usuario'));
+			// }
 		} else {
 			return $this->redirect(array('controller'=> 'site','action'=> 'home'));
 		}
@@ -559,9 +643,13 @@ class SiteController extends AppController {
 		$this->Cookie->write('Auth.flag', true);
 		$this->Cookie->write('Auth.user_id', $usuario['Usuario']['id']);
 		$this->Cookie->write('Auth.nome', $usuario['Perfil']['name']);
+		$this->Cookie->write('Auth.apelido', $usuario['Perfil']['apelido']);
 		$this->Cookie->write('Auth.email', $usuario['Usuario']['email']);
 		$this->Cookie->write('Auth.perfil_id', $usuario['Perfil']['id']);
-		$this->Cookie->write('Auth.imagem', $usuario['Perfil']['imagem']);
+		if (!empty($usuario['Perfil']['imagem'])) {
+			$this->Cookie->write('Auth.imagem', $usuario['Perfil']['imagem']);
+		}
+		
 	}
 
 	public function login(){

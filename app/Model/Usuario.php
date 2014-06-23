@@ -8,6 +8,70 @@ App::uses('AppModel', 'Model');
  */
 class Usuario extends AppModel {
 
+	public $actsAs = array('Containable');
+
+	public function isUniqueOnUpdate($fields) {
+		$options['conditions'] = array(
+			'Usuario.email'=> $fields['email'],
+			'Usuario.email !='=> $this->data['Usuario']['email_antigo']
+		);
+		$check = $this->find('count', $options);
+		return ($check == 0) ? true : false;
+	}
+
+	public function confirma_senha($field) {
+		if ($field['senha'] == $this->data['Usuario']['repetir_senha']) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+	public function confirma_nova_senha($field) {
+		if (!empty($this->data['Usuario']['nova_senha'])) {
+			if ($this->data['Usuario']['nova_senha'] == $this->data['Usuario']['repetir_senha']) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	public function confirma_senha_atual($field) {
+		if (!empty($this->data['Usuario']['nova_senha'])) {
+			$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
+			$senha = $passwordHasher->hash(
+				$field['senha']
+			);
+			$options['conditions'] = array(
+				'Usuario.id'=> $this->data['Usuario']['id'],
+				'Usuario.senha'=> $senha
+			);
+			$check = $this->find('count', $options);
+			return ($check == 0) ? false : true;
+		} else {
+			return true;
+		}
+	}
+
+	public function beforeSave($options = array()) {
+		if ($this->data['Usuario']['id'] > 0) {
+			$this->data['Usuario']['senha'] = $this->data['Usuario']['nova_senha'];
+		}
+        if (!empty($this->data['Usuario']['senha'])) {
+            $passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
+            $this->data['Usuario']['senha'] = $passwordHasher->hash(
+                $this->data['Usuario']['senha']
+            );
+        } else {
+        	unset($this->data['Usuario']['senha']);
+        }
+        return true;
+    }
+
 /**
  * Validation rules
  *
@@ -17,21 +81,45 @@ class Usuario extends AppModel {
 		'email' => array(
 			'email' => array(
 				'rule' => array('email'),
-				//'message' => 'Your custom message here',
+				'message' => 'Você informou um email inválido.',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-		),
-		'senha' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
+			'unique' => array(
+				'rule' => array('isUnique'),
+				'message' => 'O email informado já está sendo usado por outro usuário.',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+				'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+			'uniqueOnUpdate' => array(
+				'rule' => array('isUniqueOnUpdate'),
+				'message' => 'O email informado já está sendo usado por outro usuário.',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				'on' => 'update', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'senha' => array(
+			'confirma_senha'=> array(
+				'rule'=> array('confirma_senha'),
+				'message'=> 'Você não confirmou a sua senha corretamente.',
+				'on'=> 'create'
+			),
+			'confirma_nova_senha'=> array(
+				'rule'=> array('confirma_nova_senha'),
+				'message'=> 'Você não confirmou a sua nova senha corretamente.',
+				'on'=> 'update',
+				'last'=> false
+			),
+			'confirma_senha_atual'=> array(
+				'rule'=> array('confirma_senha_atual'),
+				'message'=> 'Você não informou a sua senha atual corretamente.',
+				'on'=> 'update',
 			),
 		),
 	);

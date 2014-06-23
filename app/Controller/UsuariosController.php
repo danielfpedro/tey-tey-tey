@@ -16,6 +16,21 @@ public $layout = 'BootstrapAdmin.default';
  */
 	public $components = array('Paginator');
 
+	public function admin_status_ajax($id = null, $status = null) {
+		$this->autoRender = false;
+		if (!is_null($id) AND !is_null($status)) {
+			$status = ($status == 0) ? 1 : 0;
+			if ($this->Usuario->save(array('id'=> $id, 'ativo'=> $status))) {
+				return true;
+
+			} else {
+				return false;	
+			}
+		} else {
+			return false;
+		}
+	}
+
 /**
  * index method
  *
