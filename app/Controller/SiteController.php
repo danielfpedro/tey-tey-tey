@@ -309,6 +309,7 @@ class SiteController extends AppController {
 
 	public function _validationUsuarioErrorsToList($errors) {
 		$retorno = '';
+		$retorno .= (!empty($errors['Perfil']['imagem'])) ? join('<br>', $errors['Perfil']['imagem']) . '<br>': '';
 		$retorno .= (!empty($errors['Perfil']['name'])) ? join('<br>', $errors['Perfil']['name']) . '<br>': '';
 		$retorno .= (!empty($errors['email'])) ? join('<br>', $errors['email']) . '<br>': '';
 		$retorno .= (!empty($errors['Perfil']['apelido'])) ? join('<br>', $errors['Perfil']['apelido']) . '<br>': '';
@@ -333,10 +334,10 @@ class SiteController extends AppController {
 			if ($this->Usuario->saveAll($this->request->data, array('validate'=> 'only'))) {
 				if ($this->Usuario->saveAll($this->request->data, array('validate'=> false))) {
 					if ($this->_logar($this->request->data['Usuario']['email'], $senha)) {
-						$this->Session->setFlash('Usuário salvo com sucesso!', 'default', array('class'=> 'alert alert-success'));
+						$this->Session->setFlash('Cadastro <strong>realizado</strong> com sucesso!', 'default', array('class'=> 'alert alert-success'));
 						return $this->redirect(array('controller'=> 'site', 'action'=> 'home'));
 					} else {
-						$this->Session->setFlash('Ocorreu um erro ao logar!', 'default', array('class'=> 'alert alert-danger'));
+						$this->Session->setFlash('Cadastro <strong>realizado</strong> cmo sucesso.', 'default', array('class'=> 'alert alert-danger'));
 					}
 				}
 			} else {
@@ -446,10 +447,12 @@ class SiteController extends AppController {
 							unset($this->request->data['Perfil']['imagem']);
 						}
 						$this->_loginSession($this->request->data);
-						$this->Session->setFlash('As suas alterações foram efetuadas com sucesso!', 'default', array('class'=> 'alert alert-success'));
+						$this->Session->setFlash('As suas alterações foram realizadas com sucesso.', 'default', array('class'=> 'alert alert-success'));
 						return $this->redirect($this->referer());
 					}
 				} else {
+					// Debugger::dump($this->Usuario->validationErrors);
+					// exit();
 					$errors = $this->_validationUsuarioErrorsToList($this->Usuario->validationErrors);
 					$this->Session->setFlash($errors, 'default', array('class'=> 'alert alert-danger'));
 				}

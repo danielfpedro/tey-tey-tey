@@ -20,7 +20,7 @@ class Usuario extends AppModel {
 	}
 
 	public function confirma_senha($field) {
-		if ($field['senha'] == $this->data['Usuario']['repetir_senha']) {
+		if ($field['senha'] != '' AND ($field['senha'] == $this->data['Usuario']['repetir_senha'])) {
 			return true;
 		} else {
 			return false;

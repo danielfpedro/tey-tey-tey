@@ -72,7 +72,7 @@
 								}
 								echo $this->Html->image($img_url, $options = array('width'=> 60, 'height'=> 60)); ?>
 						</div>
-						<?php echo $this->Form->input('Perfil.imagem', array('type'=> 'file')); ?>
+						<?php echo $this->Form->input('Perfil.imagem', array('type'=> 'file', 'error'=> false)); ?>
 
 						<label>Nome</label>
 						<?php echo $this->Form->input('Perfil.name', array('error'=> false)); ?>

@@ -33,6 +33,8 @@ public $layout = 'BootstrapAdmin.default';
 				$this->Session->setFlash('A combinação email/senha não foi informada corretamente.', 'default', array('class'=> 'alert alert-danger'));
 			}
 		}
+
+		$this->set('title_for_layout', 'Painel Administrativo - ' . $this->site_name);
 	}	
 
 	public function _admin_logar($login, $senha) {
