@@ -1,6 +1,7 @@
 <?php echo $this->Html->script('Site/widget_estabelecimentos', array('inline'=> false)); ?>
 <?php echo $this->Html->script('Site/cadastro', array('inline'=> false)); ?>
 <?php echo $this->Html->script('../lib/maskedinput-1.3.1/jquery.maskedinput.min', array('inline'=> false)); ?>
+<?php echo $this->Html->script('Site/facebook', array('inline'=> false)); ?>
 
 <div id="page-wrapper"> <!-- everything below the top menu should be inside the page wrapper div -->
 	<div id="logo-bar"> <!--begin the main header logo area-->
@@ -58,6 +59,16 @@
 								'inputDefaults'=> array('label'=> false))
 						);
 					?>
+
+						<button type="button" id="btn-facebook" onclick="checkLoginState();" style="display: none;">Logar com Facebook</button>
+
+						<div id="cont-facebook-img" style="display: none;">
+							<label>Foto do perfil</label>
+							<img id="imagem-facebook" width="60">
+						</div>
+						
+						<?php echo $this->Form->input('facebook_id', array('type'=> 'text','error'=> false, 'style'=> 'display: none;')); ?>
+
 						<label>Nome</label>
 						<?php echo $this->Form->input('Perfil.name', array('error'=> false)); ?>
 						
@@ -79,7 +90,7 @@
 						</div>
 						<div style="width: 45%;float: left">
 							<label>Senha</label>
-							<?php echo $this->Form->input('senha', array('type'=> 'password', 'error'=> false)); ?>
+							<?php echo $this->Form->input('senha', array('type'=> 'password', 'error'=> false, 'maxlength'=> 10)); ?>
 						</div>
 						<div style="width: 50%;float: right">
 							<label>Repetir senha</label>
@@ -110,6 +121,11 @@
 			<div class="unwrapped">
 				<?php
 					echo $this->Html->image('banners/banner2.png', array('url'=>'#'));
+				?>
+			</div><!-- unwrapped -->
+			<div class="unwrapped">
+				<?php
+					echo $this->element('Site/facebook_like_box');
 				?>
 			</div><!-- unwrapped -->
 		</div><!-- sidebar -->

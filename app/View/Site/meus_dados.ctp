@@ -61,18 +61,26 @@
 					?>
 						<div style="margin-bottom: 5px;">
 							<?php
-								if (!empty($auth_custom['imagem'])) {
+								if (!empty($usuario['Perfil']['imagem'])) {
 									$img_url = ''.
 										'Usuarios/' . 
-										$auth_custom['id'] .
+										$usuario['Usuario']['id'] .
 										'/' . 
-										$auth_custom['imagem'];
+										$usuario['Perfil']['imagem'];
+								}elseif (!empty($usuario['Usuario']['facebook_id'])) {
+									$img_url = 'https://graph.facebook.com/' .
+										$usuario['Usuario']['facebook_id'].
+										'/picture?type=normal';
+									
 								} else {
 									$img_url = 'Usuarios/default_avatar.png';
 								}
 								echo $this->Html->image($img_url, $options = array('width'=> 60, 'height'=> 60)); ?>
 						</div>
 						<?php echo $this->Form->input('Perfil.imagem', array('type'=> 'file', 'error'=> false)); ?>
+						<div style="width: 100%; clear: both; font-size: 13px; color: #666; margin-top: -18px; margin-bottom: 20px;">
+							A imagem deve estar no formato JPG ou PNG e não poder conter mais de 1MB.
+						</div>
 
 						<label>Nome</label>
 						<?php echo $this->Form->input('Perfil.name', array('error'=> false)); ?>

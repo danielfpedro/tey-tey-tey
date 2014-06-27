@@ -55,7 +55,7 @@
 										<div class="floatleft" id="thumbnail">
 											<?php
 												echo $this->Html->link(
-													$this->Html->image($perfil_img, array('class'=> 'thumb-img')),
+													$this->Html->image($perfil_img),
 													$perfil_url,
 													array('escape'=> false, 'class'=> 'thumbnail small')
 												);

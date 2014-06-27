@@ -86,6 +86,11 @@
 					echo $this->Html->image('banners/banner2.png', array('url'=>'#'));
 				?>
 			</div><!-- unwrapped -->
+			<div class="unwrapped">
+				<?php
+					echo $this->element('Site/facebook_like_box');
+				?>
+			</div><!-- unwrapped -->
 		</div><!-- sidebar -->
 		<br class="clearer" />
 

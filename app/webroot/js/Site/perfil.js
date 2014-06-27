@@ -30,24 +30,36 @@ $(function(){
 			var comentarios = $.parseJSON(data);
 			//console.log(comentarios);
 			var total = comentarios.length;
-			console.log(total);
+			// console.log(total);
 
 			if (total > 0) {
+				var i = 0;
 				$.each(comentarios, function(key, value){
-					//console.log(value);
+
 					var media_wrap = $('<div/>').addClass('media-wrap');
 					var media_thumb = $('<div/>').addClass('media-thumb');
 					var thumb = $('<img/>').attr({src: webroot + 'img/Usuarios/' + value.Usuario.id + '/' + value.Usuario.Perfil.imagem});
 
-					var media_body = $('<div/>').addClass('media-body');
-						var h4 = $('<h4/>').text(value.Usuario.Perfil.name);
+					var media_body = $('<div/>').addClass('media-body').css({width: '560px'});
+						var h4 = $('<h4/>').text(value.Usuario.Perfil.apelido);
+						var estrelas = $('<div/>').attr({'id': 'estrela' + i, 'data-score': value.Comentario.rate});
 						var p = $('<p/>').text(value.Comentario.texto);
 
 					var br_clear = $('<br />').css({clear: 'both'});
 
-					$('#comentarios-container-pagination').append(media_wrap.append(media_thumb.append(thumb)).append(media_body.append(h4).append(p)).append(br_clear));
+					$('#comentarios-container-pagination').append(media_wrap.append(media_thumb.append(thumb)).append(media_body.append(h4).append(estrelas).append(p)).append(br_clear));
 
 					$this.text(defaul_text).attr({disabled: false});
+
+					$('#estrela' + i).raty({
+						score: function() {
+							return $(this).attr('data-score');
+						},		
+						path: webroot + 'lib/raty-2.5.2/lib/img',
+						readOnly: true,
+					});
+
+					i++;
 				});
 			} else {
 				$this.text(final_text);

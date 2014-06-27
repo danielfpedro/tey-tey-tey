@@ -11,7 +11,6 @@ class Perfil extends AppModel {
 	public $actsAs = array('Containable');
 
 	public function beforeSave($options = array()) {
-
 		// Se nao upou imagem ele unseta
 		if (isset($this->data['Perfil']['imagem'])) {
 			if ($this->data['Perfil']['imagem']['error'] > 0) {
@@ -51,10 +50,11 @@ class Perfil extends AppModel {
 		return true;
     }
 
-    public function data_acima_hoje($field) {
+    public function data_nascimento_valida($field) {
     	$dt = explode('/', $field['data_nascimento']);
 		$dt_formated = $dt[1] .  '/' . $dt[0] . '/' . $dt[2];
-		if (strtotime($dt_formated) > strtotime('now')) {
+
+		if (strtotime($dt_formated) > strtotime('now -16 years')) {
 			return false;
 		} else {
 			return true;
@@ -87,13 +87,10 @@ class Perfil extends AppModel {
 			),
 		),
 		'apelido' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
-				'message' => 'O apelido deve ser informado.',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			'between'=> array(
+				'rule'=> array('between', 3, 16),
+				'message'=> 'O apelido deve conter entre 3 e 16 caracteres..',
+				//'on'=> 'create'
 			),
 			'unique' => array(
 				'rule' => array('isUnique'),
@@ -149,9 +146,9 @@ class Perfil extends AppModel {
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-			'data_acima_hoje' => array(
-				'rule' => array('data_acima_hoje'),
-				'message' => 'A sua data de nascimento não pode ser superior a hoje.',
+			'data_nascimento_valida' => array(
+				'rule' => array('data_nascimento_valida'),
+				'message' => 'Você deve ter no mínimo 16 anos para se cadastrar no site.',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule

@@ -3,10 +3,6 @@
 <?php echo $this->Html->script('Site/perfil', array('inline'=> false)); ?>
 
 <div id="page-wrapper"> <!-- everything below the top menu should be inside the page wrapper div -->
-	<div style="margin-top: 10px;">
-		<?php echo $this->Session->Flash(); ?>	
-	</div>
-	
 	<div id="logo-bar"> <!--begin the main header logo area-->
 		<div id="logo-wrapper">
 			<div id="logo"><!--logo and section header area-->
@@ -41,12 +37,14 @@
 		<br />
 
 		<div class="main-content-left">
+			<div class="page-content review" style="margin-bottom: -20px;">
+				<h1 class="title">
+					<?php echo $estabelecimento['Estabelecimento']['name']; ?>
+				</h1>
+			</div>
+			<hr>
 			 <div class="content-panel"> 
 				<div class="page-content review">                   
-					<h1 class="title">
-						<?php echo $estabelecimento['Estabelecimento']['name']; ?>
-					</h1>
-
 					<!-- Barrinha com o icone de comentarios -->
 
 					<div class="overview" style="margin-top: -30px;">
@@ -57,7 +55,7 @@
 									class="section-wrapper review"
 									style="margin-bottom: 5px; border:0;">
 									<div class="comment-bubble" style="margin-right: -7x;">
-										<a href="#" id="comentarios">
+										<a href="#" id="comentarios" style="background-color: #FFF;">
 											<?php echo $comentarios_count; ?>
 										</a>  
 									</div>
@@ -283,6 +281,13 @@
 					echo $this->Html->image('banners/banner2.png', array('url'=>'#'));
 				?>
 			</div><!-- unwrapped -->
+
+			<div class="unwrapped">
+				<?php
+					echo $this->element('Site/facebook_like_box');
+				?>
+			</div><!-- unwrapped -->
+
 		</div><!-- sidebar -->
 		<br class="clearer" />
 

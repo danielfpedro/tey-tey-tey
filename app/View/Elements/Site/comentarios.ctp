@@ -1,28 +1,40 @@
 <!-- coloquei comentarios de wrap pq a hash deve ficar em portugues, se eu trocasse o 
 comments ele perde o estilo pq o estilo estah no id -->
-
+<div style="margin-top: 10px;">
+	<?php echo $this->Session->Flash(); ?>	
+</div>
 <div id="comentarios">
-	<?php if ($auth_flag): ?>
 		<div id="comments">
 			<div id="respond">
 			
-				<h3 id="reply-title">Deixe seu Comentário</h3>
+				<h3 id="reply-title" style="font-size: 22px;">Deixe seu Comentário</h3>
 					<?php
 						echo $this->Form->create('Comentario',
 							array('type'=> 'post')
 						);
 					?>
 				
-					<p class="logged-in-as">
-						Logado como <strong><?php echo $auth_nome; ?></strong>,
+					<?php if (!empty($auth_custom)): ?>
+				<p class="logged-in-as">
+						Logado como <strong><?php echo $auth_custom['nome']; ?></strong>,
 						<?php
 							echo $this->Html->link('deseja sair?', array('controller' => 'site', 'action' => 'logout'));
 						?>
 					</p>
+					<?php else: ?>
+						Você precisa estar logado para comentar,
+						<?php
+						echo $this->Html->link('clique aqui', array('controller' => 'site', 'action' => 'login'));
+						?>
+						para fazer o login.
+						<br class="clearer" />
+					<?php endif ?>
+
 					
 					<div class="comment-form-comment">
 						<div class="label">
-							<div id="set-estrelas"></div>
+							<div
+								id="<?php echo (!empty($auth_custom)? 'set-estrelas': 'estrelas-readonly');?>"></div>
 						</div>
 						<div class="input-wrapper">
 							<div class="shadow">
@@ -41,7 +53,8 @@ comments ele perde o estilo pq o estilo estah no id -->
 												'label'=> false,
 												'value'=> '',
 												'maxlength'=> 400,
-												'required'=> true
+												'required'=> true,
+												'disabled'=> (!empty($auth_custom))? false : true
 											)
 										);
 									?>
@@ -54,19 +67,14 @@ comments ele perde o estilo pq o estilo estah no id -->
 					<br class="clearer" />
 																
 					<p class="form-submit">
-						<button type="submit" class="btn-comentario">Comentar</button>
+						<button
+							type="submit"
+							class="btn-comentario"
+							<?php echo (!empty($auth_custom))? '' : 'disabled'; ?>>Comentar</button>
 					</p>
 				<?php echo $this->Form->end(); ?>
 			</div>
 		</div>
-	<?php else: ?>
-		Você precisa estar logado para comentar,
-		<?php
-			echo $this->Html->link('clique aqui', array('controller' => 'site', 'action' => 'login'));
-		?>
-		para fazer o login.
-		<br class="clearer" />
-	<?php endif ?>
 
 	<br>
 	<hr>
@@ -95,7 +103,7 @@ comments ele perde o estilo pq o estilo estah no id -->
 					</div>
 					<div class="media-body" style="width: 560px;">
 						<h4>
-							<?php echo $comentario['Usuario']['Perfil']['name']; ?>
+							<?php echo $comentario['Usuario']['Perfil']['apelido']; ?>
 						</h4>
 						<div
 							id="estrelas-readonly"

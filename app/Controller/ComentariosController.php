@@ -165,9 +165,8 @@ public $layout = 'BootstrapAdmin.default';
 
 		$this->Comentario->recursive = 2;
 
-		$options['order'] = array('Comentario.created');
+		$options['order'] = array('Comentario.created'=> 'DESC');
 
-		// Debugger::dump($options);
 		$this->Paginator->settings = $options;
 		$this->set('comentarios', $this->Paginator->paginate());
 

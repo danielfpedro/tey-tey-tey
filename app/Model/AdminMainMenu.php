@@ -23,6 +23,12 @@ class AdminMainMenu extends AppModel {
 					'action'=> 'index'),
 				'icon'=> 'stats'),
 			array(
+				'label'=> 'Carrossel',
+				'url'=> array(
+					'controller'=> 'destaques',
+					'action'=> 'index'),
+				'icon'=> 'th'),
+			array(
 				'label'=> 'Comentários',
 				'url'=> array(
 					'controller'=> 'comentarios',

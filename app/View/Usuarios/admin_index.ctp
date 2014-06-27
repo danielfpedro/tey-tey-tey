@@ -57,6 +57,11 @@
 											$usuario['Usuario']['id'] .
 											'/' . 
 											$usuario['Perfil']['imagem'];
+									}elseif (!empty($usuario['Usuario']['facebook_id'])) {
+										$img_url = 'https://graph.facebook.com/' .
+											$usuario['Usuario']['facebook_id'].
+											'/picture?type=normal';
+										
 									} else {
 										$img_url = 'Usuarios/default_avatar.png';
 									}

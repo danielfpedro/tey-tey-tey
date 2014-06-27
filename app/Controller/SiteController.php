@@ -3,6 +3,7 @@ App::uses('AppController', 'Controller');
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 
 App::uses('WideImage', 'Lib/WideImage/lib');
+App::uses('FacebookSession', 'Lib/Facebook');
 
 App::uses('Folder', 'Utility');
 /**
@@ -70,16 +71,52 @@ class SiteController extends AppController {
 		$bar = $this->Estabelecimento->find('first', $options);
 
 
-		$options['fields'] = array(
-			'Estabelecimento.id',
-			'Estabelecimento.name', 'Estabelecimento.imagem_540x390',
-			'Estabelecimento.slug',
-		);
-		$options['conditions'] = array('Estabelecimento.ativo'=> 1, 'Estabelecimento.carrossel'=> 1);
-		$options['limit'] = 5;
-		$options['contain'] = array();
-		$carrossel = $this->Estabelecimento->find('all', $options);
+		$options = array();
+		$this->loadModel('Destaque');
+		$this->Destaque->recursive = -1;
 
+		$options['contain'] = array('Estabelecimento');
+		
+		$options['fields'] = array(
+			'Destaque.estabelecimento_id',
+			'Destaque.titulo',
+			'Destaque.link',
+			'Destaque.target',
+			'Destaque.imagem_540x390',
+			'Destaque.imagem_70x70',
+			'Estabelecimento.id',
+			'Estabelecimento.name',
+			'Estabelecimento.slug',
+			'Estabelecimento.imagem_540x390',
+			'Estabelecimento.imagem_70x70',
+		);
+		$options['limit'] = 5;
+		$options['order'] = array('Destaque.ordem'=> 'asc');
+		$options['limit'] = 5;
+		
+		$query_carrossel = $this->Destaque->find('all', $options);
+
+		$carrossel = array();
+		$i = 0;
+		foreach ($query_carrossel as $key => $value) {
+			$carrossel[$i]['estabelecimento_id'] = $value['Destaque']['estabelecimento_id'];
+			// Personalizado
+			if (empty($value['Destaque']['estabelecimento_id'])) {
+				$carrossel[$i]['titulo'] = $value['Destaque']['titulo'];
+				$carrossel[$i]['imagem'] = 'Carrossel/' . $value['Destaque']['imagem_540x390'];
+				$carrossel[$i]['link'] = (empty($value['Destaque']['link']) ? null : 'http://' . $value['Destaque']['link']);
+			$carrossel[$i]['target'] = $value['Destaque']['target'];
+			} else {
+				$carrossel[$i]['titulo'] = $value['Estabelecimento']['name'];
+				$carrossel[$i]['imagem'] = 'Estabelecimentos/' . $value['Destaque']['estabelecimento_id'] . '/' . $value['Estabelecimento']['imagem_540x390'];
+				$carrossel[$i]['link'] = array('controller'=> 'site', 'action'=> 'perfil', $value['Estabelecimento']['slug']);
+			$carrossel[$i]['target'] = '_self';
+			}
+			$i++;
+		}
+
+		// Debugger::dump($carrossel);
+		// exit();
 		$destaques[0] = $boate;
 		$destaques[1] = $restaurante;
 		$destaques[2] = $bar;
@@ -192,13 +229,13 @@ class SiteController extends AppController {
 		}
 
 		if ($this->request->is('post')) {
-			if ($this->auth_user_id) {
-				$this->request->data['Comentario']['usuario_id'] = $this->auth_user_id;
+			if (!empty($this->auth_custom)) {
+				$this->request->data['Comentario']['usuario_id'] = $this->auth_custom['id'];
 				$this->request->data['Comentario']['texto'] = $this->request->data['Comentario']['comentario'];
 				
 				$this->Comentario->create();
 				if ($this->Comentario->save($this->request->data)) {
-					$this->Session->setFlash(__('O <strong>comentario</strong> foi salvo com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+					$this->Session->setFlash(__('O <strong>comentário</strong> foi salvo com sucesso, ele será avaliado pela administração e em breve aparecerá no site.'), 'default', array('class'=> 'alert alert-success'));
 				} else {
 					$this->Session->setFlash(__('O <strong>comentario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 				}
@@ -319,7 +356,16 @@ class SiteController extends AppController {
 		return $retorno;
 	}
 
+	public function _facebookAuth() {
+		//FacebookSession::setDefaultApplication('793395310693484', 'ed977e3decb2df1b8087b77d55046359');
+		// $helper = new FacebookRedirectLoginHelper('your redirect URL here');
+		// $loginUrl = $helper->getLoginUrl();
+		// Debugger::dump($loginUrl);
+		// exit();
+	}
+
 	public function cadastro(){
+		$this->_facebookAuth();
 		$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
 		$title_for_layout = 'Cadastro de usuário - ' . $this->site_name;
 		
@@ -331,13 +377,18 @@ class SiteController extends AppController {
 
 			// $this->Usuario->create();
 			$senha = $this->request->data['Usuario']['senha'];
+
+			if (!empty($this->request->data['Usuario']['facebook_id'])) {
+				$this->request->data['Perfil']['facebook_imagem'] = 1;
+			}
+
 			if ($this->Usuario->saveAll($this->request->data, array('validate'=> 'only'))) {
 				if ($this->Usuario->saveAll($this->request->data, array('validate'=> false))) {
 					if ($this->_logar($this->request->data['Usuario']['email'], $senha)) {
 						$this->Session->setFlash('Cadastro <strong>realizado</strong> com sucesso!', 'default', array('class'=> 'alert alert-success'));
 						return $this->redirect(array('controller'=> 'site', 'action'=> 'home'));
 					} else {
-						$this->Session->setFlash('Cadastro <strong>realizado</strong> cmo sucesso.', 'default', array('class'=> 'alert alert-danger'));
+						$this->Session->setFlash('Cadastro <strong>realizado</strong> com sucesso.', 'default', array('class'=> 'alert alert-danger'));
 					}
 				}
 			} else {
@@ -459,11 +510,14 @@ class SiteController extends AppController {
 			} else {
 				$options['contain'] = array('Perfil');
 				$options['fields'] = array(
+					'Usuario.id',
 					'Usuario.email',
+					'Usuario.facebook_id',
 					'Perfil.name',
 					'Perfil.data_nascimento',
 					'Perfil.apelido',
-					'Perfil.cidade'
+					'Perfil.cidade',
+					'Perfil.imagem',
 				);
 				$options['conditions'] = array('Usuario.id'=> $this->auth_custom['id']);
 

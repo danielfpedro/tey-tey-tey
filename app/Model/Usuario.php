@@ -57,9 +57,21 @@ class Usuario extends AppModel {
 		}
 	}
 
+	public function tamanho_nova_senha () {
+		if (!empty($this->data['Usuario']['nova_senha'])) {
+			$tamanho = strlen($this->data['Usuario']['nova_senha']);
+			if ($tamanho < 6 OR $tamanho > 10) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public function beforeSave($options = array()) {
-		if ($this->data['Usuario']['id'] > 0) {
-			$this->data['Usuario']['senha'] = $this->data['Usuario']['nova_senha'];
+		if (!empty($this->data['Usuario']['id'])) {
+			if (!empty($this->data['Usuario']['nova_senha'])) {
+				$this->data['Usuario']['senha'] = $this->data['Usuario']['nova_senha'];
+			}
 		}
         if (!empty($this->data['Usuario']['senha'])) {
             $passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
@@ -105,6 +117,11 @@ class Usuario extends AppModel {
 			),
 		),
 		'senha' => array(
+			'between'=> array(
+				'rule'=> array('between', 6, 10),
+				'message'=> 'A senha deve conter no mínimo 6 e no máximo 10 caracteres.',
+				'on'=> 'create'
+			),
 			'confirma_senha'=> array(
 				'rule'=> array('confirma_senha'),
 				'message'=> 'Você não confirmou a sua senha corretamente.',
@@ -115,6 +132,11 @@ class Usuario extends AppModel {
 				'message'=> 'Você não confirmou a sua nova senha corretamente.',
 				'on'=> 'update',
 				'last'=> false
+			),
+			'tamanho_nova_senha'=> array(
+				'rule'=> array('tamanho_nova_senha'),
+				'message'=> 'A sua nova senha deve conter no mínimo 6 e no máximo 10 caracteres.',
+				'on'=> 'update',
 			),
 			'confirma_senha_atual'=> array(
 				'rule'=> array('confirma_senha_atual'),

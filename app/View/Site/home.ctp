@@ -45,16 +45,13 @@
 					<?php $i = 1; ?>
 					<?php foreach ($carrossel as $item): ?>
 						<?php
-							echo $this->Html->image(
-								'Estabelecimentos/'. $item['Estabelecimento']['id'] . '/' .
-								$item['Estabelecimento']['imagem_540x390'], 
-								array(
-									'url'=> array(
-										'controller' => 'site',
-										'action' => 'perfil',
-										$item['Estabelecimento']['slug']
-									),
-									'title'=>'#div' . $i, 'alt'=> 'Image Alt'));
+							$options['title'] = '#div' . $i;
+							if (!empty($item['link'])) {
+								$imagem = $this->Html->image($item['imagem'], $options);
+								echo $this->Html->link($imagem, $item['link'], array('target'=> $item['target'], 'escape'=> false));
+							} else {
+								echo $this->Html->image($item['imagem'], $options);
+							}
 						?>	
 						<?php $i++; ?>
 					<?php endforeach ?>
@@ -63,17 +60,13 @@
 				<?php foreach ($carrossel as $item): ?>
 					<div id="div<?php echo $i; ?>" class="nivo-html-caption">
 						<h1>
-							<?php
-								echo $this->Html->link(
-									$item['Estabelecimento']['name'],
-									array(
-										'controller' => 'site',
-										'action' => 'perfil',
-										$item['Estabelecimento']['slug']
-									),
-									array('class'=> 'bebas')
-								);
-							?>
+							<?php if (empty($item['link'])): ?>
+								<span class="bebas">
+									<?php echo $item['titulo'] ?>
+								</span>
+							<?php else: ?>
+								<?php echo $this->Html->link($item['titulo'], $item['link'], array('class'=> 'bebas', 'target'=> $item['target'])); ?>
+							<?php endif ?>
 						</h1>
 					</div><!-- Div1 -->
 					<?php $i++; ?>
@@ -93,14 +86,17 @@
 								'action' => 'estabelecimentos',
 								$value['Categoria']['name']);
 						?>
-						<div class="categorypanel <?php echo ($i % 2 == 0)? 'right' : ''; ?>"><!-- Box Do estabelecimento -->
+						<div style="height: 420px;" class="categorypanel <?php echo ($i % 2 == 0)? 'right' : ''; ?>"><!-- Box Do estabelecimento -->
 							<div class="section-wrapper">
 								<!-- categorypanels section -->
 								<?php
 									echo $this->Html->link('&nbsp;',
 										$url_mais,
-										array('escape'=> false, 'class'=> 'more')
-										);
+										array(
+											'escape'=> false,
+											'class'=> 'more',
+										)
+									);
 								?>
 								<div class="section">
 									<?php echo $value['Categoria']['name']; ?>
@@ -132,7 +128,7 @@
 								<div
 									style="margin-bottom: 10px;"
 									id="estrelas-readonly" data-score="<?php echo $value['Estabelecimento']['rate']; ?>"></div>
-								<div class="excerpt">
+								<div class="excerpt" style="height: 50px;">
 									<?php echo $this->Text->truncate($value['Estabelecimento']['descricao'], 140); ?>
 								</div><!-- Descrição -->
 								<br class="clearer" />
@@ -213,6 +209,11 @@
 			<div class="unwrapped">
 				<?php
 					echo $this->Html->image('banners/banner2.png', array('url'=>'#'));
+				?>
+			</div><!-- unwrapped -->
+			<div class="unwrapped">
+				<?php
+					echo $this->element('Site/facebook_like_box');
 				?>
 			</div><!-- unwrapped -->
 		</div><!-- sidebar -->
