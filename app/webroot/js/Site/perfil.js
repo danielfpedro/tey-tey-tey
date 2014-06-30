@@ -1,5 +1,24 @@
 $(function(){
 
+	var foto_atual = 0;
+
+	$('#nivo-wrap a').each(function(){
+		console.log('Oi');
+	});
+
+	$('div#bolinha').click(function(){
+		var num = $(this).attr('data-rel');
+		trocaFoto(num);
+	});
+
+	function trocaFoto (novo) {
+		$('a#foto-troca[data-rel="'+foto_atual+'"]').fadeOut(function(){
+			$('a#foto-troca[data-rel="'+novo+'"]').fadeIn(function(){
+				foto_atual = novo;
+			});
+		});
+	}
+
 	$('a#comentarios').click(function(){
 		$('html, body').animate({
 			scrollTop: $("#cont-comentarios").offset().top
@@ -51,7 +70,7 @@ $(function(){
 
 					$this.text(defaul_text).attr({disabled: false});
 
-					$('#estrela' + i).raty({
+					$('div#estrela' + i).raty({
 						score: function() {
 							return $(this).attr('data-score');
 						},		

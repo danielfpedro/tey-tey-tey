@@ -2,7 +2,7 @@
 <?php echo $this->Html->script('../lib/maskedinput-1.3.1/jquery.maskedinput.min', array('inline'=> false)); ?>
 
 <div class="form-group">
-	<?php echo $this->Form->input('categoria_id', array('empty'=> 'Selecione:','class'=> 'form-control')); ?>
+	<?php echo $this->Form->input('Categoria', array('class'=> 'form-control')); ?>
 </div>
 <div class="form-group">
 	<?php echo $this->Form->input('cliente_id', array('class'=> 'form-control', 'empty'=> 'Selecione:')); ?>

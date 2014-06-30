@@ -68,19 +68,36 @@
 									</div>        
 								</div>
 
-								<div id="nivo-wrap">
-								<?php
-									$img_url = ''.
-										'Estabelecimentos/'.
-										$estabelecimento['Estabelecimento']['id'] . '/' .
-										$estabelecimento['Estabelecimento']['imagem_300x170'];
-								?>
-								<a
-									href="<?php echo $this->webroot . 'img/Estabelecimentos/' . $estabelecimento['Estabelecimento']['id'] .'/original_'. $estabelecimento['Estabelecimento']['imagem']; ?>" class="darken">
-									<?php
-										echo $this->Html->image($img_url, array('width'=> '260px', 'style'=> 'margin-bottom: -5px;'));
-									?>
-								</a>
+								<div id="nivo-wrap" style="height: 145px;position: relative;background-color: #000;">
+									<?php $i = 0; ?>
+									<?php foreach ($estabelecimento['Estabelecimento']['imagem_loop'] as $key => $value): ?>
+										<?php
+											$img_url = ''.
+												'Estabelecimentos/'.
+												$estabelecimento['Estabelecimento']['id'] . '/' .
+												$value;
+										?>										
+										<a
+											id="foto-troca"
+											data-rel="<?php echo $i; ?>"
+											style="<?php echo ($i > 0)? 'display: none;': '';?>"
+											href="<?php echo $this->webroot . 'img/Estabelecimentos/' . $estabelecimento['Estabelecimento']['id'] .'/zoom_' .$value; ?>" class="darken">
+											<?php
+												echo $this->Html->image($img_url, array('height'=> '145px', 'style'=> 'margin-bottom: -5px;'));
+											?>
+										</a>
+										<?php $i++; ?>
+									<?php endforeach ?>
+									<?php if (count($estabelecimento['Estabelecimento']['imagem_loop']) > 1): ?>
+										<?php $i = 0; ?>
+										<div class="cont-bolinhas">
+											<?php foreach ($estabelecimento['Estabelecimento']['imagem_loop'] as $key => $value): ?>
+											
+												<div class="bolinha" id="bolinha" data-rel="<?php echo $i; ?>"></div>
+												<?php $i++; ?>
+											<?php endforeach ?>
+										</div>
+									<?php endif ?>
 								</div>
 							</div>        
 							<?php echo $estabelecimento['Estabelecimento']['descricao']; ?>

@@ -40,7 +40,7 @@
 			<div id="categorypanels" class="post-loop">
 				<div class="section-wrapper">
 					<div class="section">
-						<?php echo $categoria; ?>
+						<?php echo $titulo; ?>
 					</div><!-- section -->
 				</div><!-- section-wraper -->
 

@@ -102,16 +102,6 @@ class Estabelecimento extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'categoria_id' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
 		'usuarios_administrativo_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
@@ -162,13 +152,6 @@ class Estabelecimento extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Categoria' => array(
-			'className' => 'Categoria',
-			'foreignKey' => 'categoria_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
 		'UsuariosAdministrativo' => array(
 			'className' => 'UsuariosAdministrativo',
 			'foreignKey' => 'usuarios_administrativo_id',
@@ -213,6 +196,19 @@ class Estabelecimento extends AppModel {
  * @var array
  */
 	public $hasAndBelongsToMany = array(
+		'Categoria' => array(
+			'className' => 'Categoria',
+			'joinTable' => 'categorias_estabelecimentos',
+			'foreignKey' => 'estabelecimento_id',
+			'associationForeignKey' => 'categoria_id',
+			'unique' => 'keepExisting',
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'finderQuery' => '',
+		),
 		'Cartao' => array(
 			'className' => 'Cartao',
 			'joinTable' => 'cartoes_estabelecimentos',

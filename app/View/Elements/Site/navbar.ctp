@@ -21,6 +21,20 @@
 					</ul>                            
 				</div> 
 			</div>
+			<div id="search" style="">
+
+			<div class="wrapper">
+				<div class="inner">
+					<!-- SEARCH -->  
+					<form method="get" id="searchform" action="<?php echo $this->webroot . "/site/pesquisa"; ?>">
+						<input
+							value="<?php echo (!empty($this->request->query['q']))? $this->request->query['q'] : '';?>"
+							type="text" placeholder="pesquisar" name="q" id="s" autocomplete="off" />    
+					</form>
+					</div>
+				</div>
+            </div>
+            
 			<!-- social links -->
 			<div id="top-widget">
 										

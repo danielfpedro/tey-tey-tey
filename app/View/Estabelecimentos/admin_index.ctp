@@ -32,18 +32,6 @@
 						value="<?php echo $this->request->query['q']; ?>">
 					<?php
 						echo '&nbsp;';
-						echo $this->Form->input('carrossel', array(
-							'value'=> $this->request->query['carrossel'],
-							'options'=> array('Todos', 'Somente carrossel'),
-							'name'=> 'carrossel',
-							'label'=> false,
-							'class'=>
-							'form-control',
-							'div'=> false));
-						echo '&nbsp;';
-					?>
-					<?php
-						echo '&nbsp;';
 						echo $this->Form->input('categoria', array(
 							'value'=> $this->request->query['categoria'],
 							'empty'=> 'Todos as categorias',
@@ -66,20 +54,14 @@
 		<table class="table table-condensed table-hover table-striped table-admin">
 			<thead>
 				<tr>
-					<th style="width: 180px; text-align: center;"></th>
+					<th style="width: 170px;"></th>
 					<th style="width: 200px;">
 						<?php echo $this->Paginator->sort('name', 'Nome'); ?>
 					</th>
-					<th>
-						<?php echo $this->Paginator->sort('descricao', 'Descrição'); ?>
+					<th style="width: 100px;">
+						Categoria
 					</th>	
-					<th style="width: 120px;">
-						<?php echo $this->Paginator->sort('categoria_id', 'Categoria'); ?>
-					</th>
-					<th style="width: 80px;">
-						<?php echo $this->Paginator->sort('carrossel'); ?>
-					</th>	
-					<th style="width: 120px;" class="text-center">
+					<th style="width: 80px;" class="text-center">
 						<?php echo $this->Paginator->sort('tipo_cadastro', 'Tipo'); ?>
 					</th>
 					<th style="width: 80px;" class="text-center">
@@ -92,7 +74,7 @@
 				<?php if (!empty($estabelecimentos)): ?>
 					<?php foreach ($estabelecimentos as $estabelecimento): ?>						
 						<tr>
-							<td>
+							<td style="text-align: center;">
 								<?php
 									$img_url = 'Estabelecimentos/' .
 										$estabelecimento['Estabelecimento']['id'] . '/' .
@@ -113,23 +95,21 @@
 									);
 									
 								?>
-								<br>
 								<em>
-									<?php echo h($estabelecimento['Estabelecimento']['cidade']); ?>
+									(<?php echo h($estabelecimento['Estabelecimento']['cidade']); ?>)
 								</em>
-							</td>
+								<p>
+									<?php echo $this->Text->truncate($estabelecimento['Estabelecimento']['descricao'], 100); ?>
+								</p>
+							</td>			
 							<td>
-								<?php echo $this->Text->truncate($estabelecimento['Estabelecimento']['descricao'], 100); ?>
-							</td>				
-							<td>
-								<?php echo h($estabelecimento['Categoria']['name']); ?>
-							</td>
-							<td class="text-center">
-								<input
-									id="chk-carrossel"
-									type="checkbox"
-									data-id="<?php echo $estabelecimento['Estabelecimento']['id'] ?>"
-									<?php echo ($estabelecimento['Estabelecimento']['carrossel'])? 'checked': ''; ?> >
+								<?php 
+									$categorias = array();
+									foreach ($estabelecimento['Categoria'] as $key => $value) {
+										$categorias[] = $value['name'];
+									}
+								?>
+								<?php echo $this->Text->toList($categorias, "e"); ?>
 							</td>
 							<td class="text-center">
 								<?php echo ($estabelecimento['Estabelecimento']['tipo_cadastro'] == 1) ?

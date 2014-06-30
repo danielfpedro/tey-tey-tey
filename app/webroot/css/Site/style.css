@@ -435,7 +435,7 @@ a.nivo-prevNav {left:15px;}
 #featured-wrapper .video {opacity:0.85;position:absolute;display:inline-block;width:70px;height:70px;bottom:180px;left:230px;background:url(images/darken-bg-video.png) no-repeat 0px 0px;z-index:9;}
 /*thumbnails*/
 .nivo-controlNav {position:absolute;top:0px;right:-90px;}
-.nivo-control {padding:4px 10px;}
+.nivo-control {padding:2px 10px;}
 .nivo-control.active {background:#333;}
 .nivo-controlNav img {display:inline !important;position:relative !important;cursor:pointer;}
 /*ratings*/

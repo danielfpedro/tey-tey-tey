@@ -132,6 +132,7 @@ public $layout = 'BootstrapAdmin.default';
 		}
 		$this->Contato->recursive = 0;
 
+		$options['order'] = array('Contato.created'=> 'desc');
 		$this->Paginator->settings = $options;
 		$this->set('contatos', $this->Paginator->paginate());
 	}

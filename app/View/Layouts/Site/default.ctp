@@ -39,6 +39,12 @@
 		var webroot = "<?php echo $this->webroot; ?>";
 		
 		$(function(){
+			$('#searchform').submit(function(){
+				if ($('#s').val().length < 3) {
+					alert("A sua busca deve conter no mínimo 3 caracteres.");
+				};
+			});
+
 			var hints = ['Ruim', 'Fraco', 'Regular', 'Bom', 'Excelente'];
 
 			$('#set-estrelas').raty({

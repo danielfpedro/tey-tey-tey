@@ -1,14 +1,12 @@
 <?php
 App::uses('AppModel', 'Model');
 /**
- * Categoria Model
+ * CategoriasEstabelecimento Model
  *
+ * @property Categoria $Categoria
  * @property Estabelecimento $Estabelecimento
  */
-class Categoria extends AppModel {
-
-
-	public $actsAs = array('Containable');
+class CategoriasEstabelecimento extends AppModel {
 
 /**
  * Validation rules
@@ -16,9 +14,9 @@ class Categoria extends AppModel {
  * @var array
  */
 	public $validate = array(
-		'name' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
+		'categoria_id' => array(
+			'numeric' => array(
+				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -26,9 +24,9 @@ class Categoria extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'slug' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
+		'estabelecimento_id' => array(
+			'numeric' => array(
+				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -41,39 +39,24 @@ class Categoria extends AppModel {
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
 /**
- * hasMany associations
+ * belongsTo associations
  *
  * @var array
  */
-	public $hasMany = array(
+	public $belongsTo = array(
+		'Categoria' => array(
+			'className' => 'Categoria',
+			'foreignKey' => 'categoria_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
 		'Estabelecimento' => array(
 			'className' => 'Estabelecimento',
-			'foreignKey' => 'categoria_id',
-			'dependent' => false,
+			'foreignKey' => 'estabelecimento_id',
 			'conditions' => '',
 			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
+			'order' => ''
 		)
-	);
-
-	public $hasAndBelongsToMany = array(
-		'Estabelecimento' => array(
-			'className' => 'Categoria',
-			'joinTable' => 'categorias_estabelecimentos',
-			'foreignKey' => 'categoria_id',
-			'associationForeignKey' => 'estabelecimento_id',
-			'unique' => 'keepExisting',
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'finderQuery' => '',
-		),
 	);
 }

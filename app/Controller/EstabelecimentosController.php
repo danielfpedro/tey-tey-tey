@@ -59,7 +59,8 @@ public $layout = 'BootstrapAdmin.default';
 			$this->request->query['carrossel'] = '';	
 		}
 
-		$this->Estabelecimento->recursive = 0;
+		$this->Estabelecimento->recursive = -1;
+		$options['contain'] = array('Categoria');
 
 		$options['order'] = array('Estabelecimento.created DESC');
 		$this->Paginator->settings = $options;

@@ -28,19 +28,10 @@
 		<table class="table table-condensed table-hover table-striped table-admin">
 			<thead>
 				<tr>
-					<th>
-						<?php echo $this->Paginator->sort('nome'); ?>
+					<th style="width: 300px;">
+						Informações
 					</th>
 					<th>
-						<?php echo $this->Paginator->sort('email'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('telefone'); ?>
-					</th>
-					<th>
-						<?php echo $this->Paginator->sort('cidade'); ?>
-					</th>
-					<th style="width: 140px;">
 						<?php echo $this->Paginator->sort('texto'); ?>
 					</th>
 					<th style="width: 60px;">
@@ -53,15 +44,10 @@
 					<?php foreach ($contatos as $contato): ?>						
 						<tr>
 							<td>
-								<?php echo h($contato['Contato']['nome']); ?>
-							</td>
-							<td>
-								<?php echo h($contato['Contato']['email']); ?>
-							</td>
-							<td>
+								<?php echo h($contato['Contato']['nome']); ?> (<?php echo h($contato['Contato']['email']); ?>)
+								<br>
 								<?php echo h($contato['Contato']['telefone']); ?>
-							</td>
-							<td>
+								<br>
 								<?php echo h($contato['Contato']['cidade']); ?>
 							</td>
 							<td>

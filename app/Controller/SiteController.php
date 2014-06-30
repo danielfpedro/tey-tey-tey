@@ -57,17 +57,57 @@ class SiteController extends AppController {
 			'Estabelecimento.id',
 			'Estabelecimento.name', 'Estabelecimento.imagem_300x170',
 			'Estabelecimento.slug', 'Estabelecimento.rate', 'Estabelecimento.descricao',
-			'Categoria.name',
 		);
-		$options['contain'] = array('Categoria');
 
-		$options['conditions'] = array('Estabelecimento.categoria_id'=> 1);
+		$query = $this->Estabelecimento->CategoriasEstabelecimento->find(
+			'all',
+			array(
+				'recursive'=> -1,
+				'fields'=> array('CategoriasEstabelecimento.estabelecimento_id'),
+				'conditions'=> array(
+					'CategoriasEstabelecimento.categoria_id'=> 1)
+			)
+		);
+		$idsBoate = $this->_acertaIds($query);
+
+		$options['conditions'] = array('Estabelecimento.id'=> $idsBoate);
+		$options['order'] = 'rand()';
+
+		// Debugger::dump($options);
+		// exit();
 		$boate = $this->Estabelecimento->find('first', $options);
 
-		$options['conditions'] = array('Estabelecimento.categoria_id'=> 2);
+		$query = $this->Estabelecimento->CategoriasEstabelecimento->find(
+			'all',
+			array(
+				'recursive'=> -1,
+				'fields'=> array('CategoriasEstabelecimento.estabelecimento_id'),
+				'conditions'=> array(
+					'CategoriasEstabelecimento.categoria_id'=> 2,
+					'CategoriasEstabelecimento.estabelecimento_id !='=> $idsBoate
+				)
+			)
+		);
+		$idsRestaurante = $this->_acertaIds($query);
+
+		$options['conditions'] = array('Estabelecimento.id'=> $idsRestaurante);
 		$restaurante = $this->Estabelecimento->find('first', $options);
 
-		$options['conditions'] = array('Estabelecimento.categoria_id'=> 3);
+		$query = $this->Estabelecimento->CategoriasEstabelecimento->find(
+			'all',
+			array(
+				'recursive'=> -1,
+				'fields'=> array('CategoriasEstabelecimento.estabelecimento_id'),
+				'conditions'=> array(
+					'CategoriasEstabelecimento.categoria_id'=> 3,
+					'CategoriasEstabelecimento.estabelecimento_id !='=> $idsRestaurante,
+					'CategoriasEstabelecimento.estabelecimento_id !='=> $idsBoate
+				)
+			)
+		);
+		$idsBar = $this->_acertaIds($query);
+
+		$options['conditions'] = array('Estabelecimento.id'=> $idsBar);
 		$bar = $this->Estabelecimento->find('first', $options);
 
 
@@ -117,8 +157,11 @@ class SiteController extends AppController {
 
 		// Debugger::dump($carrossel);
 		// exit();
+		$boate['Categoria'] = array('name'=> 'Baladas');
 		$destaques[0] = $boate;
+		$restaurante['Categoria'] = array('name'=> 'Restaurantes');
 		$destaques[1] = $restaurante;
+		$bar['Categoria'] = array('name'=> 'Bares');
 		$destaques[2] = $bar;
 
 		$title_for_layout = $this->site_name;
@@ -152,10 +195,43 @@ class SiteController extends AppController {
 
 	}
 
+	public function _acertaIds($array) {
+		$retorno = array();
+		foreach ($array as $key => $value) {
+			$retorno[] = $value['CategoriasEstabelecimento']['estabelecimento_id'];
+		}
+		return $retorno;
+	}
+
 	public function _getWidgetEstabelecimentos(){
-		$this->loadModel('Estabelecimento');
-		$this->Estabelecimento->recursive = -1;
 		// 1 Boate, 2 - Restaurante, 3 - Bar
+		$this->loadModel('Estabelecimento');
+		$this->Estabelecimento->CategoriasEstabelecimento->recursive = 3;
+		$query = $this->Estabelecimento->CategoriasEstabelecimento->find(
+			'all',
+			array(
+				'fields'=> array('CategoriasEstabelecimento.estabelecimento_id'),
+				'recursive'=> -1,
+				'conditions'=> array('CategoriasEstabelecimento.categoria_id'=> 1)));
+
+		$idsBoate = $this->_acertaIds($query);
+		$query = $this->Estabelecimento->CategoriasEstabelecimento->find(
+			'all',
+			array(
+				'fields'=> array('CategoriasEstabelecimento.estabelecimento_id'),
+				'recursive'=> -1,
+				'conditions'=> array('CategoriasEstabelecimento.categoria_id'=> 2)));
+		$idsRestaurante = $this->_acertaIds($query);
+		$query = $this->Estabelecimento->CategoriasEstabelecimento->find(
+			'all',
+			array(
+				'fields'=> array('CategoriasEstabelecimento.estabelecimento_id'),
+				'recursive'=> -1,
+				'conditions'=> array('CategoriasEstabelecimento.categoria_id'=> 3)));
+		$idsBar = $this->_acertaIds($query);
+
+		$this->Estabelecimento->recursive = -1;
+		
 		$options = array();
 
 		$estabelecimentos = array();
@@ -165,28 +241,74 @@ class SiteController extends AppController {
 		$baladas = array();
 		$recentes = array();
 
-		$options['contain'] = array('Categoria');
+		$options['contain'] = array('Categoria'=> array('imagem'));
 		$options['limit'] = 5;
 
-		$options['conditions'] = array('Estabelecimento.ativo'=> 1 ,'Estabelecimento.categoria_id'=> 2);
+		$options['conditions'] = array(
+			'Estabelecimento.ativo'=> 1 ,
+			'Estabelecimento.id'=> $idsRestaurante);
+
 		$restaurantes = $this->Estabelecimento->find('all', $options);
 
-		$options['conditions'] = array('Estabelecimento.ativo'=> 1, 'Estabelecimento.categoria_id'=> 1);
+		$options['conditions'] = array('Estabelecimento.ativo'=> 1, 'Estabelecimento.id'=> $idsBoate);
 		$baladas = $this->Estabelecimento->find('all', $options);
 
-		$options['conditions'] = array('Estabelecimento.ativo'=> 1, 'Estabelecimento.categoria_id'=> 3);
+		$options['conditions'] = array('Estabelecimento.ativo'=> 1, 'Estabelecimento.id'=> $idsBar);
 		$bares = $this->Estabelecimento->find('all', $options);
 
 		$options['conditions'] = array('Estabelecimento.ativo'=> 1);
-		$options['order'] = array('Estabelecimento.created DESC');
+		$options['order'] = array('Estabelecimento.created'=> 'desc');
 		$recentes = $this->Estabelecimento->find('all', $options);
 
-		$estabelecimentos['restaurantes'] = $restaurantes;
-		$estabelecimentos['bares'] = $bares;
-		$estabelecimentos['baladas'] = $baladas;
-		$estabelecimentos['recentes'] = $recentes;
+		$options_categoria = array();
+		$options_categoria['fields'] = array('Categoria.imagem');
+		$options_categoria['recursive'] = -1;
 
-		// Debugger::dump($estabelecimentos['restaurantes']);
+		$options_categoria['conditions'] = array('Categoria.id'=> 2);
+		$row = $this->Estabelecimento->Categoria->find('first', $options_categoria);
+		if (!empty($restaurantes)) {
+			$i = 0;
+			foreach ($restaurantes as $key => $value) {
+				$restaurantes[$i]['Categoria']['imagem'] = $row['Categoria']['imagem'];
+				$i++;
+			}
+		}
+		$estabelecimentos['restaurantes'] = $restaurantes;
+
+		$options_categoria['conditions'] = array('Categoria.id'=> 3);
+		$row = $this->Estabelecimento->Categoria->find('first', $options_categoria);
+
+		// Debugger::dump($bares);
+		// exit();
+		if (!empty($bares)) {
+			$i = 0;
+			foreach ($bares as $key => $value) {
+				$bares[$i]['Categoria']['imagem'] = $row['Categoria']['imagem'];
+				$i++;
+			}
+		}
+		$estabelecimentos['bares'] = $bares;
+
+
+		$options_categoria['conditions'] = array('Categoria.id'=> 1);
+		$row = $this->Estabelecimento->Categoria->find('first', $options_categoria);
+		if (!empty($baladas)) {
+			$i = 0;
+			foreach ($baladas as $key => $value) {
+				$baladas[$i]['Categoria']['imagem'] = $row['Categoria']['imagem'];
+				$i++;
+			}
+		}
+		$estabelecimentos['baladas'] = $baladas;
+		
+		if (!empty($recentes)) {
+			$i = 0;
+			foreach ($recentes as $key => $value) {
+				$recentes[$i]['Categoria']['imagem'] = $value['Categoria'][0]['imagem'];
+				$i++;
+			}
+		}
+		$estabelecimentos['recentes'] = $recentes;
 
 		return $estabelecimentos;
 	}
@@ -226,7 +348,18 @@ class SiteController extends AppController {
 		);
 		if (empty($estabelecimento)) {
 			throw new NotFoundException('Este estabelecimento não existe.');
+		} else {
+			$estabelecimento['Estabelecimento']['imagem_loop'][] = $estabelecimento['Estabelecimento']['imagem_300x170'];
+
+			if (!empty($estabelecimento['Estabelecimento']['imagem2_300x170'])) {
+				$estabelecimento['Estabelecimento']['imagem_loop'][] = $estabelecimento['Estabelecimento']['imagem2_300x170'];
+			}
+			if (!empty($estabelecimento['Estabelecimento']['imagem3_300x170'])) {
+				$estabelecimento['Estabelecimento']['imagem_loop'][] = $estabelecimento['Estabelecimento']['imagem3_300x170'];
+			}
 		}
+
+		//Debugger::dump($estabelecimento);
 
 		if ($this->request->is('post')) {
 			if (!empty($this->auth_custom)) {
@@ -253,7 +386,7 @@ class SiteController extends AppController {
 				'Comentario.ativo'=> 1,
 				'Comentario.estabelecimento_id'=> $estabelecimento['Estabelecimento']['id']),
 			'limit'=> $this->Comentario->perfil_limit,
-			'order'=> array('Comentario.created DESC'))
+			'order'=> array('Comentario.created'=> 'desc'))
 		);
 
 		$comentarios_count = $this->Comentario->find('count',
@@ -269,6 +402,7 @@ class SiteController extends AppController {
 
 			$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
 			$this->set(compact(
+				'loop_images',
 				'show_paginator',
 				'title_for_layout',
 				'estabelecimento', 'widget_estabelecimentos', 'comentarios', 'comentarios_count'));
@@ -279,7 +413,53 @@ class SiteController extends AppController {
 		}
 	}
 
+	public function pesquisa(){
+		$this->loadModel('Estabelecimento');
+		$title_for_layout = 'Pesquisa - ' . $this->site_name;
+
+		$this->Paginator->settings = $this->paginate;
+
+		$options['fields'] = array(
+			'Estabelecimento.name', 'Estabelecimento.imagem_300x170', 'Estabelecimento.descricao', 
+			'Estabelecimento.slug','Estabelecimento.rate'
+		);
+		$options['contain'] = array(
+			'Comentario'=> array(
+				'conditions'=> array('Comentario.ativo'=> 1),
+				'fields'=> array('Comentario.id'))
+		);
+		$options['conditions'][] = array(
+				'Estabelecimento.ativo'=> 1,
+		);
+		if (!empty($this->request->query['q'])) {
+			$q = $this->request->query['q'];
+			$titulo = 'Resultado da pesquisa para "' .$q. '"';
+
+			$options['conditions'][] = array('Estabelecimento.name LIKE '=> '%'.$q.'%');
+		} else {
+			throw new NotFoundException('Pesquisa não informada.');
+		}
+		// Debugger::dump($options);
+		// exit();
+		$this->Paginator->settings = $options;
+
+    	$estabelecimentos = $this->Paginator->paginate('Estabelecimento');
+		$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
+		//Debugger::dump($estabelecimentos);
+		$this->set(compact('estabelecimentos','widget_estabelecimentos','titulo', 'title_for_layout'));
+
+		$this->render('estabelecimentos');
+	}
+
+	public function termos_de_uso(){
+		$title_for_layout = 'Termos de uso - ' . $this->site_name;
+		$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
+		$this->set(compact('widget_estabelecimentos', 'title_for_layout'));
+	}
+
 	public function estabelecimentos($categoria = null){
+		$titulo = $categoria;
+
 		$this->loadModel('Estabelecimento');
 		$this->Estabelecimento->recursive = -1;
 		$this->Estabelecimento->Categoria->recursive = -1;
@@ -298,11 +478,31 @@ class SiteController extends AppController {
 			);
 		if (!empty($categoria_row)) {
 
+			$query = $this->Estabelecimento->CategoriasEstabelecimento->find(
+				'all',
+				array(
+					'recursive'=> -1,
+					'fields'=> 'CategoriasEstabelecimento.estabelecimento_id',
+					'conditions'=> array(
+						'CategoriasEstabelecimento.categoria_id'=> $categoria_row['Categoria']['id']
+					)
+				)
+			);
+			$ids = array();
+			if (!empty($query)) {
+				foreach ($query as $key => $value) {
+					$ids[] = $value['CategoriasEstabelecimento']['estabelecimento_id'];
+				}
+			}
+
+
 			$title_for_layout = ucfirst($categoria) .' - ' . $this->site_name;
 
 			$this->Paginator->settings = $this->paginate;
 
-			$this->Paginator->settings = array(
+
+			$options = array(
+				'order'=> array('Estabelecimento.name'=> 'asc'),
 				'fields'=> array(
 					'Estabelecimento.name', 'Estabelecimento.imagem_300x170', 'Estabelecimento.descricao', 
 					'Estabelecimento.slug','Estabelecimento.rate'
@@ -312,14 +512,27 @@ class SiteController extends AppController {
 						'conditions'=> array('Comentario.ativo'=> 1),
 						'fields'=> array('Comentario.id'))
 				),
-				'conditions'=> array(
+			);
+
+			$options['conditions'][] = array(
 					'Estabelecimento.ativo'=> 1,
-					'Estabelecimento.categoria_id'=> $categoria_row['Categoria']['id']));
+			);
+			$options['conditions'][] = array(
+				'Estabelecimento.id'=> $ids
+			);
+			if (!empty($this->request->query['q'])) {
+				$q = $this->request->query['q'];
+				$titulo = 'Resultado da pesquisa para "' .$q. '"';
+
+				$options['conditions'][] = array('Estabelecimento.name LIKE '=> '%'.$q.'%');
+			}
+
+			$this->Paginator->settings = $options;
 
 	    	$estabelecimentos = $this->Paginator->paginate('Estabelecimento');
 			$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
 			//Debugger::dump($estabelecimentos);
-			$this->set(compact('estabelecimentos','widget_estabelecimentos','categoria', 'title_for_layout'));
+			$this->set(compact('estabelecimentos','widget_estabelecimentos','titulo', 'title_for_layout'));
 		} else {
 			throw new NotFoundException('Esta categoria não existe não existe.');
 		}
@@ -331,12 +544,20 @@ class SiteController extends AppController {
 		if ($this->request->is('post')) {
 			$this->loadModel('Contato');
 			$this->Contato->create();
-			if ($this->Contato->save($this->request->data)) {
+			if ($this->Contato->save($this->request->data, array('validation'=> 'only'))) {
 				$this->Session->setFlash(__('Mensagem enviada com sucesso.'), 'default', array('class'=> 'alert alert-success'));
+				return $this->redirect($this->referer());
 			} else {
-				$this->Session->setFlash(__('Mensagem não enviada. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+				$errors = array();
+				foreach ($this->Contato->validationErrors as $key => $value) {
+					if (!empty($value)) {
+						foreach ($value as $item) {
+							$errors[] = $item;
+						}
+					}
+				}
+				$this->Session->setFlash(join('<br>', $errors), 'default', array('class'=> 'alert alert-danger'));
 			}
-			return $this->redirect($this->referer());
 		} else {
 			$widget_estabelecimentos = $this->_getWidgetEstabelecimentos();
 			$this->set(compact('widget_estabelecimentos'));

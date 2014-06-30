@@ -60,7 +60,7 @@
 						);
 					?>
 
-						<button type="button" id="btn-facebook" onclick="checkLoginState();" style="display: none;">Logar com Facebook</button>
+						<button type="button" id="btn-facebook" onclick="checkLoginState();" style="">Logar com Facebook</button>
 
 						<div id="cont-facebook-img" style="display: none;">
 							<label>Foto do perfil</label>
@@ -97,7 +97,7 @@
 							<?php echo $this->Form->input('repetir_senha', array('type'=> 'password', array('error'=> false))); ?>
 						</div>
 						<div style="width: 100%; clear: both; font-size: 13px; color: #666; margin-bottom: 10px;">
-							Ao clicar em criar conta você estará concordando com os <a href="#">termos de uso</a>.
+							Ao clicar em criar conta você estará concordando com os <?php echo $this->Html->link('termos de uso', array('controller'=> 'site', 'action'=> 'termos_de_uso')) ?>.
 						</div>
 						<button type="submit">Criar conta</button>
 					<?php echo $this->Form->end() ?>
