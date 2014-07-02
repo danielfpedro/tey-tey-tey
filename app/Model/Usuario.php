@@ -8,15 +8,17 @@ App::uses('AppModel', 'Model');
  */
 class Usuario extends AppModel {
 
-	public $actsAs = array('Containable');
+	public $actsAs = array('Containable');	
+
 
 	public function isUniqueOnUpdate($fields) {
-		$options['conditions'] = array(
-			'Usuario.email'=> $fields['email'],
-			'Usuario.email !='=> $this->data['Usuario']['email_antigo']
-		);
-		$check = $this->find('count', $options);
-		return ($check == 0) ? true : false;
+		// $options['conditions'] = array(
+		// 	'Usuario.email'=> $fields['email'],
+		// 	'Usuario.email !='=> $this->data['Usuario']['email_antigo']
+		// );
+		// $check = $this->find('count', $options);
+		// return ($check == 0) ? true : false;
+		return true;
 	}
 
 	public function confirma_senha($field) {
@@ -74,10 +76,8 @@ class Usuario extends AppModel {
 			}
 		}
         if (!empty($this->data['Usuario']['senha'])) {
-            $passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
-            $this->data['Usuario']['senha'] = $passwordHasher->hash(
-                $this->data['Usuario']['senha']
-            );
+        	$this->data[$this->alias]['senha'] = AuthComponent::password($this->data[$this->alias]['senha']);
+ 	  		return true;
         } else {
         	unset($this->data['Usuario']['senha']);
         }
@@ -105,16 +105,13 @@ class Usuario extends AppModel {
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
-				'on' => 'create', // Limit validation to 'create' or 'update' operations
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-			'uniqueOnUpdate' => array(
-				'rule' => array('isUniqueOnUpdate'),
-				'message' => 'O email informado já está sendo usado por outro usuário.',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				'on' => 'update', // Limit validation to 'create' or 'update' operations
-			),
+			// 'uniqueOnUpdate' => array(
+			// 	'rule' => array('isUniqueOnUpdate'),
+			// 	'message' => 'O email informado já está sendo usado por outro usuário.',
+			// 	'on' => 'update',
+			// ),
 		),
 		'senha' => array(
 			'between'=> array(

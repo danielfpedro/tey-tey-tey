@@ -61,21 +61,8 @@
 					?>
 						<div style="margin-bottom: 5px;">
 							<?php
-								if (!empty($usuario['Perfil']['imagem'])) {
-									$img_url = ''.
-										'Usuarios/' . 
-										$usuario['Usuario']['id'] .
-										'/' . 
-										$usuario['Perfil']['imagem'];
-								}elseif (!empty($usuario['Usuario']['facebook_id'])) {
-									$img_url = 'https://graph.facebook.com/' .
-										$usuario['Usuario']['facebook_id'].
-										'/picture?type=normal';
-									
-								} else {
-									$img_url = 'Usuarios/default_avatar.png';
-								}
-								echo $this->Html->image($img_url, $options = array('width'=> 60, 'height'=> 60)); ?>
+								//$img_url = $this->Site->getAvatar($usuario);
+								echo $this->Html->image($img_avatar, $options = array('width'=> 60, 'height'=> 60)); ?>
 						</div>
 						<?php echo $this->Form->input('Perfil.imagem', array('type'=> 'file', 'error'=> false)); ?>
 						<div style="width: 100%; clear: both; font-size: 13px; color: #666; margin-top: -18px; margin-bottom: 20px;">
@@ -84,7 +71,6 @@
 
 						<label>Nome</label>
 						<?php echo $this->Form->input('Perfil.name', array('error'=> false)); ?>
-						
 						<div style="width: 45%;float: left">
 							<label>Email</label>
 							<?php echo $this->Form->input('email', array('error'=> false)); ?>

@@ -13,7 +13,31 @@ App::uses('Folder', 'Utility');
 class SiteController extends AppController {
 	public $layout = 'Site/default';
 
-	public $components = array('Paginator', 'DataUtil', 'Cookie', 'Session');
+	public $components = array(
+		'Auth'=> array(
+			'loginAction' => array(
+	            'controller' => 'site',
+	            'action' => 'login',
+        	),
+        	'loginRedirect'=> array(
+        		'controller' => 'site',
+	            'action' => 'home',
+        	),
+        	'logoutRedirect'=> array(
+        		'controller' => 'site',
+	            'action' => 'home',
+        	),
+			'authenticate'=> array(
+				'Form'=> array(
+					'userModel'=> 'Usuario',
+					'fields'=> array(
+						'username'=> 'email',
+						'password'=> 'senha'
+					)
+				)
+			)
+		),
+		'Paginator', 'DataUtil', 'Cookie', 'Session');
 
 	/**
 	 * beforeFilter callback
@@ -22,14 +46,19 @@ class SiteController extends AppController {
 	 */
 	public function beforeFilter() {
 		parent::beforeFilter();
-		$this->_checkLogin();
+		//$this->_checkLogin();
+		$this->Auth->allow();
+		$this->Auth->deny(array('meusDados'));
+
+		$this->set('loggedIn', $this->Auth->loggedIn());
+		$this->set('AuthUser', $this->Auth->user());
 	}
 
 	public function _checkLogin(){
 		$flag = $this->Cookie->read('Auth');
 		if (!empty($flag)) {
 			$auth_custom = array(
-				'id'=> $this->Cookie->read('Auth.user_id'),
+				'id'=> $this->Cookie->read('Auth.Usuario_id'),
 				'nome'=> $this->Cookie->read('Auth.nome'),
 				'email'=> $this->Cookie->read('Auth.email'),
 				'apelido'=> $this->Cookie->read('Auth.apelido'),
@@ -315,28 +344,20 @@ class SiteController extends AppController {
 
 	public function mais_comentarios() {
 		$this->loadModel('Comentario');
-		$this->Comentario->recursive = 3;
 
 		$estabelecimento = $this->request->data['estabelecimento'];
 		$page = $this->request->data['page'];
 		$limit = $this->Comentario->perfil_limit;
 
 		$offset = $page * $limit;
-
-		$comentarios = $this->Comentario->find('all', array(
-			'conditions'=> array(
-				'Comentario.ativo'=> 1,
-				'Comentario.estabelecimento_id'=> $estabelecimento),
-			'limit'=> $limit,
-			'offset'=> $offset,
-			'order'=> 'Comentario.created DESC'));
-
+		$comentarios = $this->Comentario->get($estabelecimento, $limit, $offset);
 		$comentarios = json_encode($comentarios);
 		echo $comentarios;
 
 		$this->autoRender = false;
 	}
 	public function perfil($slug = null) {
+		$this->helpers = array('Site');
 		$this->loadModel('Comentario');
 
 		$this->loadModel('Estabelecimento');
@@ -363,7 +384,7 @@ class SiteController extends AppController {
 
 		if ($this->request->is('post')) {
 			if (!empty($this->auth_custom)) {
-				$this->request->data['Comentario']['usuario_id'] = $this->auth_custom['id'];
+				$this->request->data['Comentario']['usuario'] = $this->auth_custom['id'];
 				$this->request->data['Comentario']['texto'] = $this->request->data['Comentario']['comentario'];
 				
 				$this->Comentario->create();
@@ -380,14 +401,7 @@ class SiteController extends AppController {
 		
 
 		$this->loadModel('Comentario');
-		$this->Comentario->recursive = 3;
-		$comentarios = $this->Comentario->find('all', array(
-			'conditions'=> array(
-				'Comentario.ativo'=> 1,
-				'Comentario.estabelecimento_id'=> $estabelecimento['Estabelecimento']['id']),
-			'limit'=> $this->Comentario->perfil_limit,
-			'order'=> array('Comentario.created'=> 'desc'))
-		);
+		$comentarios = $this->Comentario->get($estabelecimento['Estabelecimento']['id'], 5);
 
 		$comentarios_count = $this->Comentario->find('count',
 			array(
@@ -565,6 +579,18 @@ class SiteController extends AppController {
 		$this->set(compact('title_for_layout'));
 	}
 
+	public function _validationErrorsToList($errors) {
+		$retorno = array();
+		foreach ($errors as $key => $value) {
+			if (!empty($value)) {
+				foreach ($value as $item) {
+					$retorno[] = $item;
+				}
+			}
+		}
+		return $retorno;
+	}
+
 	public function _validationUsuarioErrorsToList($errors) {
 		$retorno = '';
 		$retorno .= (!empty($errors['Perfil']['imagem'])) ? join('<br>', $errors['Perfil']['imagem']) . '<br>': '';
@@ -613,7 +639,7 @@ class SiteController extends AppController {
 					}
 				}
 			} else {
-				$errors = $this->_validationUsuarioErrorsToList($this->Usuario->validationErrors);
+				$errors = $this->_validationUsuarioErrorsToList($this->Usuario->Perfil->validationErrors);
 				$this->Session->setFlash($errors, 'default', array('class'=> 'alert alert-danger'));
 			}
 
@@ -622,9 +648,9 @@ class SiteController extends AppController {
 			// $options = array();
 			// $options['fields'] = array('Usuario.email');
 			// $options['conditions'] = array('Usuario.email'=> $this->request->data['Usuario']['email']);
-			// $usuario = $this->Usuario->find('first', $options);
-			// if (!empty($usuario)) {
-			// 	if ($usuario['Usuario']['email'] == $this->request->data['Usuario']['email']) {
+			// $Usuario = $this->Usuario->find('first', $options);
+			// if (!empty($Usuario)) {
+			// 	if ($Usuario['Usuario']['email'] == $this->request->data['Usuario']['email']) {
 			// 		$erro = 1;
 			// 		$erro_desc[] = 'O email que você informou já está cadastrado';
 			// 	}
@@ -657,7 +683,7 @@ class SiteController extends AppController {
 			// 	$this->Usuario->create();
 			// 	if ($this->Usuario->save($this->request->data)) {
 			// 		if (!empty($this->request->data)) {
-			// 			$this->request->data['Perfil']['usuario_id'] = $this->Usuario->id;
+			// 			$this->request->data['Perfil']['Usuario_id'] = $this->Usuario->id;
 			// 			if ($this->Usuario->Perfil->save($this->request->data)) {
 			// 				//Debugger::dump($senha);
 			// 				if($this->_logar($email, $senha)){
@@ -672,7 +698,7 @@ class SiteController extends AppController {
 			// 			};
 			// 		}
 			// 	} else {
-			// 		$this->Session->setFlash(__('O <strong>usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
+			// 		$this->Session->setFlash(__('O <strong>Usuario</strong> não pode ser salvo. Por favor, tente novamente.'), 'default', array('class'=> 'alert alert-danger'));
 			// 	}
 			// } else {
 
@@ -681,7 +707,7 @@ class SiteController extends AppController {
 		}
 	}
 
-	public function _uploadUserImage($image_array) {
+	public function _uploadUsuarioImage($image_array) {
 		if ($this->request->data['Perfil']['imagem']['error'] == 0) {
 			$image = WideImage::load($image_array['tmp_name']);
 			$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'Usuarios/' . $this->auth_custom['id'], true, 0755);
@@ -698,57 +724,98 @@ class SiteController extends AppController {
 		$this->set(compact('widget_estabelecimentos'));
 		
 		$this->loadModel('Usuario');
-		$this->Usuario->recursive = -1;
 
-		if (!empty($this->auth_custom)) {
-			if ($this->request->is(array('post', 'put'))) {
-				$this->request->data['Usuario']['id'] = $this->auth_custom['id'];
-				$this->request->data['Perfil']['id'] = $this->auth_custom['perfil_id'];
+		if ($this->request->is(array('post', 'put'))) {
+			//unset($this->request->data['Perfil']['imagem']);
 
-				$this->request->data['Usuario']['email_antigo'] = $this->auth_custom['email'];
-				$this->request->data['Perfil']['apelido_antigo'] = $this->auth_custom['apelido'];
+			$this->request->data['Usuario']['id'] = $this->Auth->user('id');
+			$this->request->data['Perfil']['usuario_id'] = $this->Auth->user('id');
 
-				$image_array = $this->request->data['Perfil']['imagem'];
-				if ($this->Usuario->saveAll($this->request->data, array('validate'=> 'only'))) {
-					if ($this->Usuario->saveAll($this->request->data, array('validate'=> false))) {
-						
-						$this->_uploadUserImage($image_array);
-						if ($this->request->data['Perfil']['imagem']['error'] == 0) {
-							$this->request->data['Perfil']['imagem'] = $this->request->data['Perfil']['imagem']['name'];
-						} else {
-							unset($this->request->data['Perfil']['imagem']);
-						}
-						$this->_loginSession($this->request->data);
-						$this->Session->setFlash('As suas alterações foram realizadas com sucesso.', 'default', array('class'=> 'alert alert-success'));
-						return $this->redirect($this->referer());
-					}
-				} else {
-					// Debugger::dump($this->Usuario->validationErrors);
-					// exit();
-					$errors = $this->_validationUsuarioErrorsToList($this->Usuario->validationErrors);
-					$this->Session->setFlash($errors, 'default', array('class'=> 'alert alert-danger'));
-				}
+			$this->request->data['Perfil']['id'] = $this->Auth->user('Perfil.id');
+
+			if ($this->Usuario->saveAll($this->request->data)) {
+				$this->Session->setFlash('As suas alterações foram realizadas com sucesso.', 'default', array('class'=> 'alert alert-success'));
+				return $this->redirect($this->referer());
 			} else {
-				$options['contain'] = array('Perfil');
-				$options['fields'] = array(
-					'Usuario.id',
-					'Usuario.email',
-					'Usuario.facebook_id',
-					'Perfil.name',
-					'Perfil.data_nascimento',
-					'Perfil.apelido',
-					'Perfil.cidade',
-					'Perfil.imagem',
-				);
-				$options['conditions'] = array('Usuario.id'=> $this->auth_custom['id']);
+				$errors_usuario = $this->Usuario->validationErrors;
+				$errors_perfil = array();
+				if (!empty($errors_usuario['Perfil'])) {
+					$errors_perfil = $errors_usuario['Perfil'];
+					unset($errors_usuario['Perfil']);
+				}
+				
 
-				$usuario = $this->Usuario->find('first', $options);
-				$this->request->data = $usuario;
-				$this->request->data['Perfil']['data_nascimento'] = $this->DataUtil->reverse($usuario['Perfil']['data_nascimento']);
+				$errors_usuario = $this->_validationErrorsToList($errors_usuario);
+				$errors_perfil = $this->_validationErrorsToList($errors_perfil);
+				$errors = array_merge($errors_usuario, $errors_perfil);
+				// Debugger::dump($errors);
+				// exit();
 
-				$this->request->data['Usuario']['senha'] = '';
-				$this->set(compact('usuario'));
+				$this->Session->setFlash(join('<br>', $errors), 'default', array('class'=> 'alert alert-danger'));	
+				//$this->_validationErrorsToList($this->Usuario->Perfil->validationErrors);
 			}
+		}
+		$usuario = $this->Usuario->find('first', array('conditions'=> array('Usuario.id'=> $this->Auth->user('id'))));
+		$this->request->data = $usuario;
+		$this->request->data['Perfil']['data_nascimento'] = $usuario['Perfil']['data_nascimento_formatada'];
+
+		if (!empty($usuario['Perfil']['imagem'])) {
+			$img_avatar = 'Usuarios/' . $usuario['Usuario']['id'] . '/' . $usuario['Perfil']['imagem'];
+		}elseif (!empty($usuario['facebook_id'])) {
+			$img_avatar = 'https://graph.facebook.com/' . $usuario['Usuario']['facebook_id'] . '/picture?type=normal';
+		} else {
+			$img_avatar = 'Usuarios/default_avatar.png';
+		}
+		$this->set(compact('img_avatar'));
+		
+		// Debugger::dump($this->Auth->user('email'));
+		// exit();
+
+		// if ($this->request->is(array('post', 'put'))) {
+		// 	$this->request->data['Usuario']['email_antigo'] = $this->Auth->user['email'];
+		// 	$this->request->data['Perfil']['apelido_antigo'] = $this->Auth->user['apelido'];
+
+		// 	$image_array = $this->request->data['Perfil']['imagem'];
+		// 	if ($this->Usuario->saveAll($this->request->data, array('validate'=> 'only'))) {
+		// 		if ($this->Usuario->saveAll($this->request->data, array('validate'=> false))) {
+					
+		// 			$this->_uploadUsuarioImage($image_array);
+		// 			if ($this->request->data['Perfil']['imagem']['error'] == 0) {
+		// 				$this->request->data['Perfil']['imagem'] = $this->request->data['Perfil']['imagem']['name'];
+		// 			} else {
+		// 				unset($this->request->data['Perfil']['imagem']);
+		// 			}
+		// 			$this->_loginSession($this->request->data);
+		// 			$this->Session->setFlash('As suas alterações foram realizadas com sucesso.', 'default', array('class'=> 'alert alert-success'));
+		// 			return $this->redirect($this->referer());
+		// 		}
+		// 	} else {
+		// 		// Debugger::dump($this->Usuario->validationErrors);
+		// 		// exit();
+		// 		$errors = $this->_validationUsuarioErrorsToList($this->Usuario->validationErrors);
+		// 		$this->Session->setFlash($errors, 'default', array('class'=> 'alert alert-danger'));
+		// 	}
+		// } 
+		// $options['contain'] = array('Perfil');
+		// $options['fields'] = array(
+		// 	'Usuario.id',
+		// 	'Usuario.email',
+		// 	'Usuario.facebook_id',
+		// 	'Perfil.name',
+		// 	'Perfil.data_nascimento',
+		// 	'Perfil.apelido',
+		// 	'Perfil.cidade',
+		// 	'Perfil.imagem',
+		// );
+		// $options['conditions'] = array('Usuario.id'=> $this->auth_custom['id']);
+
+		// $Usuario = $this->Usuario->find('first', $options);
+		// $this->request->data = $Usuario;
+		// $this->request->data['Perfil']['data_nascimento'] = $this->DataUtil->reverse($Usuario['Perfil']['data_nascimento']);
+
+		// $this->request->data['Usuario']['senha'] = '';
+		// $this->set(compact('Usuario'));
+			
 			// 	$options = array();
 			// 	$erro = 0;
 			// 	$erro_desc = array();			
@@ -760,10 +827,10 @@ class SiteController extends AppController {
 			// 		'Usuario.email'=> $this->request->data['Usuario']['email'],
 			// 		'Usuario.email !='=> $this->auth_email
 			// 	);
-			// 	$usuario = $this->Usuario->find('all', $options);
+			// 	$Usuario = $this->Usuario->find('all', $options);
 			// 	//Debugger::dump($options);
 
-			// 	if (!empty($usuario)) {
+			// 	if (!empty($Usuario)) {
 			// 		$erro = 1;
 			// 		$erro_desc[] = 'O email que você informou já está me uso por outro usuário';
 			// 	}
@@ -803,7 +870,7 @@ class SiteController extends AppController {
 			// 					array(
 			// 						'fields'=> array('Usuario.senha'),
 			// 						'conditions'=> array(
-			// 							'Usuario.id'=> $this->auth_user_id
+			// 							'Usuario.id'=> $this->auth_Usuario_id
 			// 					)));
 
 			// 				$passwordHasher = new SimplePasswordHasher(array('hashType' => 'sha256'));
@@ -834,12 +901,12 @@ class SiteController extends AppController {
 			// 	}
 			// 	if ($erro == 0) {
 			// 		$this->request->data['Perfil']['data_nascimento'] = $data_fake;
-			// 		$this->request->data['Usuario']['id'] = $this->auth_user_id;
+			// 		$this->request->data['Usuario']['id'] = $this->auth_Usuario_id;
 			// 		// Debugger::dump($this->request->data);
 			// 		// exit();
 			// 		if ($this->Usuario->save($this->request->data)) {
 			// 			$this->request->data['Perfil']['id'] = $this->auth_perfil_id;
-			// 			$this->request->data['Perfil']['usuario_id'] = $this->auth_user_id;
+			// 			$this->request->data['Perfil']['Usuario_id'] = $this->auth_Usuario_id;
 			// 			//Debugger::dump($this->request->data['Perfil']);
 			// 			if ($this->Usuario->Perfil->save($this->request->data['Perfil'])) {
 							
@@ -848,7 +915,7 @@ class SiteController extends AppController {
 			// 					$this->Cookie->write('Auth.imagem', $this->request->data['Perfil']['imagem']);
 								
 			// 					$image = WideImage::load($image_array['tmp_name']);
-			// 					$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'Usuarios/' . $this->auth_user_id, true, 0755);
+			// 					$pasta_salvar = new Folder(WWW_ROOT . 'img' . DS . 'Usuarios/' . $this->auth_Usuario_id, true, 0755);
 						
 			// 					$image
 			// 						->resize(60, 60, 'outside')
@@ -869,19 +936,17 @@ class SiteController extends AppController {
 			// 		$this->Session->setFlash(join('<br>', $erro_desc), 'default', array('class'=> 'alert alert-danger'));
 			// 	}
 			// } else {
-			// 	$usuario = $this->Usuario->find('first', array('conditions'=> array('Usuario.id'=> $this->auth_user_id)));
+			// 	$Usuario = $this->Usuario->find('first', array('conditions'=> array('Usuario.id'=> $this->auth_Usuario_id)));
 			
-			// 	$this->request->data = $usuario;
+			// 	$this->request->data = $Usuario;
 
 			// 	$this->request->data['Perfil']['data_nascimento'] = $this->DataUtil->reverse($this->request->data['Perfil']['data_nascimento']);
 
 			// 	$this->request->data['Usuario']['senha'] = '';
 
-			// 	$this->set(compact('usuario'));
+			// 	$this->set(compact('Usuario'));
 			// }
-		} else {
-			return $this->redirect(array('controller'=> 'site','action'=> 'home'));
-		}
+
 
 		$title_for_layout = 'Meus dados - ' . $this->site_name;
 		$this->set(compact('title_for_layout'));
@@ -899,7 +964,7 @@ class SiteController extends AppController {
 		$senha = $passwordHasher->hash(
 			$senha);
 		
-		$usuario = $this->Usuario->find('first',
+		$Usuario = $this->Usuario->find('first',
 			array(
 				'conditions'=> array(
 					'Usuario.email'=> $login,
@@ -908,8 +973,8 @@ class SiteController extends AppController {
 			)
 		);
 
-		if (!empty($usuario)) {
-			$this->_loginSession($usuario);
+		if (!empty($Usuario)) {
+			$this->_loginSession($Usuario);
 			$this->_checkLogin();
 			return true;
 		} else {
@@ -917,15 +982,15 @@ class SiteController extends AppController {
 		}
 	}
 
-	public function _loginSession($usuario){
+	public function _loginSession($Usuario){
 		$this->Cookie->write('Auth.flag', true);
-		$this->Cookie->write('Auth.user_id', $usuario['Usuario']['id']);
-		$this->Cookie->write('Auth.nome', $usuario['Perfil']['name']);
-		$this->Cookie->write('Auth.apelido', $usuario['Perfil']['apelido']);
-		$this->Cookie->write('Auth.email', $usuario['Usuario']['email']);
-		$this->Cookie->write('Auth.perfil_id', $usuario['Perfil']['id']);
-		if (!empty($usuario['Perfil']['imagem'])) {
-			$this->Cookie->write('Auth.imagem', $usuario['Perfil']['imagem']);
+		$this->Cookie->write('Auth.Usuario_id', $Usuario['Usuario']['id']);
+		$this->Cookie->write('Auth.nome', $Usuario['Perfil']['name']);
+		$this->Cookie->write('Auth.apelido', $Usuario['Perfil']['apelido']);
+		$this->Cookie->write('Auth.email', $Usuario['Usuario']['email']);
+		$this->Cookie->write('Auth.perfil_id', $Usuario['Perfil']['id']);
+		if (!empty($Usuario['Perfil']['imagem'])) {
+			$this->Cookie->write('Auth.imagem', $Usuario['Perfil']['imagem']);
 		}
 		
 	}
@@ -935,19 +1000,26 @@ class SiteController extends AppController {
 		$this->set(compact('title_for_layout'));
 
 		if ($this->request->is(array('post'))) {
-			if($this->_logar($this->request->data['Usuario']['email'], $this->request->data['Usuario']['senha'])) {
-				return $this->redirect(array('controller'=> 'site', 'action'=> 'home'));
+			if($this->Auth->login()) {
+				return $this->redirect($this->Auth->redirectUrl());
 			} else {
-				$this->request->data['Usuario']['senha'] = '';
 				$this->Session->setFlash(
 					__('A combinação login/senha está incorreta.'),
 					'default',
 					array('class'=> 'alert alert-danger'));
 			}
+			// if($this->_logar($this->request->data['Usuario']['email'], $this->request->data['Usuario']['senha'])) {
+			// 	return $this->redirect(array('controller'=> 'site', 'action'=> 'home'));
+			// } else {
+			// 	$this->request->data['Usuario']['senha'] = '';
+			// 	$this->Session->setFlash(
+			// 		__('A combinação login/senha está incorreta.'),
+			// 		'default',
+			// 		array('class'=> 'alert alert-danger'));
+			// }
 		}
 	}
 	public function logout(){
-		$this->Cookie->destroy();
-		return $this->redirect(array('controller'=> 'site', 'action'=> 'home'));
+		return $this->redirect($this->Auth->logout());
 	}
 }

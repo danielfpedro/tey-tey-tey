@@ -1,7 +1,9 @@
+<?php echo $this->Html->script('Site/facebook', array('inline'=> false)); ?>
+
 <?php echo $this->Html->script('Site/widget_estabelecimentos', array('inline'=> false)); ?>
 <?php echo $this->Html->script('Site/cadastro', array('inline'=> false)); ?>
 <?php echo $this->Html->script('../lib/maskedinput-1.3.1/jquery.maskedinput.min', array('inline'=> false)); ?>
-<?php echo $this->Html->script('Site/facebook', array('inline'=> false)); ?>
+
 
 <div id="page-wrapper"> <!-- everything below the top menu should be inside the page wrapper div -->
 	<div id="logo-bar"> <!--begin the main header logo area-->
@@ -62,12 +64,12 @@
 
 						<button type="button" id="btn-facebook" onclick="checkLoginState();" style="">Logar com Facebook</button>
 
-						<div id="cont-facebook-img" style="display: none;">
+						<div id="cont-facebook-img" style="<?php echo (!empty($this->request->data['Usuario']['facebook_id']))? '': 'display: none;';?>">
 							<label>Foto do perfil</label>
-							<img id="imagem-facebook" width="60">
+							<img id="imagem-facebook" width="60" <?php echo (empty($this->request->data['Usuario']['facebook_id']))? '': 'src="https://graph.facebook.com/' .$this->request->data['Usuario']['facebook_id']. '/picture?type=normal"';?>>
 						</div>
-						
-						<?php echo $this->Form->input('facebook_id', array('type'=> 'text','error'=> false, 'style'=> 'display: none;')); ?>
+
+						<?php echo $this->Form->input('facebook_id', array('type'=> 'hidden','error'=> false)); ?>
 
 						<label>Nome</label>
 						<?php echo $this->Form->input('Perfil.name', array('error'=> false)); ?>
@@ -97,7 +99,7 @@
 							<?php echo $this->Form->input('repetir_senha', array('type'=> 'password', array('error'=> false))); ?>
 						</div>
 						<div style="width: 100%; clear: both; font-size: 13px; color: #666; margin-bottom: 10px;">
-							Ao clicar em criar conta você estará concordando com os <?php echo $this->Html->link('termos de uso', array('controller'=> 'site', 'action'=> 'termos_de_uso')) ?>.
+							Ao clicar em criar conta você estará concordando com os <?php echo $this->Html->link('termos de uso', array('controller'=> 'site', 'action'=> 'termos_de_uso'), array('target'=> '_blank')) ?>.
 						</div>
 						<button type="submit">Criar conta</button>
 					<?php echo $this->Form->end() ?>

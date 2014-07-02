@@ -89,16 +89,7 @@ comments ele perde o estilo pq o estilo estah no id -->
 				<div class="media-wrap">
 					<div class="media-thumb">
 						<?php
-							if (!empty($comentario['Usuario']['Perfil']['imagem']) OR !is_null($comentario['Usuario']['Perfil']['imagem'])) {
-								$img_url = ''.
-									'Usuarios/' . 
-									$comentario['Usuario']['id'] .
-									'/' . 
-									$comentario['Usuario']['Perfil']['imagem'];
-							} else {
-								$img_url = 'Usuarios/default_avatar.png';
-							}
-							echo $this->Html->image($img_url, $options = array('width'=> 60, 'height'=> 60));
+							echo $this->Html->image($comentario['Usuario']['Perfil']['imagem_final'], $options = array('width'=> 60, 'height'=> 60));
 						?>
 					</div>
 					<div class="media-body" style="width: 560px;">

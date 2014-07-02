@@ -1,9 +1,14 @@
+<?php
+	if (!empty($AuthUser)) {
+		//Debugger::dump($AuthUser);
+	}
+?>
 <div id="top-menu-wrapper"> <!-- begin top menu -->
 		<div id="top-menu">
 			<div class="container mid">
 				<div class="menu">
 					<ul>
-						<?php if (empty($auth_custom)): ?>
+						<?php if (!$loggedIn): ?>
 							<li>
 								<?php echo $this->Html->link('Cadastre-se', array('controller' => 'site', 'action' => 'cadastro')); ?>
 							</li>
@@ -26,7 +31,7 @@
 			<div class="wrapper">
 				<div class="inner">
 					<!-- SEARCH -->  
-					<form method="get" id="searchform" action="<?php echo $this->webroot . "/site/pesquisa"; ?>">
+					<form method="get" id="searchform" action="<?php echo $this->webroot . "site/pesquisa"; ?>">
 						<input
 							value="<?php echo (!empty($this->request->query['q']))? $this->request->query['q'] : '';?>"
 							type="text" placeholder="pesquisar" name="q" id="s" autocomplete="off" />    

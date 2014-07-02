@@ -45,6 +45,7 @@
 				</div><!-- section-wraper -->
 
 				<div class="wrap-form-contato">
+					<?php echo $this->Session->flash('auth'); ?>
 					<?php
 						echo $this->Form->create(
 							'Usuario',
@@ -53,7 +54,7 @@
 						);
 					?>
 						<label>Email</label>
-						<?php echo $this->Form->input('email'); ?>
+						<?php echo $this->Form->input('email', array('autofocus'=> true)); ?>
 						<label>Senha</label>
 						<?php echo $this->Form->input('senha', array('type'=> 'password')); ?>
 

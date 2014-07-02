@@ -34,10 +34,10 @@
 						<?php echo $this->Paginator->sort('email', 'Nome/Email'); ?>
 					</th>
 					<th>
-						<?php echo $this->Paginator->sort('data_nascimento'); ?>
+						<?php echo $this->Paginator->sort('cidade'); ?>
 					</th>
 					<th>
-						<?php echo $this->Paginator->sort('cidade'); ?>
+						<?php echo $this->Paginator->sort('data_nascimento', 'Data de nascimento'); ?>
 					</th>
 					<th style="width: 160px;">
 						<?php echo $this->Paginator->sort('created', 'Data de criação'); ?>
@@ -51,20 +51,7 @@
 						<tr>
 							<td>
 								<?php
-									if (!empty($usuario['Perfil']['imagem'])) {
-										$img_url = ''.
-											'Usuarios/' . 
-											$usuario['Usuario']['id'] .
-											'/' . 
-											$usuario['Perfil']['imagem'];
-									}elseif (!empty($usuario['Usuario']['facebook_id'])) {
-										$img_url = 'https://graph.facebook.com/' .
-											$usuario['Usuario']['facebook_id'].
-											'/picture?type=normal';
-										
-									} else {
-										$img_url = 'Usuarios/default_avatar.png';
-									}
+									$img_url = $this->Site->getAvatar($usuario);
 									echo $this->Html->image($img_url, array('width'=> '100%'));
 								?>
 							</td>
@@ -74,10 +61,13 @@
 								<?php echo h($usuario['Usuario']['email']); ?>
 							</td>
 							<td>
-								<?php echo $this->Time->format('d/m/Y', $usuario['Perfil']['data_nascimento']); ?>
+								<?php echo h($usuario['Perfil']['cidade']); ?>
 							</td>
 							<td>
-								<?php echo h($usuario['Perfil']['cidade']); ?>
+								<?php
+									$time = $this->Time->format('d/m/Y', $usuario['Perfil']['data_nascimento']);
+									echo $time;
+								?>
 							</td>
 							<td>
 								<?php echo $this->Time->format('d/m/Y h:i',$usuario['Usuario']['created']); ?>
